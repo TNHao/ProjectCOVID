@@ -1,0 +1,41 @@
+<div class="sidebar" data-color="white" data-active-color="danger">
+    <div class="logo">
+        <a href="#" class="simple-text logo-mini">
+            <div class="logo-image-small">
+                {{!-- <img src="../assets/img/logo-small.png"> --}}
+                Logo
+            </div>
+        </a>
+        <a href="/" class="simple-text logo-normal">
+            Project COVID
+        </a>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li class="{{#if active.profile}}active{{/if}}">
+                <a href="/user/5/profile">
+                    <i class="nc-icon nc-badge"></i>
+                    <p>Tài khoản của tôi</p>
+                </a>
+            </li>
+            <li class="{{#if active.accManagement}}active{{/if}}">
+                <a href="/admin/account-management">
+                    <i class="nc-icon nc-single-copy-04"></i>
+                    <p>Lịch sử được quản lý</p>
+                </a>
+            </li>
+            <li class="{{#if active.isolationWardManagement}}active{{/if}}">
+                <a href="/admin/isolation-ward">
+                    <i class="nc-icon nc-cart-simple"></i>
+                    <p>Lịch sử mua hàng</p>
+                </a>
+            </li>
+            <li class="{{#if active.payment}}active{{/if}}">
+                <a href="/user/5/payment">
+                    <i class="nc-icon nc-money-coins"></i>
+                    <p>Tài khoản thanh toán</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

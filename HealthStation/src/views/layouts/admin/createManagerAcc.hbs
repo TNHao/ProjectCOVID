@@ -1,0 +1,37 @@
+{{#section 'title'}}
+<title>Tạo tài khoản</title>
+{{/section}}
+<div class="card w-50 mx-auto px-3 pb-3">
+    <form id="registerFormValidation" action="" method="" required>
+        <div class="card-header">
+            <h4 class="card-title">
+                Tạo tài khoản
+            </h4>
+        </div>
+        <div class="card-content">
+            <div class="form-group">
+                <label class="control-label">
+                    Username <star class="text-danger">*</star>
+                </label>
+                <input class="form-control" name="username" type="text" required="true" autocomplete="off"
+                    title="username phải từ 3-20 kí tự, không có _ hay . ở đầu và cuối"
+                    pattern="^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Password <star class="text-danger">*</star></label>
+                <input class="form-control" name="password" id="registerPassword" type="password" required="true">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Confirm Password <star class="text-danger">*</star></label>
+                <input class="form-control" name="password_confirmation" id="registerPasswordConfirmation"
+                    type="password" required="true" equalto="#registerPassword">
+            </div>
+            <div class="category">
+                <star class="text-danger">*</star> Required fields
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-info btn-fill pull-right">Register</button>
+        </div>
+    </form>
+</div>
