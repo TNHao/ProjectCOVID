@@ -7,6 +7,9 @@ router.get('/', managerController.get);
 router.get('/account-management', managerController.getAccount);
 router.get('/account-management/:id/history', managerController.getAccountHistory);
 router.get('/account-management/:id', managerController.getAccountEdit);
-router.get('/isolation-ward', managerController.getIsolationWard);
+router.get('/category-management', managerController.getCategory);
+router.post('/category-management', managerController.createCategory);
+router.put('/category-management', managerController.updateCategory);
+router.delete('/category-management', managerController.deleteCategory);
 
 module.exports = router;

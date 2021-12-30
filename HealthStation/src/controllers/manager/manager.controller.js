@@ -25,33 +25,6 @@ const fakeData = [
     },
 ]
 
-const fakeIsolationWardData = [
-    {
-        name: "Sage Rodriguez",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Doris Greene",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Jon Porter",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Mason Porter",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Chet Faker",
-        capacity: 5,
-        used: 5,
-    },
-]
 
 const fakeManagementData = [
     {
@@ -93,6 +66,8 @@ const fakePatientData = {
     relate: '1,3,2'
 }
 
+const categoryModel = require('../../models/sites/category.model')
+
 module.exports = {
     get: async (req, res) => {
         res.render('layouts/manager/createAcc',
@@ -133,13 +108,34 @@ module.exports = {
         )
     },
 
-    getIsolationWard: async (req, res) => {
-        res.render('layouts/manager/isolationWardManagement',
+    getCategory: async (req, res) => {
+        const response = await categoryModel.findAll()
+        const data = response.data
+
+        res.render('layouts/manager/categoryManagement',
             {
                 layout: 'manager/main',
-                data: fakeIsolationWardData,
-                active: { isolationWardManagement: true }
+                data: data,
+                active: { catManagement: true }
             }
         )
     },
+
+    createCategory: async (req, res) => {
+        const name = req.body.name
+        await categoryModel.create({name})
+        res.redirect('/manager/category-management')
+    },
+
+    updateCategory: async (req, res) => {
+        await categoryModel.update(req.body)
+        res.redirect('/manager/category-management')
+    },
+
+    deleteCategory: async (req, res) => {
+        const id = req.body.delete_category_id
+        await categoryModel.deleteById(id)
+        res.redirect('/manager/category-management')
+    },
+    
 }

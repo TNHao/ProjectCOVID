@@ -1,0 +1,139 @@
+{{#section 'title'}}
+<title>Quản lý cơ sở</title>
+{{/section}}
+
+{{#section 'style'}}
+{{!-- DataTables --}}
+<link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
+{{/section}}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Quản lý danh mục</h4>
+        </div>
+        <button class="btn btn-info w-25 ml-4" onclick="handleCategoryModal(null, 'form-submit')" data-toggle="modal"
+            data-target="#categoryModal">
+            Thêm danh mục
+        </button>
+        <div class="card-body">
+            <div class="table-responsive p-3">
+                <table class="table table-hover" id="table_category_management">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Tên danh mục
+                            </th>
+                            <th class="text-center">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>
+                                {{this.category_id}}
+                            </td>
+                            <td>
+                                {{this.name}}
+                            </td>
+                            <td class="text-center">
+                                <button 
+                                    class="btn btn-success"
+                                    data-toggle="modal"
+                                    data-target="#categoryModal"
+                                    onclick="handleCategoryModal({{{json this}}}, 'form-submit')"
+                                >
+                                    Sửa
+                                </button>
+                                <button
+                                    class="btn btn-danger"
+                                    data-id="{{this.category_id}}"
+                                    data-toggle="modal"
+                                    data-target="#delete-category-modal"
+                                    onclick="handleCategoryModal(this, 'delete-category-form')"
+                                >Xóa</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- add or update category modal --}}
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm danh mục</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-submit" method="POST" action="/manager/category-management">
+                <input type="text" name="category_id" id="category_id" hidden>
+                    <div class="form-group">
+                        <label>Tên danh mục</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Ex: Thực phẩm" required>
+                    </div>
+                    <div class="row">
+                        <div class="update ml-auto mr-auto">
+                            <button type="submit" class="btn btn-primary btn-round">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!-- Confirm delete category modal --}}
+<div class="modal fade" id="delete-category-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa danh mục?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn chắc chắn muốn xóa danh mục này?</p>
+                <form name="delete-category-form" id="delete-category-form" method="POST" action="/manager/category-management?_method=DELETE">
+                    <input type="text" name="delete_category_id" id="delete_category_id" hidden>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="submit"
+                    form="delete-category-form"
+                    class="btn btn-danger"
+                >
+                    Xóa bỏ
+                </button>
+                <button type="button" class="btn btn-secondary ml-1" data-dismiss="modal" aria-label="Close">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{#section 'script'}}
+{{!-- Datatables --}}
+<script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table_category_management').DataTable();
+    });
+</script>
+{{!-- Modal --}}
+<script src="/js/custom/modal.js"></script>
+{{/section}}
