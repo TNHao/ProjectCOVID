@@ -1,5 +1,17 @@
 const {db, pgp} = require('../../config/db')
 
+
+// example:
+//   const product = {
+//     necessary_id: 1,
+//     name: 'Đường',
+//     price: 11000,
+//     unit: 'kg',
+//     category_id: 2,
+//     images: ['firstUrl', 'secondUrl']
+//   }
+
+
 class ProductModel {
   table = new pgp.helpers.TableName({ table: "Necessary"});
 
@@ -42,6 +54,18 @@ class ProductModel {
     },
   }
 
+
+  async findById(id) {
+    const necessary = await db.one('select * from ${table} where necessary_id = ${id}', {
+      table: this.table,
+      id: id,
+    });
+    const response = await this.helpers.findImagesById(necessary.necessary_id)
+    const images = response.map(item => item.img_url)
+    const data = {...necessary, images: images}
+    return {data};
+  }
+
   async findAll() {
     const response = await db.any('select necessary_id from $1 order by necessary_id', this.table)
     const ids = response.map(item => item.necessary_id)
@@ -55,19 +79,24 @@ class ProductModel {
     return {data};
   }
 
-  async findById(id) {
-    const necessary = await db.one('select * from ${table} where necessary_id = ${id}', {
-      table: this.table,
-      id: id,
-    });
-    const images = await this.helpers.findImagesById(necessary.necessary_id)
-    const data = {...necessary, images: images}
-    return {data};
-  }
-
   async findByCategoryId(categoryId) {
     const response = await db.any('select necessary_id from ${table} where category_id = ${id}', {
       table: this.table,
+      id: categoryId,
+    });
+    const ids = response.map(item => item.necessary_id)
+    const data = []
+    for(const id of ids) {
+        const necessary = await this.findById(id)
+        const item = await necessary.data
+        data.push(item)
+    }
+    return {data};
+  }
+
+  async findByPackageId(categoryId) {
+    const response = await db.any('select necessary_id from ${table} where package_id = ${id}', {
+      table: this.necessaryPackageTable,
       id: categoryId,
     });
     const ids = response.map(item => item.necessary_id)
@@ -110,17 +139,19 @@ class ProductModel {
     });
   }
 
-  async deleteByCategoryId(id) {
-    const response = await this.findByCategoryId(id)
+  async deleteByCategoryId(categoryId) {
+    const response = await this.findByCategoryId(categoryId)
     const ids = response.data.map(necessary => necessary.necessary_id)
-    ids.forEach(async(necessaryId) => {
-        await this.deleteById(necessaryId)
-    })
+    console.log(ids)
+    for (const id of ids){
+      await this.deleteById(id)
+    }
+
   }
 
   async update(necessary) {
     const queryString = `
-       update $(table) set name = $(name), category_id = $(category_id), price = $(price), unit = $(unit), where necessary_id = $(id)
+       update $(table) set name = $(name), category_id = $(category_id), price = $(price), unit = $(unit) where necessary_id = $(id)
     `;
     await db.none(queryString, {
       table: this.table,  

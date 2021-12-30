@@ -1,6 +1,13 @@
 const {db, pgp} = require('../../config/db')
 const productModel = require('./product.model')
 
+
+// example:
+//   const category = {
+//     name: 'Thực phẩm',
+//     category_id: 2,
+//   }
+
 class CategoryModel {
   table = new pgp.helpers.TableName({ table: "Category"});
 
