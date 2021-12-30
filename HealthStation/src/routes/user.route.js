@@ -5,6 +5,8 @@ const userController = require('../controllers/user/user.controller');
 
 router.get('/:id/profile', userController.getProfile);
 router.get('/:id/payment', userController.getPayment);
+router.get('/:id/management', userController.getManagement);
+router.get('/:id/purchase', userController.getPurchase);
 router.get('/:id/change-password', userController.getChangePassword);
 
 module.exports = router;

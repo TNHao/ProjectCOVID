@@ -53,6 +53,34 @@ const fakeIsolationWardData = [
     },
 ]
 
+const fakeManagementData = [
+    {
+        type: 'Thêm mới',
+        description: 'Thêm bệnh nhân A vào danh sách những người F0 ',
+        create_at: '22/12/2021',
+    },
+    {
+        type: 'Thêm nhu yếu phẩm',
+        description: 'Thêm Đường vào danh sách nhu yếu phẩm',
+        create_at: '22/12/2021',
+    },
+    {
+        type: 'Xóa gói nhu yếu phẩm',
+        description: 'Xóa gói hỗ trợ 69',
+        create_at: '22/12/2021',
+    },
+    {
+        type: 'Chuyển nơi điều trị',
+        description: 'Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B',
+        create_at: '22/12/2021',
+    },
+    {
+        type: 'Xuất viện',
+        description: 'Cho phép bệnh nhân A rời khỏi khu cách ly',
+        create_at: '22/12/2021',
+    },
+]
+
 module.exports = {
     get: async (req, res) => {
         res.render('layouts/admin/createManagerAcc',
@@ -67,6 +95,15 @@ module.exports = {
             {
                 layout: 'admin/main',
                 data: fakeData,
+                active: { accManagement: true }
+            }
+        )
+    },
+    getAccountHistory: async (req, res) => {
+        res.render('layouts/admin/accountHistory',
+            {
+                layout: 'admin/main',
+                data: fakeManagementData,
                 active: { accManagement: true }
             }
         )

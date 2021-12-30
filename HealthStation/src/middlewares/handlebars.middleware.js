@@ -40,6 +40,11 @@ const helper = {
         if (!this._sections) this._sections = {};
         this._sections[name] = options.fn(this);
         return null;
+    },
+    select: function(selected, options) {
+        return options.fn(this).replace(
+            new RegExp(' value=\"' + selected + '\"'),
+            '$& selected="selected"');
     }
 }
 
