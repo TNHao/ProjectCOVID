@@ -44,6 +44,12 @@
                         {{#if active.payment}}
                         <a class="navbar-brand" href="javascript:;">Quản lý tài khoản thanh toán</a>
                         {{/if}}
+                        {{#if active.management}}
+                        <a class="navbar-brand" href="javascript:;">Thông tin lịch sử được quản lý</a>
+                        {{/if}}
+                        {{#if active.purchase}}
+                        <a class="navbar-brand" href="javascript:;">Thông tin lịch sử mua hàng</a>
+                        {{/if}}
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
                         aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
