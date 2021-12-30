@@ -1,11 +1,12 @@
 const {db, pgp} = require('../../config/db')
+const productModel = require('./product.model')
 
 class CategoryModel {
   table = new pgp.helpers.TableName({ table: "Category"});
 
   async findAll() {
     const data = await db.any(`select * from $1 order by category_id `, this.table);
-    return {data: data};
+    return {data};
   }
 
   async findById(id) {
@@ -27,7 +28,10 @@ class CategoryModel {
     });
   }
 
-  async delete(id) {
+  async deleteById(id) {
+
+    await productModel.deleteByCategoryId(id)
+
     const queryString = `
        delete from $(table) where category_id=$(id)
     `;
@@ -43,7 +47,7 @@ class CategoryModel {
     `;
     await db.none(queryString, {
       table: this.table,  
-      id: category.id,
+      id: category.category_id,
       name: category.name
     });
   }
