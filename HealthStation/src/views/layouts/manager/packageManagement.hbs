@@ -1,0 +1,114 @@
+{{#section 'title'}}
+<title>Quản lý gói nhu yếu phẩm</title>
+{{/section}}
+
+{{#section 'style'}}
+{{!-- DataTables --}}
+<link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
+{{/section}}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Quản lý gói nhu yếu phẩm</h4>
+        </div>
+         <a href="/manager/package-management/create" class="btn btn-info w-25 ml-4"> Thêm gói nhu yếu phẩm </a>
+        <div class="card-body">
+            <div class="table-responsive p-3">
+                <table class="table table-hover" id="table_package_management">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Tên gói nhu yếu phẩm
+                            </th>
+                            <th>
+                                Tối đa 1 người
+                            </th>
+                            <th>
+                                Thời gian
+                            </th>
+                            <th class="text-center">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>
+                                {{this.package_id}}
+                            </td>
+                            <td>
+                                {{this.name}}
+                            </td>
+                            <td>
+                                {{this.max_per_person}}
+                            </td>
+                             <td>
+                                {{this.period}}
+                            </td>
+                            <td class="text-center">
+                                <a href="/manager/package-management/{{this.package_id}}" class="btn btn-success"> Chi tiết </a>
+                                <button
+                                    class="btn btn-danger"
+                                    data-id="{{this.package_id}}"
+                                    data-toggle="modal"
+                                    data-target="#delete-package-modal"
+                                    onclick="handlePackageModal(this, 'delete-package-form')"
+                                >Xóa</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!-- Confirm delete package modal --}}
+<div class="modal fade" id="delete-package-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa gói nhu yếu phẩm?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn chắc chắn muốn xóa gói nhu yếu phẩm này?</p>
+                <form name="delete-package-form" id="delete-package-form" method="POST" action="/manager/package-management?_method=DELETE">
+                    <input type="text" name="delete_package_id" id="delete_package_id" hidden>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="submit"
+                    form="delete-package-form"
+                    class="btn btn-danger"
+                >
+                    Xóa bỏ
+                </button>
+                <button type="button" class="btn btn-secondary ml-1" data-dismiss="modal" aria-label="Close">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{#section 'script'}}
+{{!-- Datatables --}}
+<script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table_package_management').DataTable();
+    });
+</script>
+{{!-- Modal --}}
+<script src="/js/custom/modal.js"></script>
+{{/section}}
