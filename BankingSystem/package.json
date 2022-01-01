@@ -2,8 +2,12 @@
   "name": "bankingsystem",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "nodemonConfig": {
+    "ext": "js,html,css,hbs,scss"
+  },
+  "main": "./src/app.js",
   "scripts": {
+    "start": "nodemon --inspect --watch ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,6 +19,9 @@
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
     "pg": "^8.7.1",
     "pg-promise": "^10.11.1"
   }
