@@ -34,26 +34,22 @@
                     <div class="form-group" style="flex: 1;">
                         <label class="control-label">Trạng thái hiện tại <star class="text-danger">*</star></label>
                         <select class="form-control" name="status" id="registerStatus" required="true">
-                            <option value="0">F0</option>
-                            <option value="1">F1</option>
-                            <option value="2">F2</option>
+                            <option value="F0">F0</option>
+                            <option value="F1">F1</option>
+                            <option value="F2">F2</option>
                         </select>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
                     <div class="form-group mr-4" style="flex: 1;">
                         <label class="control-label">Tỉnh thành <star class="text-danger">*</star></label>
-                        <select class="form-control" name="city" id="registerCity" type="text" required="true">
-                            <option value="1">TP Hồ Chí Minh</option>
-                            <option value="2">TP Hà Nội</option>
-                            <option value="3">Tỉnh Tiền Giang</option>
-                            <option value="4">TP Đà Nẵng</option>
-                            <option value="5">TP Huế</option>
+                        <select class="form-control" name="city" id="registerCity" required="true">
+                           
                         </select>
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label class="control-label">Quận huyện <star class="text-danger">*</star></label>
-                        <select class="form-control" name="district" id="registerDistrict" type="text" required="true">
+                        <select class="form-control" name="district" id="registerDistrict" required="true">
                             <option value="1">Quận Thủ Đức</option>
                             <option value="2">Huyện Hóc Môn</option>
                             <option value="3">Quận 1</option>
@@ -86,11 +82,11 @@
                 </div>
                 <div class="form-group">
                         <label class="control-label">ID những người liên quan (Vui lòng chọn trong danh sách người bệnh) <star class="text-danger">*</star></label>
-                        <input class="form-control" autocomplete="off" onkeypress="return false;" onkeydown="return false;" style="background-color: #FFF;" name="relate" id="registerRelate" type="text" required="true">
+                        <input class="form-control" autocomplete="off" onkeypress="return false;" onkeydown="return false;" style="background-color: #FFF;" name="relate" id="registerRelate" type="text">
                     </div>
             </div>
             <div class="card-footer">
-                <button id="btn-register" type="submit" class="btn btn-info btn-fill pull-right">Register</button>
+                <button id="btn-register" type="submit" class="btn btn-info btn-fill pull-right">Thêm mới</button>
             </div>
         </form>
     </div>
@@ -152,7 +148,9 @@
     $(document).ready(function () {
         $('#table_relate_account').DataTable();
     });
+    
 </script>
 {{!-- relate account --}}
 <script type="text/javascript" charset="utf8" src="/js/custom/relateAcc.js"></script>
+<script type="text/javascript" charset="utf8" src="/js/custom/addressAPI.js"></script>
 {{/section}}

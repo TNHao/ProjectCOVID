@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label class="control-label">Đơn giá <star class="text-danger">*</star></label>
-                        <input class="form-control" name="price" id="registerPrice" type="number" required="true" value="{{product.price}}">
+                        <input min="1000" class="form-control" name="price" id="registerPrice" type="number" required="true" value="{{product.price}}">
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
@@ -58,7 +58,7 @@
             <div class="row justify-content-center">
 
                 {{#each product.images}}
-                    <div class="col-12 col-md-5 mb-3 mx-2 text-center" style="border: 1px solid rgba(0, 0, 0, 0.5);">
+                    <div class="col-12 col-md-5 mb-3 mx-2 text-center d-flex justify-content-center align-items-center">
                         <img src="{{this}}" alt="">
                     </div>
                 {{/each}}

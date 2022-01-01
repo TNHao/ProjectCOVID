@@ -19,18 +19,18 @@
                     <thead class=" text-primary">
                         <tr>
                             <th>
-                                ID
-                            </th>
-                            <th>
                                 Tên nhu yếu phẩm
                             </th>
                              <th>
                                 Đơn vị
                             </th>
-                             <th>
+                            <th>
                                 Đơn giá
                             </th>
-                            <th class="text-center">
+                            <th>
+                                Danh mục
+                            </th>
+                            <th class="text-right">
                                 Thao tác
                             </th>
                         </tr>
@@ -39,18 +39,18 @@
                         {{#each data}}
                         <tr>
                             <td>
-                                {{this.necessary_id}}
-                            </td>
-                            <td>
                                 {{this.name}}
                             </td>
                              <td>
                                 {{this.unit}}
                             </td>
-                             <td>
+                            <td>
                                 {{this.price}}
                             </td>
-                            <td class="text-center">
+                            <td>
+                                {{this.category_name}}
+                            </td>
+                            <td class="text-right">
                                 <a href="/manager/product-management/{{this.necessary_id}}" class="btn btn-success"> Chi tiết </a>
                                 <button
                                     class="btn btn-danger"
