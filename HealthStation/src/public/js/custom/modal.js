@@ -34,3 +34,18 @@ const handleCategoryModal = (data, formId = '') => {
         document.getElementById('delete_category_id').value = category_id;
     }
 }
+
+
+const handleProductModal = (data, formId = '') => {
+    const form = document.querySelector(`#${formId}`);
+    // delete modal
+    const product_id = data.getAttribute('data-id')
+    document.getElementById('delete_product_id').value = product_id;
+}
+
+const handlePackageModal = (data, formId = '') => {
+    const form = document.querySelector(`#${formId}`);
+    // delete modal
+    const package_id = data.getAttribute('data-id')
+    document.getElementById('delete_package_id').value = package_id;
+}
