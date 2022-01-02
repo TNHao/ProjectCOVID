@@ -1,0 +1,113 @@
+{{#section 'title'}}
+<title>Quản lý nhu yếu phẩm</title>
+{{/section}}
+
+{{#section 'style'}}
+{{!-- DataTables --}}
+<link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
+{{/section}}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Quản lý nhu yếu phẩm</h4>
+        </div>
+        <a href="/manager/product-management/create" class="btn btn-info w-25 ml-4"> Thêm nhu yếu phẩm </a>
+        <div class="card-body">
+            <div class="table-responsive p-3">
+                <table class="table table-hover" id="table_product_management">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Tên nhu yếu phẩm
+                            </th>
+                             <th>
+                                Đơn vị
+                            </th>
+                             <th>
+                                Đơn giá
+                            </th>
+                            <th class="text-center">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>
+                                {{this.necessary_id}}
+                            </td>
+                            <td>
+                                {{this.name}}
+                            </td>
+                             <td>
+                                {{this.unit}}
+                            </td>
+                             <td>
+                                {{this.price}}
+                            </td>
+                            <td class="text-center">
+                                <a href="/manager/product-management/{{this.necessary_id}}" class="btn btn-success"> Chi tiết </a>
+                                <button
+                                    class="btn btn-danger"
+                                    data-id="{{this.necessary_id}}"
+                                    data-toggle="modal"
+                                    data-target="#delete-product-modal"
+                                    onclick="handleProductModal(this, 'delete-product-form')"
+                                >Xóa</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Confirm delete product modal --}}
+<div class="modal fade" id="delete-product-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa nhu yếu phẩm?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn chắc chắn muốn xóa nhu yếu phẩm này?</p>
+                <form name="delete-product-form" id="delete-product-form" method="POST" action="/manager/product-management?_method=DELETE">
+                    <input type="text" name="delete_product_id" id="delete_product_id" hidden>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="submit"
+                    form="delete-product-form"
+                    class="btn btn-danger"
+                >
+                    Xóa bỏ
+                </button>
+                <button type="button" class="btn btn-secondary ml-1" data-dismiss="modal" aria-label="Close">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{#section 'script'}}
+{{!-- Datatables --}}
+<script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table_product_management').DataTable();
+    });
+</script>
+{{!-- Modal --}}
+<script src="/js/custom/modal.js"></script>
+{{/section}}

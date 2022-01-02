@@ -1,0 +1,48 @@
+{{#section 'title'}}
+<title>Tạo nhu yếu phẩm</title>
+{{/section}}
+
+
+<div class="col-md-12">
+    <div class="card px-3 pb-3">
+        <form id="registerFormValidation" action="/manager/product-management/create" method="POST" enctype="multipart/form-data" required>
+            <div class="card-header">
+                <h4 class="card-title">
+                    Thông tin nhu yếu phẩm
+                </h4>
+            </div>
+            <div class="card-content">
+                <div class="d-flex align-items-center">
+                    <div class="form-group mr-4" style="flex: 1;">
+                        <label class="control-label">Tên nhu yếu phẩm <star class="text-danger">*</star></label>
+                        <input class="form-control" name="name" id="registerName" type="text" required="true">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="control-label">Đơn giá <star class="text-danger">*</star></label>
+                        <input class="form-control" name="price" id="registerPrice" type="number" required="true">
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="form-group mr-4" style="flex: 1;">
+                        <label class="control-label">Đơn vị <star class="text-danger">*</star></label>
+                        <input class="form-control" name="unit" id="registerUnit" type="text" required="true">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="control-label">Danh mục <star class="text-danger">*</star></label>
+                        <select class="form-control" name="category_id" id="registerCategoryId" required="true">
+                            {{#each categories}}
+                            <option value="{{this.category_id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <label class="control-label w-50">Thêm hình ảnh</label>
+                <input class="form-control" name="images" accept='image/*' id="images" type="file" multiple>
+                
+            </div>
+            <div class="card-footer">
+                <button id="btn-register" type="submit" class="btn btn-info btn-fill pull-right">Tạo mới</button>
+            </div>
+        </form>
+    </div>
+</div>
