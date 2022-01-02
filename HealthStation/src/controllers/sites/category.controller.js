@@ -3,8 +3,6 @@ const categoryModel = require('../../models/sites/category.model')
 module.exports = {
     get: async (req, res) => {
 
-
-
         const response = await categoryModel.findAll()
         const data = response.data
 
@@ -15,6 +13,6 @@ module.exports = {
                 layout: 'sites/main',
                 data
             }
-        )  
+        )
     },
 }

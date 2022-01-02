@@ -6,7 +6,7 @@ const productRoute = require('./sites/product.route');
 const necessaryPacketRoute = require('./sites/necessaryPacket.route');
 const userRoute = require('./user.route');
 const managerRoute = require('./manager.route');
-
+const locationRoute = require('./sites/location.route')
 function route(app) {
     app.use('/', homeRoute);
     app.use('/category/:id', categoryRoute);
@@ -16,9 +16,11 @@ function route(app) {
     app.use('/manager', managerRoute);
     app.use('/user', userRoute);
     app.use('/login', logInRoute);
+    app.use('/location', locationRoute);
     app.use((req, res, next) => {
         res.render('404')
     })
+
 }
 
 module.exports = route;
