@@ -1,25 +1,27 @@
+const userModel = require('../../models/user/user.model');
+
 const fakePaymentData = [
     {
-        id: '1',
-        name: "Thanh toán hóa đơn",
+        transaction_id: '1',
+        action: "Thanh toán hóa đơn",
         amount: "500$",
         date: '22/12/2021'
     },
     {
-        id: '2',
-        name: "Thanh toán nợ",
+        transaction_id: '2',
+        action: "Thanh toán nợ",
         amount: "50$",
         date: '22/12/2021'
     },
     {
-        id: '3',
-        name: "Nạp tiền",
+        transaction_id: '3',
+        action: "Nạp tiền",
         amount: "100$",
         date: '22/12/2021'
     },
     {
-        id: '4',
-        name: "Thanh toán hóa đơn",
+        transaction_id: '4',
+        action: "Thanh toán hóa đơn",
         amount: "200$",
         date: '22/12/2021'
     },
@@ -96,6 +98,7 @@ const fakeManagementData = [
     },
 ]
 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2NDEwNTc2MTY1OTksImV4cCI6MTY0MTA1NzcwMjk5OX0.cdTrTbGwUt-3PJw3jeav8UfM2BEM9iFXa8GySM7prMM"
 
 module.exports = {
     getProfile: async (req, res) => {
@@ -115,11 +118,20 @@ module.exports = {
         )
     },
     getPayment: async (req, res) => {
+        const { id } = req.params;
+        const { data } = await userModel.getPaymentData(id, token);
+        const { data: userBankingDetail } = await userModel.getBalance(id, token);
+        const { data: isVerified } = await userModel.checkVerify(id)
+
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
-                data: fakePaymentData
+                data: data,
+                balance: (userBankingDetail.balance || "---"),
+                isVerified,
+                isLoggedIn: token ? true : false,
+                id
             }
         )
     },
@@ -141,4 +153,9 @@ module.exports = {
             }
         )
     },
+    deposit: async (req, res) => {
+        const { amount, send_id } = req.body;
+        const { data } = await userModel.deposit(send_id, amount, token);
+        res.redirect(`/user/${send_id}/payment`);
+    }
 }

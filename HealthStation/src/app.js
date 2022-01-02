@@ -5,16 +5,21 @@ const route = require('./routes');
 const handlebars = require('./middlewares/handlebars.middleware');
 const app = express();
 const port = 3000;
-
-app.use(express.static(path.join(__dirname, "/public")));
+const userM = require('./models/user/user.model');
+const managerM = require('./models/manager/manager.model');
+const { rmSync } = require('fs');
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'))
 handlebars(app);
 route(app);
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+app.get('/test', async (req, res) => {
+  const rs1 = await managerM.blockManagerWithId(9);
+  const rs2 = await managerM.blockManagerWithId(7);
+  console.log(rs1, rs2);
 });
-
-
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});

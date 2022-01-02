@@ -34,5 +34,15 @@ module.exports = {
             const token = issueJWT(req.body.id);
             return res.json({ status: 200, token })
         }
+    },
+    verify: async (req, res) => {
+        const { data } = await authModel.findUser(req.body.id);
+        if (!data)
+            return res.json({ status: 404, msg: "User not found" })
+
+        if (!data.password)
+            return res.json({ status: 200, verified: false })
+
+        return res.json({ status: 200, verified: true })
     }
 }
