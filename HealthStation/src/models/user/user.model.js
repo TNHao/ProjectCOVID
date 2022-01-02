@@ -1,4 +1,9 @@
 const { db, pgp } = require('../../config/db');
+const { API_URL } = require('../../constants');
+const { getTransactionName } = require('../../lib/utils');
+const axios = require('axios');
+const moment = require('moment');
+
 class UserModel {
   account_tb = new pgp.helpers.TableName({ table: 'Account' });
   account_related_tb = new pgp.helpers.TableName({ table: 'Related_Account' });
@@ -203,6 +208,71 @@ class UserModel {
       table: this.account_related_tb,
       id: account_id,
     });
+  }
+  async updateBankingToken(account_id, banking_token) {
+    const queryString = `update $(table) set banking_token = $(banking_token) where account_id = $(id)`;
+    try {
+      await db.none(queryString, {
+        table: this.account_tb,
+        id: account_id,
+        banking_token: banking_token,
+      });
+      return 'Success';
+    } catch (error) {
+      return error;
+    }
+  }
+  async getPaymentData(id, token) {
+    let { data } = await axios({
+      method: 'GET',
+      url: `${API_URL}/api/transactions/history/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => res.data)
+      .catch(err => console.log(err))
+
+    data = data.map(item => ({
+      ...item,
+      action: getTransactionName(item.action),
+      date: moment(item.create_at).format('MMMM Do YYYY, h:mm:ss')
+    }))
+
+    return { data };
+  }
+  async getBalance(id, token) {
+    let { data } = await axios({
+      method: 'GET',
+      url: `${API_URL}/api/accounts/${id}/get-balance`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => res.data)
+      .catch(err => console.log(err))
+    return { data };
+  }
+  async checkVerify(id) {
+    let response = await axios({
+      method: 'POST',
+      url: `${API_URL}/auth/verify`,
+      data: { id }
+    }).then(res => res.data)
+      .catch(err => console.log(err))
+
+    return { data: response.verified }
+  }
+  async deposit(send_id, amount, token) {
+    let data = await axios({
+      method: 'POST',
+      url: `${API_URL}/api/transactions/deposit`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      data: { send_id, amount }
+    }).then(res => res.data)
+      .catch(err => console.log(err))
+
+    return { data }
   }
 }
 module.exports = new UserModel();

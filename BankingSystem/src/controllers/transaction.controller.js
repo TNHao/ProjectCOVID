@@ -56,4 +56,12 @@ module.exports = {
             res.json({ status: 400, msg: error });
         }
     },
+    getPayment: async (req, res) => {
+        try {
+            const { data } = await transactionModel.getTransaction(req.params.id);
+            res.json({ status: 200, msg: "SUCCESS", data });
+        } catch (error) {
+            res.json({ status: 400, msg: error });
+        }
+    }
 }

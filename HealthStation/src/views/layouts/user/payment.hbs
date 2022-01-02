@@ -10,6 +10,7 @@
 {{#section 'script'}}
 {{!-- Datatables --}}
 <script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
+<script type="text/javascript" charset="utf8" src="/js/custom/banking.js"></script>
 <script>
     $(document).ready(function () {
         $('#table_payment_history').DataTable();
@@ -17,105 +18,212 @@
 </script>
 {{/section}}
 
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-money-coins text-success"></i>
+{{#if isVerified}}
+{{#if isLoggedIn}}
+<div id="content">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-5 col-md-4">
+                            <div class="icon-big text-center icon-warning">
+                                <i class="nc-icon nc-money-coins text-success"></i>
+                            </div>
+                        </div>
+                        <div class="col-7 col-md-8">
+                            <div class="numbers">
+                                <p class="card-category">Số dư</p>
+                                <p class="card-title">${{balance}}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Số dư</p>
-                            <p class="card-title">$ 1,345</p>
+                </div>
+                <div class="card-footer ">
+                    <hr>
+                    <div class="stats" style="cursor: pointer;" data-toggle="modal" data-target="#depositModal">
+                        <i class="fa fa-plus"></i>
+                        Nạp tiền vào tài khoản
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade text-left" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="loginModalLabel">Liên kết tài khoản thanh toán</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/user/{{id}}/deposit" method="post">
+                                <div class="form-group">
+                                    <label class="control-label">Số tiền <star class="text-danger">*</star></label>
+                                    <input class="form-control" name="amount" min="10" type="number" required="true">
+                                    <input class="form-control" name="send_id" value="{{id}}" hidden required="true">
+                                </div>
+                                <div class="category">
+                                    <star class="text-danger">*</star> Required fields
+                                </div>
+                                <button type="submit" class="btn btn-primary float-right">Nạp</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-plus"></i>
-                    Nạp tiền vào tài khoản
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-5 col-md-4">
+                            <div class="icon-big text-center icon-warning">
+                                <i class="nc-icon nc-vector text-danger"></i>
+                            </div>
+                        </div>
+                        <div class="col-7 col-md-8">
+                            <div class="numbers">
+                                <p class="card-category">Tiền nợ</p>
+                                <p class="card-title">$ 23</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer ">
+                    <hr>
+                    <div class="stats">
+                        <i class="fa fa-minus"></i>
+                        Thanh toán dư nợ
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-vector text-danger"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Tiền nợ</p>
-                            <p class="card-title">$ 23</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-minus"></i>
-                    Thanh toán dư nợ
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="col-md-12 p-0">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Lịch sử thanh toán</h4>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive p-3">
-                <table class="table table-hover" id="table_payment_history">
-                    <thead class=" text-primary">
-                        <tr>
-                            <th>
-                                Mã giao dịch
-                            </th>
-                            <th>
-                                Giao dịch
-                            </th>
-                            <th class="text-right">
-                                Số tiền
-                            </th>
-                            <th class="text-center">
-                                Ngày
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each data}}
-                        <tr>
-                            <td>
-                                {{this.id}}
-                            </td>
-                            <td>
-                                {{this.name}}
-                            </td>
-                            <td class="text-right">
-                                {{this.amount}}
-                            </td>
-                            <td class="text-center">
-                                {{this.date}}
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
+    <div class="col-md-12 p-0">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Lịch sử thanh toán</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive p-3">
+                    <table class="table table-hover" id="table_payment_history">
+                        <thead class=" text-primary">
+                            <tr>
+                                <th>
+                                    Mã giao dịch
+                                </th>
+                                <th>
+                                    Giao dịch
+                                </th>
+                                <th class="text-right">
+                                    Số tiền
+                                </th>
+                                <th class="text-center">
+                                    Ngày
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each data}}
+                            <tr>
+                                <td>
+                                    {{this.transaction_id}}
+                                </td>
+                                <td>
+                                    {{this.action}}
+                                </td>
+                                <td class="text-right">
+                                    {{this.amount}}
+                                </td>
+                                <td class="text-center">
+                                    {{this.date}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
+{{else}}
+<div class="col-lg text-center" id="loginBtn">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+        Liên kết tài khoản thanh toán
+    </button>
+    <!-- Bank Login Modal -->
+    <div class="modal fade text-left" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Liên kết tài khoản thanh toán</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label class="control-label">Password <star class="text-danger">*</star></label>
+                            <input class="form-control" name="password" minlength="1" id="password" type="password"
+                                required="true">
+                        </div>
+                        <div class="category">
+                            <star class="text-danger">*</star> Required fields
+                        </div>
+                        <button type="submit" class="btn btn-primary float-right" onclick="handleBankingConnect()">Liên
+                            kết</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/if}}
+{{else}}
+<div class="w-100 text-center" id="newPasswordBtn">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPasswordModal">
+        Liên kết tài khoản thanh toán
+    </button>
+
+    <!-- Set New Password Modal -->
+    <div class="modal fade text-left" id="newPasswordModal" tabindex="-1" aria-labelledby="newPasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newPasswordModalLabel">Tạo mật khẩu mới
+                        <br>
+                        <small><small>Bạn chưa tạo mật khẩu cho tài khoản thanh toán</small></small>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">Password <star class="text-danger">*</star></label>
+                        <input class="form-control" name="password" id="registerPassword" type="password"
+                            required="true">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Confirm Password <star class="text-danger">*</star></label>
+                        <input class="form-control" name="password_confirmation" id="registerPasswordConfirmation"
+                            type="password" required="true" equalto="#registerPassword">
+                    </div>
+                    <div class="category">
+                        <star class="text-danger">*</star> Required fields
+                    </div>
+                    <button type="button" class="btn btn-primary float-right"
+                        onclick="handleBankingConnect()">Tạo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/if}}

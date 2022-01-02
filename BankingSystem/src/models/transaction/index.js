@@ -20,4 +20,10 @@ module.exports = {
 
         return { data }
     },
+    getTransaction: async (account_id) => {
+        const data = await db.many('SELECT * FROM $1 where "send_id"=$2', [table, account_id])
+            .then(res => res)
+
+        return { data }
+    },
 }

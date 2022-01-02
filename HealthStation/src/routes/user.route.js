@@ -9,4 +9,6 @@ router.get('/:id/management', userController.getManagement);
 router.get('/:id/purchase', userController.getPurchase);
 router.get('/:id/change-password', userController.getChangePassword);
 
+router.post('/:id/deposit', userController.deposit);
+
 module.exports = router;

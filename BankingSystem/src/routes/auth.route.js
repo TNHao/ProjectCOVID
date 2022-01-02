@@ -8,9 +8,20 @@ const authController = require('../controllers/auth.controller');
 // router.get('/login', (req, res, next) => { });
 // router.get('/reset-password', (req, res, next) => { });
 
-router.get('/test-jwt', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    res.json({ status: 200, msg: "SUCCESS" })
-});
+router.get('/test-jwt',
+    (req, res, next) => {
+        passport.authenticate('jwt', { session: false }, (err, user) => {
+            if (err || !user)
+                res.json({ status: 401, msg: "TOKEN Đâu???" })
+            else next();
+        })(req, res, next);
+    },
+    (req, res, next) => {
+        res.json({ status: 200, msg: "SUCCESS" })
+    }
+);
+
+router.post('/verify', authController.verify);
 
 router.post('/register', authController.addNewUser);
 router.post('/login', authController.login);

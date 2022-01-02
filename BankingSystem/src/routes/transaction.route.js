@@ -8,4 +8,5 @@ router.post('/deposit', transactionController.deposit);
 router.post('/withdrawal', transactionController.withdrawal);
 router.post('/payment', transactionController.payment);
 
+router.get('/history/:id', transactionController.getPayment);
 module.exports = router;
