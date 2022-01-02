@@ -58,10 +58,10 @@ const fakePatientData = {
     fullname: 'Nguyễn Hoàng Tiến',
     identity: '123456789',
     birthday: '2001-12-21',
-    status: 1,
-    city: 2,
-    district: 3,
-    ward: 4,
+    status: 'F1',
+    city: 'Thành phố Hồ Chí Minh',
+    district: 'Quận Thủ Đức',
+    ward: 'Phường Trường Thọ',
     isolation: 2,
     relate: '1,3,2'
 }
@@ -148,6 +148,12 @@ module.exports = {
     getProduct: async (req, res) => {
         const response = await productModel.findAll()
         const data = response.data
+
+        for(const product of data) {
+            const category = await categoryModel.findById(product.category_id)
+            product.category_name = category.data.name
+        }
+
         res.render('layouts/manager/productManagement',
             {
                 layout: 'manager/main',

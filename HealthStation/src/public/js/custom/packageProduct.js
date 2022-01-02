@@ -5,7 +5,8 @@ const inputProducts = document.querySelector('#registerProducts')
 
 const addToInputRelate = (checkbox) => {
 
-    const maxNumberPerPackage = checkbox.nextSibling.nextSibling.value;
+   const maxNumberPerPackageInput = checkbox.closest('td').nextElementSibling.querySelector('input')
+    const maxNumberPerPackage = maxNumberPerPackageInput.value;
     let products = inputProducts.value.split(',')
     products = products.filter(product => product !== '')
 
@@ -19,7 +20,7 @@ const addToInputRelate = (checkbox) => {
         return;
     }
 
-    if(maxNumberPerPackage !== '') {
+    if(maxNumberPerPackage !== '' && maxNumberPerPackage > 0) {
         const newProduct = [checkbox.id, maxNumberPerPackage]
         products.push(newProduct)
 
@@ -55,7 +56,11 @@ for(const i in products) {
 }
     checkboxes.forEach(checkbox => {
         for(const product of products) {
-            if(product[0] === checkbox.id) checkbox.checked = true
+            if(product[0] === checkbox.id){
+                checkbox.checked = true
+                const maxNumberPerPackageInput = checkbox.closest('td').nextElementSibling.querySelector('input')
+                maxNumberPerPackageInput.value = product[1]
+            }
         }
         checkbox.addEventListener('click', e => {
             if(e.target.checked) {

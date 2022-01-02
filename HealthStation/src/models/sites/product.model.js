@@ -1,5 +1,5 @@
 const {db, pgp} = require('../../config/db')
-
+const packageModel = require('./necessaryPacket.model')
 
 // example:
 //   const product = {
@@ -44,6 +44,14 @@ class ProductModel {
                 image: image
             })
         })
+    },
+    findNecessaryPackageById: async(id) => {
+        const necessaryPackageQueryString = `select package_id from $(table) where necessary_id = $(id)`
+        const data = await db.any(necessaryPackageQueryString, {
+          table: this.necessaryPackageTable,
+          id: id
+        })
+        return data
     },
     deleteNecessaryPackageById: async(id) => {
         const necessaryPackageQueryString = `delete from $(table) where necessary_id = $(id)`
@@ -128,8 +136,14 @@ class ProductModel {
   }
 
   async deleteById(id) {
+
+    const data = await this.helpers.findNecessaryPackageById(id)
     await this.helpers.deleteImagesById(id)
     await this.helpers.deleteNecessaryPackageById(id)
+    for (const item of data) {
+        await packageModel.deleteById(item.package_id)
+    }
+
     const queryString = `
        delete from $(table) where necessary_id=$(id)
     `;
