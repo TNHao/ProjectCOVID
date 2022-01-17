@@ -3,6 +3,6 @@ const router = express.Router();
 
 const packetController = require('../../controllers/sites/necessaryPacket.controller');
 
-router.get('/', packetController.get);
+router.get('/:id', packetController.get);
 
 module.exports = router;

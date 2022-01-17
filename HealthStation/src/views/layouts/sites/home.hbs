@@ -121,7 +121,7 @@
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, provident!</p>
                 </div>
                 <div class="row">
-                    <a href="/category/1" class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6">
+                    {{!-- <a href="/category/1" class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6">
                         <div class="category-block">
                             <div class="header">
                                 <i class="fa fa-apple icon-bg-1"></i>
@@ -180,7 +180,22 @@
                                 <h4>Dành cho trẻ em</h4>
                             </div>
                         </div>
+                    </a> --}}
+                    {{#each categories}}
+                    <a href="/category/{{this.category_id}}"
+                        class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6">
+                        <div class="category-block">
+                            <div class="header">
+                                <i class="fa fa-home icon-bg-5"></i>
+                                <br>
+                                <br>
+                            </div>
+                            <div class="category-list text-center">
+                                <h4>{{this.name}}</h4>
+                            </div>
+                        </div>
                     </a>
+                    {{/each}}
                 </div>
             </div>
         </div>

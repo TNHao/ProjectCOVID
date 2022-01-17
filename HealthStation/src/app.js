@@ -3,6 +3,9 @@ const path = require('path');
 const methodOverride = require('method-override')
 const route = require('./routes');
 const handlebars = require('./middlewares/handlebars.middleware');
+const session = require('./middlewares/session.middleware');
+const passport = require('./middlewares/passport.middeware');
+
 const app = express();
 const port = 3000;
 const userM = require('./models/user/user.model');
@@ -12,7 +15,10 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'))
+
 handlebars(app);
+session(app);
+passport(app);
 route(app);
 
 app.get('/test', async (req, res) => {
