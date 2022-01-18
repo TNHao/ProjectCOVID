@@ -1,4 +1,4 @@
-const {db, pgp} = require('../../config/db')
+const { db, pgp } = require('../../config/db')
 const productModel = require('./product.model')
 
 
@@ -15,36 +15,36 @@ const productModel = require('./product.model')
 //   }
 
 class NecessaryPacketModel {
-  table = new pgp.helpers.TableName({ table: "Package"});
+  table = new pgp.helpers.TableName({ table: "Package" });
 
-  necessaryPackageTable = new pgp.helpers.TableName({ table: "Necessary_Package"});
+  necessaryPackageTable = new pgp.helpers.TableName({ table: "Necessary_Package" });
 
   helpers = {
-    findNecessaryPackageById: async(id) => {
-        const necessaryQueryString = `select necessary_id, max_necessary_per_package from $(table) where package_id = $(id)`
-        const necessaries = await db.any(necessaryQueryString, {
-            table: this.necessaryPackageTable,
-            id: id
-        })
-        return necessaries 
+    findNecessaryPackageById: async (id) => {
+      const necessaryQueryString = `select necessary_id, max_necessary_per_package from $(table) where package_id = $(id)`
+      const necessaries = await db.any(necessaryQueryString, {
+        table: this.necessaryPackageTable,
+        id: id
+      })
+      return necessaries
     },
-    createNecessaryPackageById: async(package_id, products) => {
-        const necessaryQueryString = `insert into $(table)(package_id, necessary_id, max_necessary_per_package) values($(package_id), $(necessary_id), $(max))`
-        for(const product of products) {
-            await db.none(necessaryQueryString, {
-                table: this.necessaryPackageTable,
-                package_id: package_id,
-                necessary_id: product.necessary_id,
-                max: product.max_necessary_per_package
-            })
-        }
-    },
-    deleteNecessaryPackageById: async(id) => {
-        const packagePackageQueryString = `delete from $(table) where package_id = $(id)`
-        await db.none(packagePackageQueryString, {
-            table: this.necessaryPackageTable,
-            id: id
+    createNecessaryPackageById: async (package_id, products) => {
+      const necessaryQueryString = `insert into $(table)(package_id, necessary_id, max_necessary_per_package) values($(package_id), $(necessary_id), $(max))`
+      for (const product of products) {
+        await db.none(necessaryQueryString, {
+          table: this.necessaryPackageTable,
+          package_id: package_id,
+          necessary_id: product.necessary_id,
+          max: product.max_necessary_per_package
         })
+      }
+    },
+    deleteNecessaryPackageById: async (id) => {
+      const packagePackageQueryString = `delete from $(table) where package_id = $(id)`
+      await db.none(packagePackageQueryString, {
+        table: this.necessaryPackageTable,
+        id: id
+      })
     },
   }
 
@@ -52,11 +52,12 @@ class NecessaryPacketModel {
     const response = await db.any('select package_id from $1 order by package_id', this.table)
     const ids = response.map(item => item.package_id)
     const data = []
-    for(const id of ids) {
-        const _package = await this.findById(id)
-        const item = await _package.data
-        data.push(item)
+    for (const id of ids) {
+      const _package = await this.findById(id)
+      const item = await _package.data
+      data.push(item)
     }
+
     return { data };
   }
 
@@ -66,10 +67,19 @@ class NecessaryPacketModel {
       id: id,
     });
     const necessaries = await this.helpers.findNecessaryPackageById(id)
-    const data = {..._package, products: necessaries}
+    const data = { ..._package, products: necessaries }
     return { data };
   }
 
+  async findByName(name) {
+    const _package = await db.one('select * from ${table} where name = ${name}', {
+      table: this.table,
+      name: name,
+    });
+    const necessaries = await this.helpers.findNecessaryPackageById(_package.package_id)
+    const data = { ..._package, products: necessaries }
+    return { data };
+  }
 
   async create(_package) {
     const queryString = `
@@ -104,7 +114,7 @@ class NecessaryPacketModel {
        update $(table) set name = $(name), max_per_person = $(max_per_person), period = $(period) where package_id = $(id)
     `;
     await db.none(queryString, {
-      table: this.table,  
+      table: this.table,
       id: _package.package_id,
       name: _package.name,
       max_per_person: _package.max_per_person,
