@@ -1,4 +1,5 @@
-const categoryModel = require('../../models/sites/category.model')
+const categoryModel = require('../../models/sites/category.model');
+const necessaryPacketModel = require('../../models/sites/necessaryPacket.model');
 
 module.exports = {
     get: async (req, res) => {
@@ -8,6 +9,8 @@ module.exports = {
 
         const mainCategory = categories.find(category => Number(category.category_id) === Number(id));
 
+        const { data: packages } = await necessaryPacketModel.getPackageByCategory(id);
+
         if (!mainCategory)
             return res.redirect('/404-page-not-found');
 
@@ -16,6 +19,7 @@ module.exports = {
                 layout: 'sites/main',
                 categories,
                 mainCategory,
+                packages,
                 isLoggedIn,
                 user
             }
