@@ -2,6 +2,9 @@ const passport = require('passport');
 
 module.exports = {
     get: async (req, res) => {
+        if (res.locals.isLoggedIn)
+            return res.redirect('/');
+
         res.render('layouts/sites/login',
             {
                 layout: false,
@@ -23,9 +26,9 @@ module.exports = {
                 return;
             }
 
-            const { permission, username } = user
+            const { permission, username, account_id } = user
 
-            req.logIn({ permission, username }, function (err) {
+            req.logIn({ permission, username, account_id }, function (err) {
                 if (err) {
                     res.render('layouts/sites/login', {
                         error: { status: true, msg: err }

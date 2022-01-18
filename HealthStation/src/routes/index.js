@@ -1,5 +1,6 @@
 const adminRoute = require('./admin.route');
 const logInRoute = require('./sites/login.route');
+const logOutRoute = require('./sites/logout.route');
 const homeRoute = require('./sites/home.route');
 const categoryRoute = require('./sites/category.route');
 const productRoute = require('./sites/product.route');
@@ -15,6 +16,7 @@ function route(app) {
     app.use('/manager', managerRoute);
     app.use('/user', userRoute);
     app.use('/login', logInRoute);
+    app.use('/logout', logOutRoute);
     app.use('/location', locationRoute);
     app.use('/', homeRoute);
     app.use((req, res, next) => {

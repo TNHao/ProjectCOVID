@@ -19,6 +19,12 @@ app.use(methodOverride('_method'))
 handlebars(app);
 session(app);
 passport(app);
+
+app.use((req, res, next) => {
+  res.locals = { isLoggedIn: req.user ? true : false, user: req.user }
+  next();
+})
+
 route(app);
 
 app.get('/test', async (req, res) => {

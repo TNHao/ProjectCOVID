@@ -50,23 +50,26 @@
             </li>
         </ul>
         <ul class="navbar-nav ml-auto mt-10">
-            <li class="nav-item">
-                <a class="nav-link login-button" href="/login">Login</a>
-            </li>
+            {{#if isLoggedIn}}
             <li class="nav-item dropdown dropdown-slide">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                    Hi, TN_Hao
+                    Hi, {{user.username}}
                 </a>
                 <!-- Dropdown list -->
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="/user/5/profile">Tài khoản của tôi</a>
-                    <a class="dropdown-item" href="/user/5/management">Lịch sử được quản lý</a>
-                    <a class="dropdown-item" href="/user/5/purchase">Lịch sử mua hàng</a>
-                    <a class="dropdown-item" href="/user/5/payment">Tài khoản thanh toán</a>
-                    <a class="dropdown-item" href="/user/5/profile">Đăng xuất</a>
+                    <a class="dropdown-item" href="/user/{{user.account_id}}/profile">Tài khoản của tôi</a>
+                    <a class="dropdown-item" href="/user/{{user.account_id}}/management">Lịch sử được quản lý</a>
+                    <a class="dropdown-item" href="/user/{{user.account_id}}/purchase">Lịch sử mua hàng</a>
+                    <a class="dropdown-item" href="/user/{{user.account_id}}/payment">Tài khoản thanh toán</a>
+                    <a class="dropdown-item" href="/logout">Đăng xuất</a>
                 </div>
             </li>
+            {{else}}
+            <li class="nav-item">
+                <a class="nav-link login-button" href="/login">Login</a>
+            </li>
+            {{/if}}
         </ul>
     </div>
 </nav>

@@ -4,6 +4,7 @@ module.exports = {
     get: async (req, res) => {
         const { data: categories } = await categoryModel.findAll();
         const { id } = req.params;
+        const { isLoggedIn, user } = res.locals;
 
         const mainCategory = categories.find(category => Number(category.category_id) === Number(id));
 
@@ -14,7 +15,9 @@ module.exports = {
             {
                 layout: 'sites/main',
                 categories,
-                mainCategory
+                mainCategory,
+                isLoggedIn,
+                user
             }
         )
     },
