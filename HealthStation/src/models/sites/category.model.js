@@ -13,7 +13,7 @@ class CategoryModel {
 
   async findAll() {
     const data = await db.any(`select * from $1 order by category_id `, this.table);
-    return {data};
+    return { data };
   }
 
   async findById(id) {
@@ -21,7 +21,7 @@ class CategoryModel {
       table: this.table,
       id: id,
     });
-    return {data};
+    return { data };
   }
 
   async create(category) {

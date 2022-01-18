@@ -71,7 +71,7 @@ class ProductModel {
     const response = await this.helpers.findImagesById(necessary.necessary_id)
     const images = response.map(item => item.img_url)
     const data = {...necessary, images: images}
-    return {data};
+    return { data };
   }
 
   async findAll() {
@@ -84,7 +84,7 @@ class ProductModel {
         data.push(item)
     }
 
-    return {data};
+    return { data };
   }
 
   async findByCategoryId(categoryId) {
@@ -99,7 +99,7 @@ class ProductModel {
         const item = await necessary.data
         data.push(item)
     }
-    return {data};
+    return { data };
   }
 
   async findByPackageId(categoryId) {
@@ -114,7 +114,7 @@ class ProductModel {
         const item = await necessary.data
         data.push(item)
     }
-    return {data};
+    return { data };
   }
 
   async create(necessary) {
