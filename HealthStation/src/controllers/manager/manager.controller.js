@@ -72,6 +72,7 @@ const packageModel = require('../../models/sites/necessaryPacket.model')
 const { uploadMultipleFiles, deleteFile } = require('../../config/firebase')
 
 module.exports = {
+
     get: async (req, res) => {
         res.render('layouts/manager/createAcc',
             {
@@ -114,8 +115,7 @@ module.exports = {
 
     // start category
     getCategory: async (req, res) => {
-        const response = await categoryModel.findAll()
-        const data = response.data
+        const { data } = await categoryModel.findAll()
 
         res.render('layouts/manager/categoryManagement',
             {
@@ -146,9 +146,7 @@ module.exports = {
 
     // start product
     getProduct: async (req, res) => {
-        const response = await productModel.findAll()
-        const data = response.data
-
+        const { data } = await productModel.findAll()
         for(const product of data) {
             const category = await categoryModel.findById(product.category_id)
             product.category_name = category.data.name
@@ -164,11 +162,10 @@ module.exports = {
     },
 
     getCreateProduct: async (req, res) => {
-        const categories = await categoryModel.findAll()
-        const categoriesData = categories.data
+        const { data: categories } = await categoryModel.findAll()
         res.render('layouts/manager/createProd', {
             layout: 'manager/main',
-            categories: categoriesData,
+            categories: categories,
             active: { proManagement: true }
         })
     },
@@ -182,11 +179,9 @@ module.exports = {
     },
 
     detailsProduct: async (req, res) => {
-        const categories = await categoryModel.findAll()
-        const categoriesData = categories.data
+        const { data: categoriesData } = await categoryModel.findAll()
         const id = parseInt(req.params.id)
-        const product = await productModel.findById(id)
-        const productData = product.data
+        const { data: productData } = await productModel.findById(id)
         res.render('layouts/manager/editProd', {
             layout: 'manager/main',
             categories: categoriesData,
@@ -214,8 +209,7 @@ module.exports = {
 
     // start package
     getPackage: async (req, res) => {
-        const response = await packageModel.findAll()
-        const data = response.data
+        const { data } = await packageModel.findAll()
 
         res.render('layouts/manager/packageManagement',
             {
@@ -228,8 +222,7 @@ module.exports = {
 
 
     getCreatePackage: async (req, res) => {
-        const products = await productModel.findAll()
-        const productsData = products.data
+        const { data: productsData } = await productModel.findAll()
         res.render('layouts/manager/createPack', {
             layout: 'manager/main',
             products: productsData,
@@ -240,7 +233,6 @@ module.exports = {
 
     postCreatePackage: async (req, res) => {
         const _package = {...req.body}
-        console.log(_package)
 
         _package.products = 
                 _package.products
@@ -259,11 +251,9 @@ module.exports = {
     },
 
     detailsPackage: async (req, res) => {
-        const products = await productModel.findAll()
-        const productsData = products.data
+        const { data: productsData } = await productModel.findAll()
         const id = parseInt(req.params.id)
-        const _package = await packageModel.findById(id)
-        const packageData = _package.data
+        const { data: packageData } = await packageModel.findById(id)
 
         let inputValue = ''
 

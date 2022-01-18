@@ -20,20 +20,23 @@
 
 <body cz-shortcut-listen="true">
 
-    <form class="form-signin">
+    <form class="form-signin" action="/login" method="post">
         <div class="text-center mb-4">
             <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
                 height="72">
             <h1 class="h3 mb-3 font-weight-normal">LOG IN</h1>
         </div>
 
+        {{#if error.status}}
+        <small style="color: red;">{{error.msg}}</small>
+        {{/if}}
         <div class="form-label-group">
-            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="">
+            <input type="text" id="inputUsername" name="Username" class="form-control" placeholder="Username" required="">
             <label for="inputUsername">Username</label>
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password" required="">
             <label for="inputPassword">Password</label>
         </div>
 

@@ -27,7 +27,7 @@ class UserModel {
     return { data };
   }
   async findByUsername(username) {
-    const data = await db.one(
+    const data = await db.oneOrNone(
       'select * from ${table} where username = ${username}',
       {
         table: this.account_tb,

@@ -57,7 +57,7 @@ class NecessaryPacketModel {
         const item = await _package.data
         data.push(item)
     }
-    return {data};
+    return { data };
   }
 
   async findById(id) {
@@ -67,8 +67,9 @@ class NecessaryPacketModel {
     });
     const necessaries = await this.helpers.findNecessaryPackageById(id)
     const data = {..._package, products: necessaries}
-    return {data};
+    return { data };
   }
+
 
   async create(_package) {
     const queryString = `
