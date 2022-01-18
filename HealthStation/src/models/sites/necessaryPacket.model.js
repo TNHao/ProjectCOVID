@@ -21,7 +21,7 @@ class NecessaryPacketModel {
 
   helpers = {
     findNecessaryPackageById: async (id) => {
-      const necessaryQueryString = `select necessary_id, max_necessary_per_package from $(table) where package_id = $(id)`
+      const necessaryQueryString = `select * from $(table) where package_id = $(id)`
       const necessaries = await db.any(necessaryQueryString, {
         table: this.necessaryPackageTable,
         id: id
@@ -123,6 +123,20 @@ class NecessaryPacketModel {
 
     await this.helpers.deleteNecessaryPackageById(_package.package_id)
     await this.helpers.createNecessaryPackageById(_package.package_id, _package.products)
+  }
+
+  async getPackageByCategory(category_id) {
+    const queryString = `
+      Select distinct P.package_id, P.name, P.period, P.max_per_person
+      from public."Package" P, public."Necessary_Package" NP, public."Necessary" N
+      where 
+        P.package_id = NP.package_id 
+        and NP.necessary_id = N.necessary_id 
+        and N.category_id=$(id)
+    `
+
+    const data = await db.manyOrNone(queryString, { id: category_id });
+    return { data }
   }
 }
 
