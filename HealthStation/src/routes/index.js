@@ -20,7 +20,7 @@ function route(app) {
     app.use('/location', locationRoute);
     app.use('/', homeRoute);
     app.use((req, res, next) => {
-        res.render('404')
+        res.render('error/404')
     })
 
 }
