@@ -2,16 +2,10 @@
 // manager: 2 (active) and 3 (inactive)
 // user: 4
 
-const PERMISSIONS = {
-    admin: 1,
-    activeManager: 2,
-    inactiveManager: 3,
-    user: 4
-}
+const { PERMISSIONS } = require('../constants/index')
 
 module.exports = {
     isUser: (req, res, next) => {
-        console.log(req.user)
         // not login yet
         if(!req.user) {
             res.redirect('/login')
@@ -26,7 +20,6 @@ module.exports = {
         }
     },
     isAdmin: (req, res, next) => {
-        console.log(req.user)
         // not login yet
         if(!req.user) {
             res.redirect('/login')
@@ -41,19 +34,16 @@ module.exports = {
         }
     },
     isManager: (req, res, next) => {
-        console.log(req.user)
         // not login yet
         if(!req.user) {
             res.redirect('/login')
         } 
         // login but not as an active manager
         else if (req.user.permission != PERMISSIONS['activeManager']) {
-            console.log(req.user.permission)
             res.status(401).redirect('/error/unauthorized')
         }
         // login as an active manager
         else {
-            console.log(req.user.permission)
             next()
         }
     },
