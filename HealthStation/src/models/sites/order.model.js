@@ -80,6 +80,14 @@ module.exports = {
 
         return { data }
     },
+    findDetailByProductName: async (name) => {
+        const data = await db.manyOrNone('Select * from $(table) where necessary_name = $(product_name)', {
+            table: orderDetailPackageTable,
+            product_name: name,
+        });
+
+        return { data }
+    },
     // Tìm tất cả các đơn hàng mua bởi 1 tài khoản bất kỳ
     findOrderByAccountID: async (account_id) => {
         return await db.task(async t => {

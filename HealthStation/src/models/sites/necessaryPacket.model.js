@@ -21,7 +21,6 @@ class NecessaryPacketModel {
 
   helpers = {
     findNecessaryPackageById: async (id) => {
-
       const necessaryQueryString = `select * from $(table) where package_id = $(id)`
       const necessaries = await db.any(necessaryQueryString, {
         table: this.necessaryPackageTable,
@@ -57,7 +56,6 @@ class NecessaryPacketModel {
       const _package = await this.findById(id)
       const item = await _package.data
       data.push(item)
-
     }
 
     return { data };
