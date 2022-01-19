@@ -18,7 +18,7 @@ module.exports = {
             trendingPackage.push((await packageModel.findByName(packageStat[i].package_name)).data)
         }
         const package = trendingPackage;
-        console.log(package[0].products);
+        console.log(await statModel.statOfPatients());
         res.render('layouts/sites/home',
             {
                 layout: 'sites/main',
