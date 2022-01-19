@@ -1,4 +1,4 @@
-const URL = "http://localhost:5000";
+const URL = "https://localhost:5000";
 
 const setLoading = () => {
     document.getElementById('loading').style.display = 'block';
