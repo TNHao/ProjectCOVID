@@ -1,10 +1,12 @@
 const { db, pgp } = require('../../config/db');
-
+const axios = require('axios');
 const numPatientsLogModel = require('../sites/numPatientsLog.model');
 const oderModel = require('../sites/order.model');
 const orderDetailModel = require('../sites/order.model');
+
 // const userPaymentModel = require('');
 const packageModel = require('../sites/necessaryPacket.model');
+const productModel = require("../sites/product.model");
 const orderModel = require('../sites/order.model');
 const logTable = new pgp.helpers.TableName({ table: "Log", schema: "public" });
 const accountTable = new pgp.helpers.TableName({ table: "Account", schema: "public" });
@@ -61,18 +63,46 @@ class stat {
                 total += order.amount;
             }
             data.push({ package_name: i.name, total: total });
-            // data.push({ name: i.name, total: total })
         }
-
         return { data }
     }
     //Thống kê tiêu thụ các sản phẩm
-    async neccessaryStat() {
-        data = [];
-
+    async necessaryStat() {
+        const data = [];
+        const product = (await productModel.findAll()).data;
+        //const listOrder = orderModel.findAllDetail().data;
+        //console.log(listOrder);
+        for (const i of product) {
+            let total = 0;
+            const listOrder = (await orderModel.findDetailByProductName(i.name)).data;
+            for (const order of listOrder) {
+                total += order.amount;
+            }
+            data.push({ necessary_name: i.name, total: total });
+        }
+        return { data }
 
     }
     //Thống kê dư nợ, thanh toán
+    async balanceStat() {
+        const data = await axios.get("http://localhost:5000/api/accounts/123/get-balance", {
+            method: "GET",
+            auth: {
+                "type": "bearer",
+                "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2NDA5NzEzMTQ4OTMsImV4cCI6MTY0MDk3MTQwMTI5M30.bpH-GM-hVpp0pHj-aghX58LvwxKzHCAAfgy7sYS_A4s"
+                }
+            },
+            header: [],
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        return { data };
+    }
 
 }
 
