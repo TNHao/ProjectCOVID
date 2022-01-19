@@ -2,13 +2,14 @@ const { db, pgp } = require('../../config/db');
 const userM = require('../user/user.model');
 class ManagerModel {
   account_tb = new pgp.helpers.TableName({ table: 'Account' });
-  async createManager(username) {
+  async createManager(username, password = '') {
     const user_manager = {
       username: username,
-      password: '',
+      password: password,
       permission: 2,
     };
     const rs = await userM.create(user_manager);
+    return rs
   }
   async updatePasswordById(id, password) {
     const rs = userM.updatePasswordById(id, password);

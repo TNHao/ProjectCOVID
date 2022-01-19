@@ -5,6 +5,8 @@ const adminController = require('../controllers/admin/admin.controller');
 
 router.get('/', adminController.get);
 router.get('/account-management', adminController.getAccount);
+router.post('/account-management', adminController.createAccount);
+router.get('/account-management/:id/toggle-active', adminController.toggleActive);
 router.get('/account-management/:id/', adminController.getAccountHistory);
 
 router.get('/firstCreate', adminController.firstCreate);
