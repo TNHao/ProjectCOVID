@@ -25,33 +25,6 @@ const fakeData = [
     },
 ]
 
-const fakeIsolationWardData = [
-    {
-        name: "Sage Rodriguez",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Doris Greene",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Jon Porter",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Mason Porter",
-        capacity: 5,
-        used: 5,
-    },
-    {
-        name: "Chet Faker",
-        capacity: 5,
-        used: 5,
-    },
-]
 
 const fakeManagementData = [
     {
@@ -81,6 +54,8 @@ const fakeManagementData = [
     },
 ]
 
+const locationModel = require('../../models/sites/location.model')
+
 module.exports = {
     get: async (req, res) => {
         res.render('layouts/admin/createManagerAcc',
@@ -109,13 +84,30 @@ module.exports = {
         )
     },
     getIsolationWard: async (req, res) => {
+        const { data } = await locationModel.findAll()
         res.render('layouts/admin/isolationWardManagement',
             {
                 layout: 'admin/main',
-                data: fakeIsolationWardData,
+                data: data,
                 active: { isolationWardManagement: true }
-
             }
         )
+    },
+
+    createIsolationWard: async (req, res) => {
+        
+        await locationModel.create(req.body)
+        res.redirect('/admin/isolation-ward')
+    },
+
+    updateIsolationWard: async (req, res) => {
+        await locationModel.update(req.body)
+        res.redirect('/admin/isolation-ward')
+    },
+
+    deleteIsolationWard: async (req, res) => {
+        const id = req.body.delete_location_id
+        await locationModel.deleteById(id)
+        res.redirect('/admin/isolation-ward')
     },
 }

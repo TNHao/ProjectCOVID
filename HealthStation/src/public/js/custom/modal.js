@@ -1,28 +1,42 @@
-const handleIsolationWardModal = (data) => {
-    if (!data) {
-        document.getElementById('name').value = "";
-        document.getElementById('capacity').value = "";
-        document.getElementById('used').value = "";
-        return;
+const handleIsolationWardModal = (data, formId = "") => {
+    const form = document.querySelector(`#${formId}`);
+
+    if(formId === 'form-submit') {
+        // create new location
+        if (!data) {
+            document.getElementById('name').value = "";
+            document.getElementById('capacity').value = "";
+            document.getElementById('num_patients').value = "0";
+            return;
+        }
+    
+        // update location
+        form.action = form.action + '?_method=PUT';
+        const { name, capacity, num_patients, location_id } = data;
+        document.getElementById('name').value = name;
+        document.getElementById('capacity').value = capacity;
+        document.getElementById('capacity').min = num_patients > 10 ? num_patients : 10;
+        document.getElementById('num_patients').value = num_patients;
+        document.getElementById('location_id').value = location_id;
+    } else {
+        // delete location
+        const location_id = data.getAttribute('data-id')
+        document.getElementById('delete_location_id').value = location_id;
     }
-
-    const { name, capacity, used } = data;
-
-    document.getElementById('name').value = name;
-    document.getElementById('capacity').value = capacity;
-    document.getElementById('used').value = used;
 }
 
 
 const handleCategoryModal = (data, formId = '') => {
     const form = document.querySelector(`#${formId}`);
 
-    // add or create modal
+    // create new category
     if(formId === 'form-submit') {
         if (!data) {
             document.getElementById('name').value = "";
             return;
         }
+
+        // update category
         form.action = form.action + '?_method=PUT';
         const { name, category_id } = data;
         document.getElementById('name').value = name;
@@ -35,16 +49,13 @@ const handleCategoryModal = (data, formId = '') => {
     }
 }
 
-
 const handleProductModal = (data, formId = '') => {
-    const form = document.querySelector(`#${formId}`);
     // delete modal
     const product_id = data.getAttribute('data-id')
     document.getElementById('delete_product_id').value = product_id;
 }
 
 const handlePackageModal = (data, formId = '') => {
-    const form = document.querySelector(`#${formId}`);
     // delete modal
     const package_id = data.getAttribute('data-id')
     document.getElementById('delete_package_id').value = package_id;
