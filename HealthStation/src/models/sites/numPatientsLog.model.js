@@ -7,13 +7,13 @@ class log {
         return { data }
     }
     async findByDate(date) {
-        const data = await db.any(`select * from $(table)  where date_created = $(date)`, { table: this.table, date: date })
+        const data = await db.oneOrNone(`select * from $(table)  where date_created = $(date)`, { table: this.table, date: date })
         return { data }
     }
     async create(date) {
         const queryString = `
-        insert into $(table) (date_created, f0,f1,f2,f3,f4) 
-        values($(date),$(f0),$(f1),$(f2),$(f3),$(f4))
+        insert into $(table) (date_created, f0,f1,f2,f3) 
+        values($(date),$(f0),$(f1),$(f2),$(f3))
         `
         //Count số luong 
         const countQuery = `
@@ -21,7 +21,7 @@ class log {
         where state = $(state)
         `
         listState = []
-        for (const i = 0; i <= 4; i++) {
+        for (const i = 0; i <= 3; i++) {
             const num = await db.one(countQuery, {
                 state: String(i)
             })
@@ -32,8 +32,7 @@ class log {
             f0: listState[0],
             f1: listState[1],
             f2: listState[2],
-            f3: listState[3],
-            f4: listState[4]
+            f3: listState[3]
         })
 
     }

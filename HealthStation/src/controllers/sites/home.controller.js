@@ -18,7 +18,9 @@ module.exports = {
             trendingPackage.push((await packageModel.findByName(packageStat[i].package_name)).data)
         }
         const package = trendingPackage;
-        console.log(await statModel.statOfPatients());
+        //console.log(await statModel.statOfPatients());
+        const d = new Date("2022-01-10")
+        console.log(await statModel.countPatientByState(d))
         res.render('layouts/sites/home',
             {
                 layout: 'sites/main',
