@@ -1,4 +1,5 @@
 const { DEPOSIT, WITHDRAWAL, PAYMENT } = require("../constants");
+const bcrypt = require('bcrypt')
 
 module.exports = {
     getTransactionName: (action) => {
@@ -13,5 +14,9 @@ module.exports = {
             default:
                 return "Không rõ";
         }
+    },
+
+    generatePassword: async (password) => {
+        return await bcrypt.hash(password.toString(), 10)
     }
 }

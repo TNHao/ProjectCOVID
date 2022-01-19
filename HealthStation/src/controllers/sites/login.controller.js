@@ -1,4 +1,5 @@
 const passport = require('passport');
+const { PERMISSIONS } = require('../../constants/index')
 
 module.exports = {
     get: async (req, res) => {
@@ -35,7 +36,18 @@ module.exports = {
                     });
                 }
                 else {
-                    return res.redirect('/');
+                    
+                    let url = '/'
+                    switch(permission) {
+                        case PERMISSIONS['admin']:
+                            url = '/admin'
+                            break
+                        case PERMISSIONS['activeManager']:
+                            url = '/manager'
+                            break
+                    }
+
+                    return res.redirect(url);
                 }
             });
         })(req, res, next);

@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const userModel = require('../models/user/user.model');
-
+const { PERMISSIONS } = require('../constants/index')
 const bcrypt = require('bcrypt');
 
 module.exports = (app) => {
@@ -23,6 +23,9 @@ module.exports = (app) => {
           const validPassword = await bcrypt.compare(password, user.password);
           if (!validPassword) {
             return done(null, false, { message: 'Incorrect password.' });
+          }
+          if (user.permission == PERMISSIONS['inactiveManager']) {
+            return done(null, false, { message: 'Account has been blocked.' });
           }
 
           return done(null, user);

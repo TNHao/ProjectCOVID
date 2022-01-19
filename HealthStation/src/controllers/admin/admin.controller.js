@@ -1,36 +1,3 @@
-const {
-  createAdmin,
-  setFirstGenerate,
-} = require('../../models/admin/admin.model');
-const userM = require('../../models/user/user.model');
-
-const fakeData = [
-  {
-    name: 'Sage Rodriguez',
-    country: 'Netherlands',
-    city: 'Baileux',
-    salary: '$56,142',
-  },
-  {
-    name: 'Doris Greene',
-    country: 'Malawi',
-    city: 'Feldkirchen in Kärnten',
-    salary: '$63,542',
-  },
-  {
-    name: 'Mason Porter',
-    country: 'Chile',
-    city: 'Gloucester',
-    salary: '$78,615',
-  },
-  {
-    name: 'Jon Porter',
-    country: 'Portugal',
-    city: 'Gloucester',
-    salary: '$98,615',
-  },
-];
-
 const fakeManagementData = [
   {
     type: 'Thêm mới',
@@ -59,69 +26,133 @@ const fakeManagementData = [
   },
 ];
 
+const {
+  createAdmin,
+  setFirstGenerate,
+} = require('../../models/admin/admin.model');
+
+
+const { PERMISSIONS } = require('../../constants/index')
+const userM = require('../../models/user/user.model');
+const managerModel = require('../../models/manager/manager.model')
 const locationModel = require('../../models/sites/location.model')
 
 module.exports = {
   
   get: async (req, res) => {
+    const message = req.session.message || {}
+    req.session.message = null
         res.render('layouts/admin/createManagerAcc',
             {
                 layout: 'admin/main',
+                message: message,
                 active: { createAcc: true }
             }
         )
-    },
-    getAccount: async (req, res) => {
-        res.render('layouts/admin/accountManagement',
-            {
-                layout: 'admin/main',
-                data: fakeData,
-                active: { accManagement: true }
-            }
-        )
-    },
-    getAccountHistory: async (req, res) => {
-        res.render('layouts/admin/accountHistory',
-            {
-                layout: 'admin/main',
-                data: fakeManagementData,
-                active: { accManagement: true }
-            }
-        )
-    },
-    getIsolationWard: async (req, res) => {
-        const { data } = await locationModel.findAll()
-        res.render('layouts/admin/isolationWardManagement',
-            {
-                layout: 'admin/main',
-                data: data,
-                active: { isolationWardManagement: true }
-            }
-        )
-    },
+  },
+  getAccount: async (req, res) => {
+    const { data: users } = await userM.findAll()
+    const managers = users.filter(user => {
+      if(user.permission == PERMISSIONS['activeManager'] || user.permission == PERMISSIONS['inactiveManager']) {
+          return user
+      }
+    })
+      res.render('layouts/admin/accountManagement',
+          {
+              layout: 'admin/main',
+              data: managers,
+              active: { accManagement: true }
+          }
+      )
+  },
+  createAccount: async (req, res) => {
+    const { username, password, password_confirmation } = req.body
 
-    createIsolationWard: async (req, res) => {
-        
-        await locationModel.create(req.body)
-        res.redirect('/admin/isolation-ward')
-    },
+    // confirm password does not match
+    if(password !== password_confirmation) {
+      req.session.message = {
+          content: 'Mật khẩu nhập lại không chính xác!',
+          status: 'danger'
+      } 
+      return res.redirect('/admin')
+    }
 
-    updateIsolationWard: async (req, res) => {
-        await locationModel.update(req.body)
-        res.redirect('/admin/isolation-ward')
-    },
+    const response = await managerModel.createManager(username, password)
+    let message = {
+      content: 'Tạo tài khoản thành công!',
+      status: 'success'
+    }
+    if(!response || typeof response === 'string' || response instanceof String) {
+      message = {
+        content: 'Đã có lỗi hoặc tài khoản đã tồn tại!',
+        status: 'danger'
+      }
+    } 
+    req.session.message = message
+    return res.redirect('/admin')
+  },
 
-    deleteIsolationWard: async (req, res) => {
-        const id = req.body.delete_location_id
-        await locationModel.deleteById(id)
-        res.redirect('/admin/isolation-ward')
-    },
+  toggleActive: async(req, res, next) => {
+    const id = req.params.id
+    const { data: manager } = await userM.findById(id)
+    const permission = manager.permission == PERMISSIONS['activeManager'] ?
+            PERMISSIONS['inactiveManager'] : PERMISSIONS['activeManager']
+    
+    manager.permission = permission
+    // TODO: add to log
+    await userM.update(manager, true)
+    res.redirect('/admin/account-management')
+  },
+
+  getAccountHistory: async (req, res) => {
+      const id = req.params.id
+      const { data: manager } = await userM.findById(id)
+      res.render('layouts/admin/accountHistory',
+          {
+              layout: 'admin/main',
+              data: fakeManagementData,
+              active: { accManagement: true }
+          }
+      )
+  },
+
+
+  // begin location
+  getIsolationWard: async (req, res) => {
+      const { data } = await locationModel.findAll()
+      res.render('layouts/admin/isolationWardManagement',
+          {
+              layout: 'admin/main',
+              data: data,
+              active: { isolationWardManagement: true }
+          }
+      )
+  },
+
+  createIsolationWard: async (req, res) => {
+      await locationModel.create(req.body)
+      res.redirect('/admin/isolation-ward')
+  },
+
+  updateIsolationWard: async (req, res) => {
+      await locationModel.update(req.body)
+      res.redirect('/admin/isolation-ward')
+  },
+
+  deleteIsolationWard: async (req, res) => {
+      const id = req.body.delete_location_id
+      await locationModel.deleteById(id)
+      res.redirect('/admin/isolation-ward')
+  },
+  // end location
+
 
   firstCreate: async (req, res) => {
     res.render('layouts/admin/firstCreate', {
       layout: '',
     });
   },
+
   setUpAdmin: async (req, res) => {
     const username = req.body.Username;
     const password = req.body.Password;
