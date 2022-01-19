@@ -91,6 +91,7 @@ const {
   updateStateById,
 } = require("../../models/user/user.model");
 const { PERMISSIONS } = require('../../constants/index')
+const { callBankingApi } = require('../../lib/utils')
 
 module.exports = {
   get: async (req, res) => {
@@ -114,6 +115,7 @@ module.exports = {
       city: req.body.city,
       district: req.body.district,
       ward: req.body.ward,
+      national_id: req.body.identity,
       password: "",
       permission: PERMISSIONS['user'],
     };
@@ -133,6 +135,9 @@ module.exports = {
     } else {
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
+
+      await callBankingApi('/auth/register', "POST", { id: user_id})
+      
       for (let i = 0; i < related_id.length; i++) {
         await userModel.createRelated(user_id, related_id[i]);
         await userModel.createRelated(related_id[i], user_id);

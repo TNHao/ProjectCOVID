@@ -7,8 +7,8 @@ const handlebars = require('./middlewares/handlebars.middleware');
 const session = require('./middlewares/session.middleware');
 const passport = require('./middlewares/passport.middeware');
 
-const app = require("https-localhost")()
-// const app = express();
+// const app = require("https-localhost")()
+const app = express();
 const port = 3000;
 const userM = require('./models/user/user.model');
 const managerM = require('./models/manager/manager.model');

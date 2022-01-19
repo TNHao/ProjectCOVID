@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, scale=1.0">
 
     <title>Log in</title>
 
@@ -19,8 +19,33 @@
 </head>
 
 <body cz-shortcut-listen="true">
+    {{#if isFirstLogin}}
+    <form class="form-create-password" action="/login?_method=PUT" method="POST">
+        <div class="text-center mb-4">
+            <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
+                height="72">
+            <h1 class="h3 mb-3 font-weight-normal">CREATE YOUR PASSWORD</h1>
+        </div>
 
-    <form class="form-signin" action="/login" method="post">
+        <div class="form-label-group">
+            <input type="text" id="inputId" name="username" class="form-control" value="{{user.username}}" hidden>
+        </div>
+         <div class="form-label-group">
+            <input type="text" id="inputId" name="id" class="form-control" value="{{user.account_id}}" hidden>
+        </div>
+
+        <div class="form-label-group">
+            <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password">
+            <label for="inputPassword">New Password</label>
+        </div>
+         <div class="form-label-group">
+            <input type="password" id="inputConfirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm Password">
+            <label for="inputConfirmPassword">Confirm Password</label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+    </form>
+    {{else}}
+    <form class="form-signin" action="/login" method="POST">
         <div class="text-center mb-4">
             <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
                 height="72">
@@ -31,12 +56,12 @@
         <small style="color: red;">{{error.msg}}</small>
         {{/if}}
         <div class="form-label-group">
-            <input type="text" id="inputUsername" name="Username" class="form-control" placeholder="Username" required="">
+            <input type="text" id="inputUsername" name="Username" class="form-control" value="{{user.username}}">
             <label for="inputUsername">Username</label>
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password" required="">
+            <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password">
             <label for="inputPassword">Password</label>
         </div>
 
@@ -47,6 +72,7 @@
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
     </form>
+    {{/if}}
 </body>
 
 </html>

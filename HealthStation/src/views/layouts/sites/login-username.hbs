@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Log in</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+
+    {{!-- Floating label --}}
+    <link href="/css/floating-labels.css" rel="stylesheet" />
+</head>
+
+<body cz-shortcut-listen="true">
+    <form class="form-signin" action="login/username" method="POST">
+        <div class="text-center mb-4">
+            <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
+                height="72">
+            <h1 class="h3 mb-3 font-weight-normal">LOG IN</h1>
+        </div>
+
+        {{#if error.status}}
+        <small style="color: red;">{{error.msg}}</small>
+        {{/if}}
+        <div class="form-label-group">
+            <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required="">
+            <label for="inputUsername">Username</label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+    </form>
+</body>
+
+</html>
