@@ -1,3 +1,26 @@
+const fakePaymentData = [
+    {
+        name: "Sage Rodriguez",
+        debt: 50000,
+        status: 'F0'
+    },
+    {
+        name: 'Doris Greene',
+        debt: 10000,
+        status: 'F1',
+    },
+    {
+        name: 'Mason Porter',
+        debt: 0,
+        status: 'F2',
+    },
+    {
+        name: 'Jon Porter',
+        debt: 40000,
+        status: 'F0',
+    },
+]
+
 const fakeData = [
   {
     name: 'Sage Rodriguez',
@@ -69,6 +92,7 @@ const categoryModel = require('../../models/sites/category.model');
 const productModel = require('../../models/sites/product.model');
 const packageModel = require('../../models/sites/necessaryPacket.model');
 const userModel = require('../../models/user/user.model');
+const minimumPaymentModel = require('../../models/sites/minimumPayment.model')
 const quarantineLocationModel = require('../../models/sites/location.model');
 const { uploadMultipleFiles, deleteFile } = require('../../config/firebase');
 const {
@@ -77,7 +101,8 @@ const {
 } = require('../../models/user/user.model');
 
 module.exports = {
-  get: async (req, res) => {
+
+    get: async (req, res) => {
     const data = await userModel.findAllPatient();
     const location = await quarantineLocationModel.findAvailableLocation();
     console.log(location.data);
@@ -88,6 +113,7 @@ module.exports = {
       active: { createAcc: true },
     });
   },
+  
   addPatient: async (req, res) => {
     console.log(req.body);
     const user = {
@@ -124,6 +150,7 @@ module.exports = {
       return res.redirect('/manager');
     }
   },
+  
   getAccount: async (req, res) => {
     const data = await userModel.findAllPatient();
     res.render('layouts/manager/accountManagement', {
@@ -132,6 +159,7 @@ module.exports = {
       active: { accManagement: true },
     });
   },
+  
   getAccountDetails: async (req, res) => {
     console.log(req.params);
     const data = await userModel.findById(parseInt(req.params.id));
@@ -153,182 +181,224 @@ module.exports = {
     });
   },
 
-  getAccountEdit: async (req, res, next) => {
-    res.render('layouts/manager/editAcc', {
-      layout: 'manager/main',
-      data: fakeData,
-      patient: fakePatientData,
-      active: { accManagement: true },
-    });
-  },
 
-  // start category
-  getCategory: async (req, res) => {
-    const { data } = await categoryModel.findAll();
+    getAccountEdit: async(req, res, next) => {
+        res.render('layouts/manager/editAcc',
+            {
+                layout: 'manager/main',
+                data: fakeData,
+                patient: fakePatientData,
+                active: { accManagement: true }
+            }
+        )
+    },
 
-    res.render('layouts/manager/categoryManagement', {
-      layout: 'manager/main',
-      data: data,
-      active: { catManagement: true },
-    });
-  },
+    // start category
+    getCategory: async (req, res) => {
+        const { data } = await categoryModel.findAll()
 
-  createCategory: async (req, res) => {
-    const name = req.body.name;
-    await categoryModel.create({ name });
-    res.redirect('/manager/category-management');
-  },
+        res.render('layouts/manager/categoryManagement',
+            {
+                layout: 'manager/main',
+                data: data,
+                active: { catManagement: true }
+            }
+        )
+    },
 
-  updateCategory: async (req, res) => {
-    await categoryModel.update(req.body);
-    res.redirect('/manager/category-management');
-  },
+    createCategory: async (req, res) => {
+        const name = req.body.name
+        await categoryModel.create({name})
+        res.redirect('/manager/category-management')
+    },
 
-  deleteCategory: async (req, res) => {
-    const id = req.body.delete_category_id;
-    await categoryModel.deleteById(id);
-    res.redirect('/manager/category-management');
-  },
-  // end category
+    updateCategory: async (req, res) => {
+        await categoryModel.update(req.body)
+        res.redirect('/manager/category-management')
+    },
 
-  // start product
-  getProduct: async (req, res) => {
-    const { data } = await productModel.findAll();
-    for (const product of data) {
-      const category = await categoryModel.findById(product.category_id);
-      product.category_name = category.data.name;
-    }
+    deleteCategory: async (req, res) => {
+        const id = req.body.delete_category_id
+        await categoryModel.deleteById(id)
+        res.redirect('/manager/category-management')
+    },
+    // end category
 
-    res.render('layouts/manager/productManagement', {
-      layout: 'manager/main',
-      data: data,
-      active: { proManagement: true },
-    });
-  },
+    // start product
+    getProduct: async (req, res) => {
+        const { data } = await productModel.findAll()
+        for(const product of data) {
+            const category = await categoryModel.findById(product.category_id)
+            product.category_name = category.data.name
+        }
 
-  getCreateProduct: async (req, res) => {
-    const { data: categories } = await categoryModel.findAll();
-    res.render('layouts/manager/createProd', {
-      layout: 'manager/main',
-      categories: categories,
-      active: { proManagement: true },
-    });
-  },
+        res.render('layouts/manager/productManagement',
+            {
+                layout: 'manager/main',
+                data: data,
+                active: { proManagement: true }
+            }
+        )
+    },
 
-  postCreateProduct: async (req, res) => {
-    const files = await uploadMultipleFiles(req.files);
-    const product = { ...req.body, images: files };
-    await productModel.create(product);
-    res.redirect('/manager/product-management');
-  },
+    getCreateProduct: async (req, res) => {
+        const { data: categories } = await categoryModel.findAll()
+        res.render('layouts/manager/createProd', {
+            layout: 'manager/main',
+            categories: categories,
+            active: { proManagement: true }
+        })
+    },
 
-  detailsProduct: async (req, res) => {
-    const { data: categoriesData } = await categoryModel.findAll();
-    const id = parseInt(req.params.id);
-    const { data: productData } = await productModel.findById(id);
-    res.render('layouts/manager/editProd', {
-      layout: 'manager/main',
-      categories: categoriesData,
-      product: productData,
-      active: { proManagement: true },
-    });
-  },
 
-  updateProduct: async (req, res) => {
-    const id = req.params.id;
-    const files = await uploadMultipleFiles(req.files);
-    const product = { ...req.body, images: files, necessary_id: id };
-    await productModel.update(product);
-    res.redirect('/manager/product-management/');
-  },
+    postCreateProduct: async (req, res) => {
+        const files = await uploadMultipleFiles(req.files)
+        const product = {...req.body, images: files}
+        await productModel.create(product)
+        res.redirect('/manager/product-management')
+    },
 
-  deleteProduct: async (req, res) => {
-    const id = req.body.delete_product_id;
-    await productModel.deleteById(id);
-    res.redirect('/manager/product-management');
-  },
-  // end product
+    detailsProduct: async (req, res) => {
+        const { data: categoriesData } = await categoryModel.findAll()
+        const id = parseInt(req.params.id)
+        const { data: productData } = await productModel.findById(id)
+        res.render('layouts/manager/editProd', {
+            layout: 'manager/main',
+            categories: categoriesData,
+            product: productData,
+            active: { proManagement: true }
+        })
+    },
+    
 
-  // start package
-  getPackage: async (req, res) => {
-    const { data } = await packageModel.findAll();
+    updateProduct: async (req, res) => {
+        const id = req.params.id
+        const files = await uploadMultipleFiles(req.files)
+        const product = {...req.body, images: files, necessary_id: id}
+        await productModel.update(product)
+        res.redirect('/manager/product-management/')
+    },
 
-    res.render('layouts/manager/packageManagement', {
-      layout: 'manager/main',
-      data: data,
-      active: { packManagement: true },
-    });
-  },
+    deleteProduct: async (req, res) => {
+        const id = req.body.delete_product_id
+        await productModel.deleteById(id)
+        res.redirect('/manager/product-management')
+    },
+    // end product
+    
 
-  getCreatePackage: async (req, res) => {
-    const { data: productsData } = await productModel.findAll();
-    res.render('layouts/manager/createPack', {
-      layout: 'manager/main',
-      products: productsData,
-      active: { packManagement: true },
-    });
-  },
+    // start package
+    getPackage: async (req, res) => {
+        const { data } = await packageModel.findAll()
 
-  postCreatePackage: async (req, res) => {
-    const _package = { ...req.body };
+        res.render('layouts/manager/packageManagement',
+            {
+                layout: 'manager/main',
+                data: data,
+                active: { packManagement: true }
+            }
+        )
+    },
 
-    _package.products = _package.products
-      .split(',')
-      .filter((product) => product !== '')
-      .map((product) => {
-        return {
-          necessary_id: product.split('-')[0],
-          max_necessary_per_package: product.split('-')[1],
-        };
-      });
 
-    await packageModel.create(_package);
-    res.redirect('/manager/package-management');
-  },
+    getCreatePackage: async (req, res) => {
+        const { data: productsData } = await productModel.findAll()
+        res.render('layouts/manager/createPack', {
+            layout: 'manager/main',
+            products: productsData,
+            active: { packManagement: true }
+        })
+    },
 
-  detailsPackage: async (req, res) => {
-    const { data: productsData } = await productModel.findAll();
-    const id = parseInt(req.params.id);
-    const { data: packageData } = await packageModel.findById(id);
 
-    let inputValue = '';
+    postCreatePackage: async (req, res) => {
+        const _package = {...req.body}
 
-    for (const product of packageData.products) {
-      let temp = product.necessary_id + '-' + product.max_necessary_per_package;
-      inputValue += temp;
-      inputValue += ',';
-    }
+        _package.products = 
+                _package.products
+                    .split(',')
+                    .filter(product => product !== '')
+                    .map(product => {
+                        return {
+                            necessary_id: product.split('-')[0],
+                            max_necessary_per_package: product.split('-')[1],
+                        }
+                    })
 
-    res.render('layouts/manager/editPack', {
-      layout: 'manager/main',
-      products: productsData,
-      package: packageData,
-      inputValue: inputValue,
-      active: { packManagement: true },
-    });
-  },
+        
+        await packageModel.create(_package)
+        res.redirect('/manager/package-management')
+    },
 
-  updatePackage: async (req, res) => {
-    const id = req.params.id;
-    const _package = { ...req.body, package_id: id };
-    _package.products = _package.products
-      .split(',')
-      .filter((product) => product !== '')
-      .map((product) => {
-        return {
-          necessary_id: product.split('-')[0],
-          max_necessary_per_package: product.split('-')[1],
-        };
-      });
+    detailsPackage: async (req, res) => {
+        const { data: productsData } = await productModel.findAll()
+        const id = parseInt(req.params.id)
+        const { data: packageData } = await packageModel.findById(id)
 
-    await packageModel.update(_package);
-    res.redirect('/manager/package-management');
-  },
+        let inputValue = ''
 
-  deletePackage: async (req, res) => {
-    const id = req.body.delete_package_id;
-    await packageModel.deleteById(id);
-    res.redirect('/manager/package-management');
-  },
-  // end package
-};
+        for(const product of packageData.products) {
+            let temp = product.necessary_id + '-' + product.max_necessary_per_package
+            inputValue += temp
+            inputValue += ','
+        }
+
+        res.render('layouts/manager/editPack', {
+            layout: 'manager/main',
+            products: productsData,
+            package: packageData,
+            inputValue: inputValue,
+            active: { packManagement: true }
+        })
+    },
+    
+
+    updatePackage: async (req, res) => {
+        const id = req.params.id
+        const _package = {...req.body, package_id: id}
+        _package.products = 
+                _package.products
+                    .split(',')
+                    .filter(product => product !== '')
+                    .map(product => {
+                        return {
+                            necessary_id: product.split('-')[0],
+                            max_necessary_per_package: product.split('-')[1],
+                        }
+                    })
+
+
+        await packageModel.update(_package)
+        res.redirect('/manager/package-management')
+    },
+   
+ 
+
+    deletePackage: async (req, res) => {
+        const id = req.body.delete_package_id
+        await packageModel.deleteById(id)
+        res.redirect('/manager/package-management')
+    },
+    // end package
+
+
+    // start payment
+    getPayment: async(req, res, next) => {
+        const { data: amount } = await minimumPaymentModel.find()
+        res.render('layouts/manager/paymentManagement',
+            {
+                layout: 'manager/main',
+                amount: amount,
+                data: fakePaymentData,
+                active: { paymentManagement: true }
+            }
+        )
+    },
+
+    updatePayment: async(req, res, next) => {
+        const amount = req.body.amount
+        await minimumPaymentModel.update(amount)
+        res.redirect('/manager/payment-management')
+    },
+
+}

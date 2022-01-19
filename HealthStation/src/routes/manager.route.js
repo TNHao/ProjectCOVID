@@ -36,4 +36,8 @@ router.get('/package-management/:id', managerController.detailsPackage);
 router.post('/package-management/:id', managerController.updatePackage);
 router.delete('/package-management', managerController.deletePackage);
 
+router.get('/payment-management', managerController.getPayment);
+router.post('/payment-management', managerController.updatePayment);
+
 module.exports = router;
+
