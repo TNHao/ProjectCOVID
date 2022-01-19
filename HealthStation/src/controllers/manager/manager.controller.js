@@ -22,109 +22,165 @@ const fakePaymentData = [
 ]
 
 const fakeData = [
-    {
-        name: "Sage Rodriguez",
-        country: 'Netherlands',
-        city: 'Baileux',
-        status: 'F0'
-    },
-    {
-        name: 'Doris Greene',
-        country: 'Malawi',
-        city: 'Feldkirchen in Kärnten',
-        status: 'F1',
-    },
-    {
-        name: 'Mason Porter',
-        country: 'Chile',
-        city: 'Gloucester',
-        status: 'F2',
-    },
-    {
-        name: 'Jon Porter',
-        country: 'Portugal',
-        city: 'Gloucester',
-        status: 'F0',
-    },
-]
-
+  {
+    name: 'Sage Rodriguez',
+    country: 'Netherlands',
+    city: 'Baileux',
+    status: 'F0',
+  },
+  {
+    name: 'Doris Greene',
+    country: 'Malawi',
+    city: 'Feldkirchen in Kärnten',
+    status: 'F1',
+  },
+  {
+    name: 'Mason Porter',
+    country: 'Chile',
+    city: 'Gloucester',
+    status: 'F2',
+  },
+  {
+    name: 'Jon Porter',
+    country: 'Portugal',
+    city: 'Gloucester',
+    status: 'F0',
+  },
+];
 
 const fakeManagementData = [
-    {
-        type: 'Thêm mới',
-        description: 'Thêm bệnh nhân A vào danh sách những người F0 ',
-        create_at: '22/12/2021',
-    },
-    {
-        type: 'Thêm nhu yếu phẩm',
-        description: 'Thêm Đường vào danh sách nhu yếu phẩm',
-        create_at: '22/12/2021',
-    },
-    {
-        type: 'Xóa gói nhu yếu phẩm',
-        description: 'Xóa gói hỗ trợ 69',
-        create_at: '22/12/2021',
-    },
-    {
-        type: 'Chuyển nơi điều trị',
-        description: 'Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B',
-        create_at: '22/12/2021',
-    },
-    {
-        type: 'Xuất viện',
-        description: 'Cho phép bệnh nhân A rời khỏi khu cách ly',
-        create_at: '22/12/2021',
-    },
-]
+  {
+    type: 'Thêm mới',
+    description: 'Thêm bệnh nhân A vào danh sách những người F0 ',
+    create_at: '22/12/2021',
+  },
+  {
+    type: 'Thêm nhu yếu phẩm',
+    description: 'Thêm Đường vào danh sách nhu yếu phẩm',
+    create_at: '22/12/2021',
+  },
+  {
+    type: 'Xóa gói nhu yếu phẩm',
+    description: 'Xóa gói hỗ trợ 69',
+    create_at: '22/12/2021',
+  },
+  {
+    type: 'Chuyển nơi điều trị',
+    description: 'Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B',
+    create_at: '22/12/2021',
+  },
+  {
+    type: 'Xuất viện',
+    description: 'Cho phép bệnh nhân A rời khỏi khu cách ly',
+    create_at: '22/12/2021',
+  },
+];
 
 const fakePatientData = {
-    fullname: 'Nguyễn Hoàng Tiến',
-    identity: '123456789',
-    birthday: '2001-12-21',
-    status: 'F1',
-    city: 'Thành phố Hồ Chí Minh',
-    district: 'Quận Thủ Đức',
-    ward: 'Phường Trường Thọ',
-    isolation: 2,
-    relate: '1,3,2'
-}
+  fullname: 'Nguyễn Hoàng Tiến',
+  identity: '123456789',
+  birthday: '2001-12-21',
+  status: 'F1',
+  city: 'Thành phố Hồ Chí Minh',
+  district: 'Quận Thủ Đức',
+  ward: 'Phường Trường Thọ',
+  isolation: 2,
+  relate: '1,3,2',
+};
 
-const categoryModel = require('../../models/sites/category.model')
-const productModel = require('../../models/sites/product.model')
-const packageModel = require('../../models/sites/necessaryPacket.model')
+const categoryModel = require('../../models/sites/category.model');
+const productModel = require('../../models/sites/product.model');
+const packageModel = require('../../models/sites/necessaryPacket.model');
+const userModel = require('../../models/user/user.model');
 const minimumPaymentModel = require('../../models/sites/minimumPayment.model')
-const { uploadMultipleFiles, deleteFile } = require('../../config/firebase')
+const quarantineLocationModel = require('../../models/sites/location.model');
+const { uploadMultipleFiles, deleteFile } = require('../../config/firebase');
+const {
+  updateStateOfAllRelated,
+  updateStateById,
+} = require('../../models/user/user.model');
 
 module.exports = {
 
     get: async (req, res) => {
-        res.render('layouts/manager/createAcc',
-            {
-                layout: 'manager/main',
-                data: fakeData,
-                active: { createAcc: true }
-            }
-        )
-    },
-    getAccount: async (req, res) => {
-        res.render('layouts/manager/accountManagement',
-            {
-                layout: 'manager/main',
-                data: fakeData,
-                active: { accManagement: true }
-            }
-        )
-    },
-    getAccountDetails: async (req, res) => {
-        res.render('layouts/manager/accountDetails',
-            {
-                layout: 'manager/main',
-                data: fakeManagementData,
-                relate: fakeData,
-                active: { accManagement: true }
-            }
-        )
-    },
+    const data = await userModel.findAllPatient();
+    const location = await quarantineLocationModel.findAvailableLocation();
+    console.log(location.data);
+    res.render('layouts/manager/createAcc', {
+      layout: 'manager/main',
+      data: data.data,
+      quarantine_location: location.data,
+      active: { createAcc: true },
+    });
+  },
+  
+  addPatient: async (req, res) => {
+    console.log(req.body);
+    const user = {
+      fullname: req.body.fullname,
+      username: req.body.identity,
+      dob: req.body.birthday,
+      state: req.body.status[1],
+      city: req.body.city,
+      district: req.body.district,
+      ward: req.body.ward,
+      password: '',
+      permission: 4,
+    };
+    const related_id = req.body.relate.split(',');
+    const add_create = await userModel.create(user);
+    if (add_create != true) {
+      const data = await userModel.findAllPatient();
+      const location = await quarantineLocationModel.findAvailableLocation();
+      console.log(location.data);
+      res.render('layouts/manager/createAcc', {
+        layout: 'manager/main',
+        data: data.data,
+        quarantine_location: location.data,
+        active: { createAcc: true },
+        message: { status: 'error', content: add_create },
+      });
+    } else {
+      const user_id = (await userModel.findByUsername(user.username)).data
+        .account_id;
+      for (let i = 0; i < related_id.length; i++) {
+        await userModel.createRelated(user_id, related_id[i]);
+        await userModel.createRelated(related_id[i], user_id);
+      }
+      return res.redirect('/manager');
+    }
+  },
+  
+  getAccount: async (req, res) => {
+    const data = await userModel.findAllPatient();
+    res.render('layouts/manager/accountManagement', {
+      layout: 'manager/main',
+      data: data.data,
+      active: { accManagement: true },
+    });
+  },
+  
+  getAccountDetails: async (req, res) => {
+    console.log(req.params);
+    const data = await userModel.findById(parseInt(req.params.id));
+    const related_id = await userModel.findAllRelatedById(
+      parseInt(req.params.id)
+    );
+    const related = [];
+    for (let i = 0; i < related_id.data.length; i++) {
+      related.push((await userModel.findById(related_id.data[i])).data);
+    }
+    console.log(related);
+    res.render('layouts/manager/accountDetails', {
+      layout: 'manager/main',
+      data: fakeManagementData,
+      username: data.data.username,
+      fullname: data.data.fullname,
+      relate: related,
+      active: { accManagement: true },
+    });
+  },
+
 
     getAccountEdit: async(req, res, next) => {
         res.render('layouts/manager/editAcc',

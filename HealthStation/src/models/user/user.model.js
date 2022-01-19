@@ -16,12 +16,20 @@ class UserModel {
     );
     return { data };
   }
-
+  async findAllPatient() {
+    try {
+      const data = await db.any(
+        `select * from public."Account" where "permission"=4 order by account_id`
+      );
+      return { data };
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async findById(id) {
     const data = await db.one(
-      'select * from ${table} where account_id = ${id}',
+      'select * from public."Account" where account_id = ${id}',
       {
-        table: this.account_tb,
         id: id,
       }
     );
@@ -138,6 +146,7 @@ class UserModel {
     }
   }
   async updateStateById(id, newState) {
+    id = parseInt(id);
     const user = await this.findById(id);
     const cur_state = parseInt(user.data.state);
     if (parseInt(newState) < cur_state) {
@@ -159,6 +168,7 @@ class UserModel {
     return 'Unchanged';
   }
   async updateStateOfAllRelated(id) {
+    id = parseInt(id);
     const user_data = await this.findById(id);
     const new_state = parseInt(user_data.data.state) + 1 + '';
     const all_related_id = await this.findAllRelatedById(id);
