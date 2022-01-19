@@ -127,15 +127,19 @@ module.exports = {
     if (create_admin == true) {
       const set_first_generate = await setFirstGenerate();
       if (set_first_generate != true) {
-        console.log('heloal');
         const admin_user = await userM.findByUsername('admin');
         const user = await userM.deleteById(admin_user.data.id);
+        return res.render('layouts/admin/firstCreate', {
+          layout: '',
+          error: { status: true, msg: 'Failed to generate' },
+        });
       }
-      res.render('layouts/admin/firstCreate', {
+      return res.redirect('/');
+    } else {
+      return res.render('layouts/admin/firstCreate', {
         layout: '',
         error: { status: true, msg: 'Failed to generate' },
       });
     }
-    return res.redirect('/');
   },
 };

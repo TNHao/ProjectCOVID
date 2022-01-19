@@ -25,16 +25,26 @@ app.use((req, res, next) => {
   res.locals = { isLoggedIn: req.user ? true : false, user: req.user };
   next();
 });
+// app.use(async (req, res, next) => {
+//   const firstGenerate = await isFirstGenerate();
+//   console.log(req.url);
+//   console.log(firstGenerate);
+//   if (firstGenerate == true) {
+//     if (req.url != '/admin/firstCreate') {
+//       return res.redirect('/admin/firstCreate');
+//     } else {
+//       if (req.method == 'POST') {
+//         next();
+//       }
+//     }
+//   }
+//   next();
+// });
 app.use(async (req, res, next) => {
   const firstGenerate = await isFirstGenerate();
-  console.log(firstGenerate);
   if (firstGenerate == true) {
     if (req.url != '/admin/firstCreate') {
-      return res.redirect('/admin/firstCreate');
-    } else {
-      if (req.method == 'POST') {
-        next();
-      }
+      req.url = '/admin/firstCreate';
     }
   }
   next();
