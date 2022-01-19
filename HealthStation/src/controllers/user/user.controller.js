@@ -102,18 +102,31 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2
 
 module.exports = {
     getProfile: async (req, res) => {
+        const { id } = req.params;
+        let { data: profile } = await userModel.findById(id);
+        const { data: quarantineLocation } = await userModel.getUserQuarantineLocation(id);
+
+        console.log(quarantineLocation)
+
+        profile = { ...profile, quarantineLocation }
+
         res.render('layouts/user/profile',
             {
                 layout: 'user/main',
-                active: { profile: true }
+                active: { profile: true },
+                id,
+                profile,
             }
         )
     },
     getChangePassword: async (req, res) => {
+        const { id } = req.params;
+
         res.render('layouts/user/changePassword',
             {
                 layout: 'user/main',
-                active: { profile: true }
+                active: { profile: true },
+                id
             }
         )
     },
@@ -123,33 +136,41 @@ module.exports = {
         const { data: userBankingDetail } = await userModel.getBalance(id, token);
         const { data: isVerified } = await userModel.checkVerify(id)
 
+        console.log(data)
+
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
-                data: data,
-                balance: (userBankingDetail.balance || "---"),
-                isVerified,
-                isLoggedIn: token ? true : false,
-                id
+                // data: data,
+                // balance: (userBankingDetail.balance || "---"),
+                // isVerified,
+                // isLoggedIn: token ? true : false,
+                // id
             }
         )
     },
     getManagement: async (req, res) => {
+        const { id } = req.params;
+
         res.render('layouts/user/management',
             {
                 layout: 'user/main',
                 active: { management: true },
-                data: fakeManagementData
+                data: fakeManagementData,
+                id
             }
         )
     },
     getPurchase: async (req, res) => {
+        const { id } = req.params;
+
         res.render('layouts/user/purchase',
             {
                 layout: 'user/main',
                 active: { purchase: true },
-                data: fakePurchaseData
+                data: fakePurchaseData,
+                id
             }
         )
     },

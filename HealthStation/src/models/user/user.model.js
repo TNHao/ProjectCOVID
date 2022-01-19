@@ -293,5 +293,15 @@ class UserModel {
 
     return { data };
   }
+  async getUserQuarantineLocation(account_id) {
+    const queryString = `
+      select QL.location_id, Ql.name
+      from public."Account" A, public."Quarantine_Location" QL
+      where A.account_id=$(id)
+        and A.quarantine_location_id=QL.location_id
+    `;
+    const data = await db.oneOrNone(queryString, { id: account_id });
+    return { data };
+  }
 }
 module.exports = new UserModel();

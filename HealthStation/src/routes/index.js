@@ -17,7 +17,13 @@ function route(app) {
     app.use('/necessary-packet', necessaryPacketRoute);
     app.use('/admin', adminRoute);
     app.use('/manager', managerRoute);
-    app.use('/user', userRoute);
+
+    app.use('/user', (req, res, next) => {
+        if (res.locals.isLoggedIn) next(); 
+        else 
+            res.redirect('/login')
+    }, userRoute);
+
     app.use('/login', logInRoute);
     app.use('/logout', logOutRoute);
     app.use('/location', locationRoute);

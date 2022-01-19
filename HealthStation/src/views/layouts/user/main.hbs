@@ -39,7 +39,7 @@
                             </button>
                         </div>
                         {{#if active.profile}}
-                        <a class="navbar-brand" href="javascript:;">Tài khoản của Trần Nhật Hào</a>
+                        <a class="navbar-brand" href="javascript:;">Tài khoản của {{profile.fullname}}</a>
                         {{/if}}
                         {{#if active.payment}}
                         <a class="navbar-brand" href="javascript:;">Quản lý tài khoản thanh toán</a>
@@ -75,7 +75,7 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn-rotate" href="/user/5/change-password">
+                                <a class="nav-link btn-rotate" href="/user/{{id}}/change-password">
                                     <i class="nc-icon nc-settings-gear-65"></i>
                                     <p>
                                         <span class="d-lg-none d-md-block">Đổi mật khẩu</span>
