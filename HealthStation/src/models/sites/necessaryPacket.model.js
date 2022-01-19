@@ -142,6 +142,16 @@ class NecessaryPacketModel {
     const data = await db.manyOrNone(queryString, { id: category_id });
     return { data }
   }
+  async searchPackage(searchTerm) {
+    const queryString = `
+      SELECT *
+      FROM public."Package"
+      where name like $(searchTerm)
+    `;
+
+    const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%` });
+    return { data }
+  }
 }
 
 module.exports = new NecessaryPacketModel();

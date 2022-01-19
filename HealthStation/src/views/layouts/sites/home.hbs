@@ -34,28 +34,27 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-lg-12 col-md-12 align-content-center">
-                                <form>
+                                <form action="/necessary-packet/search" method="get">
                                     <div class="form-row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col">
                                             <input type="text" class="form-control my-2 my-lg-1" id="inputtext4"
-                                                placeholder="Bạn đang tìm gì à">
+                                                placeholder="Bạn đang tìm gì à" name="searchTerm" required>
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <select class="w-100 form-control mt-lg-1 mt-md-2">
-                                                <option>Danh mục</option>
-                                                <option value="">Lương thực</option>
-                                                <option value="">Vật dụng hàng ngày</option>
-                                                <option value="">Dụng cụ nhà bếp</option>
-                                                <option value="">Vật dụng khử khuẩn</option>
+                                        <div class="form-group col">
+                                            <select class="w-100 form-control mt-lg-1 mt-md-2" name="category">
+                                                <option value="">Danh mục</option>
+                                                {{#each categories}}
+                                                <option value="{{this.category_id}}">{{this.name}}</option>
+                                                {{/each}}
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        {{!-- <div class="form-group col-md-3">
                                             <select class="w-100 form-control mt-lg-1 mt-md-2">
                                                 <option>Lọc theo</option>
                                                 <option value="">Giá thấp</option>
                                                 <option value="">Giá cao</option>
                                             </select>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group col-md-2 align-self-center">
                                             <button type="submit" class="btn btn-info">Search Now</button>
                                         </div>
