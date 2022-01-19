@@ -132,21 +132,29 @@ module.exports = {
     },
     getPayment: async (req, res) => {
         const { id } = req.params;
-        const { data } = await userModel.getPaymentData(id, token);
-        const { data: userBankingDetail } = await userModel.getBalance(id, token);
-        const { data: isVerified } = await userModel.checkVerify(id)
 
-        console.log(data)
+        const { data: user } = await userModel.findById(id);
+        const { banking_token: token } = user;
+
+        let data = {};
+        let userBankingDetail = {};
+
+        if (token) {
+            data = (await userModel.getPaymentData(id, token)).data;
+            userBankingDetail = (await userModel.getBalance(id, token)).data;
+        }
+
+        const { data: isVerified } = await userModel.checkVerify(id)
 
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
-                // data: data,
-                // balance: (userBankingDetail.balance || "---"),
-                // isVerified,
-                // isLoggedIn: token ? true : false,
-                // id
+                data: data || null,
+                balance: (userBankingDetail.balance || "---"),
+                isVerified,
+                isLoggedIn: token ? true : false,
+                id
             }
         )
     },
@@ -178,5 +186,13 @@ module.exports = {
         const { amount, send_id } = req.body;
         const { data } = await userModel.deposit(send_id, amount, token);
         res.redirect(`/user/${send_id}/payment`);
+    },
+    setToken: async (req, res) => {
+        const { token } = req.body;
+        const { id } = req.params;
+
+        await userModel.setToken(id, token);
+
+        res.redirect(`/user/${id}/payment`);
     }
 }

@@ -38,24 +38,78 @@ const userID = document.getElementById('user_id').innerHTML;
 // })(userID)
 
 const handleBankingConnect = () => {
-    console.log(userID)
-    const password = document.getElementById('password').value;
+    const password = document.getElementById('registerPassword').value;
+    const passwordConfirm = document.getElementById('registerPasswordConfirmation').value;
 
-    fetch(`${URL}/auth/login`, {
+    if (password !== passwordConfirm)
+        return document.getElementById('registerPasswordError').innerHTML = "Mật khẩu không khớp.";
+    else document.getElementById('registerPasswordError').innerHTML = "";
+
+    fetch(`${URL}/auth/create-password`, {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         method: "POST",
-        body: JSON.stringify({ id: userID, password })
+        body: JSON.stringify({ id: userID, newPassword: password })
+    }).then(res => res.json())
+        .then(data => {
+            const { status, msg } = data;
+            if (status != 200) {
+                alert(msg);
+                location.reload();
+                return
+            }
+        })
+        .catch(err => console.log(err))
+
+    // console.log(bankingToken);
+
+    // fetch(`/user/${userID}/set-token`, {
+    //     method: "POST",
+    //     body: JSON.stringify({ token: bankingToken })
+    // })
+}
+
+const handleBankingLogin = async () => {
+    const password = document.getElementById('password').value;
+
+    let bankingToken = null;
+
+    await fetch(`${URL}/auth/login`, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({ id: userID, password: password })
     }).then(res => res.json())
         .then(data => {
             const { status, msg, token } = data;
-            if (status != 200) { alert(msg); return }
+            console.log(token);
 
-            localStorage.setItem("banking_token", token);
+            if (status != 200) {
+                alert(msg);
+                location.reload()
+                return null
+            }
+            else
+                return bankingToken = token;
         })
         .catch(err => console.log(err))
+
+    console.log(bankingToken);
+
+    fetch(`/user/${userID}/set-token`, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({ token: bankingToken })
+    })
+
+    location.reload();
 }
 
 const handleDeposit = (e) => {
