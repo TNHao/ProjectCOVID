@@ -248,11 +248,12 @@ class UserModel {
       .then((res) => res.data)
       .catch((err) => console.log(err));
 
-    data = data.map((item) => ({
-      ...item,
-      action: getTransactionName(item.action),
-      date: moment(item.create_at).format('MMMM Do YYYY, h:mm:ss'),
-    }));
+    if (data)
+      data = data.map((item) => ({
+        ...item,
+        action: getTransactionName(item.action),
+        date: moment(item.create_at).format('MMMM Do YYYY, h:mm:ss'),
+      }));
 
     return { data };
   }
@@ -291,6 +292,25 @@ class UserModel {
       .then((res) => res.data)
       .catch((err) => console.log(err));
 
+    return { data };
+  }
+  async getUserQuarantineLocation(account_id) {
+    const queryString = `
+      select QL.location_id, Ql.name
+      from public."Account" A, public."Quarantine_Location" QL
+      where A.account_id=$(id)
+        and A.quarantine_location_id=QL.location_id
+    `;
+    const data = await db.oneOrNone(queryString, { id: account_id });
+    return { data };
+  }
+  async setToken(account_id, token) {
+    const queryString = `
+      UPDATE public."Account"
+      SET banking_token=$(token)
+      WHERE account_id=$(id);
+    `;
+    const data = await db.oneOrNone(queryString, { id: account_id, token: token });
     return { data };
   }
 }

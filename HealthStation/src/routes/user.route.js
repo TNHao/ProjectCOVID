@@ -10,5 +10,6 @@ router.get('/:id/purchase', userController.getPurchase);
 router.get('/:id/change-password', userController.getChangePassword);
 
 router.post('/:id/deposit', userController.deposit);
+router.post('/:id/set-token', userController.setToken);
 
 module.exports = router;
