@@ -182,7 +182,7 @@ module.exports = {
       related.push(relatedUser);
     }
     console.log(related);
-    user.dob = moment(user.dob).format('MM-DD-YYYY')
+    user.dob = moment(user.dob).format('YYYY-MM-DD')
     res.render("layouts/manager/editAcc", {
       layout: "manager/main",
       relate: related,
