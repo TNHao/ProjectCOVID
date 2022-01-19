@@ -12,9 +12,12 @@
         <div class="card-header">
             <h4 class="card-title"> Quản lý nhu yếu phẩm</h4>
         </div>
-        <a href="/manager/product-management/create" class="btn btn-info w-25 ml-4"> Thêm nhu yếu phẩm </a>
+        <div class="d-flex justify-content-between">
+            <a href="/manager/product-management/create" class="btn btn-info w-25 ml-4"> Thêm nhu yếu phẩm </a>
+            <button class="btn btn-info w-25 mr-4 switch-view-btn"> Đổi dạng hiển thị </button>
+        </div>
         <div class="card-body">
-            <div class="table-responsive p-3">
+            <div class="table-responsive table-view p-3">
                 <table class="table table-hover" id="table_product_management">
                     <thead class=" text-primary">
                         <tr>
@@ -65,6 +68,23 @@
                     </tbody>
                 </table>
             </div>
+            <div class="table-responsive card-view p-3">
+                <div class="container">
+                    <div class="row">
+                        {{#each data}}
+                        <div class="card col-12 col-md-4 col-lg-3">
+                            <a href="/manager/product-management/{{this.necessary_id}}">
+                                <img src="{{get this.images 0}}" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">{{this.name}}</h5>
+                                    <p class="card-text text-dark">{{this.price}}đ / {{this.unit}}</p>
+                                </div>
+                            </a>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -110,4 +130,5 @@
 </script>
 {{!-- Modal --}}
 <script src="/js/custom/modal.js"></script>
+<script src="/js/custom/toggleTableCardView.js"></script>
 {{/section}}
