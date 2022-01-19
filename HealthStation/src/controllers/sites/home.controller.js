@@ -1,10 +1,11 @@
+
 const categoryModel = require("../../models/sites/category.model");
 const statModel = require("../../models/statistic/stat.model");
 const packageModel = require('../../models/sites/necessaryPacket.model');
-module.exports = {
-    get: async (req, res) => {
-        const { data: categories } = await categoryModel.findAll()
 
+module.exports = {
+  get: async (req, res) => {
+    const { data: categories } = await categoryModel.findAll();
         const { isLoggedIn, user } = res.locals;
         const packageStat = (await statModel.packageStat()).data;
         var sorters = {
@@ -18,7 +19,7 @@ module.exports = {
             trendingPackage.push((await packageModel.findByName(packageStat[i].package_name)).data)
         }
         const package = trendingPackage;
-        console.log(package[0].products);
+        console.log(await statModel.statOfPatients());
         res.render('layouts/sites/home',
             {
                 layout: 'sites/main',
@@ -30,3 +31,4 @@ module.exports = {
         )
     },
 }
+

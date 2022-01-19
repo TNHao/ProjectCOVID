@@ -42,7 +42,6 @@ module.exports = {
                 for (let package of order.packages) {
                     package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
                 }
-
             }
             return { data: orders }
         })

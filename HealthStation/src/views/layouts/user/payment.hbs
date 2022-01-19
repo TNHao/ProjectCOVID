@@ -167,18 +167,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="">
-                        <div class="form-group">
-                            <label class="control-label">Password <star class="text-danger">*</star></label>
-                            <input class="form-control" name="password" minlength="1" id="password" type="password"
-                                required="true">
-                        </div>
-                        <div class="category">
-                            <star class="text-danger">*</star> Required fields
-                        </div>
-                        <button type="submit" class="btn btn-primary float-right" onclick="handleBankingConnect()">Liên
-                            kết</button>
-                    </form>
+                    <div class="form-group">
+                        <label class="control-label">Password <star class="text-danger">*</star></label>
+                        <input class="form-control" name="password" minlength="1" id="password" type="password"
+                            required="true">
+                    </div>
+                    <div class="category">
+                        <star class="text-danger">*</star> Required fields
+                    </div>
+                    <button type="button" class="btn btn-primary float-right" onclick="handleBankingLogin()">Liên
+                        kết</button>
                 </div>
             </div>
         </div>
@@ -215,6 +213,7 @@
                         <label class="control-label">Confirm Password <star class="text-danger">*</star></label>
                         <input class="form-control" name="password_confirmation" id="registerPasswordConfirmation"
                             type="password" required="true" equalto="#registerPassword">
+                        <small id="registerPasswordError" class="text-danger"></small>
                     </div>
                     <div class="category">
                         <star class="text-danger">*</star> Required fields
@@ -227,3 +226,5 @@
     </div>
 </div>
 {{/if}}
+
+<div id="user_id" style="display: none">{{id}}</div>

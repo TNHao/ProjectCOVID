@@ -64,7 +64,7 @@ class ProductModel {
 
 
   async findById(id) {
-    const necessary = await db.one('select * from ${table} where necessary_id = ${id}', {
+    const necessary = await db.oneOrNone('select * from ${table} where necessary_id = ${id}', {
       table: this.table,
       id: id,
     });

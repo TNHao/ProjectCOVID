@@ -2,7 +2,7 @@
 <title>Tạo tài khoản</title>
 {{/section}}
 <div class="card w-50 mx-auto px-3 pb-3">
-    <form id="registerFormValidation" action="" method="" required>
+    <form id="registerFormValidation" action="/admin/account-management" method="POST" required>
         <div class="card-header">
             <h4 class="card-title">
                 Tạo tài khoản
@@ -33,5 +33,6 @@
         <div class="card-footer">
             <button type="submit" class="btn btn-info btn-fill pull-right">Register</button>
         </div>
+        <p class="text-{{message.status}}">{{message.content}}</p>
     </form>
 </div>

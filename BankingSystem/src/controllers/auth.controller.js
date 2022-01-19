@@ -12,9 +12,17 @@ module.exports = {
         }
     },
     editPassword: async (req, res) => {
-        const { password, id } = req.body;
+        const { password = null, newPassword = null, id } = req.body;
+        const { data: user } = await authModel.findUser(id);
+
+        if (user.password) {
+            const isValid = await validPassword(password, user.password);
+            if (!isValid)
+                return res.json({ status: 401, msg: "Wrong password" })
+        }
+
         try {
-            const { data } = await authModel.editPassword(id, password);
+            const { data } = await authModel.editPassword(id, newPassword);
             res.json({ status: 200, msg: "SUCCESS", data });
         } catch (error) {
             res.json({ status: 400, msg: error });
