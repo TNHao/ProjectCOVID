@@ -31,34 +31,6 @@ const fakeData = [
   },
 ];
 
-const fakeIsolationWardData = [
-  {
-    name: 'Sage Rodriguez',
-    capacity: 5,
-    used: 5,
-  },
-  {
-    name: 'Doris Greene',
-    capacity: 5,
-    used: 5,
-  },
-  {
-    name: 'Jon Porter',
-    capacity: 5,
-    used: 5,
-  },
-  {
-    name: 'Mason Porter',
-    capacity: 5,
-    used: 5,
-  },
-  {
-    name: 'Chet Faker',
-    capacity: 5,
-    used: 5,
-  },
-];
-
 const fakeManagementData = [
   {
     type: 'Thêm mới',
@@ -87,34 +59,64 @@ const fakeManagementData = [
   },
 ];
 
+const locationModel = require('../../models/sites/location.model')
+
 module.exports = {
+  
   get: async (req, res) => {
-    res.render('layouts/admin/createManagerAcc', {
-      layout: 'admin/main',
-      active: { createAcc: true },
-    });
-  },
-  getAccount: async (req, res) => {
-    res.render('layouts/admin/accountManagement', {
-      layout: 'admin/main',
-      data: fakeData,
-      active: { accManagement: true },
-    });
-  },
-  getAccountHistory: async (req, res) => {
-    res.render('layouts/admin/accountHistory', {
-      layout: 'admin/main',
-      data: fakeManagementData,
-      active: { accManagement: true },
-    });
-  },
-  getIsolationWard: async (req, res) => {
-    res.render('layouts/admin/isolationWardManagement', {
-      layout: 'admin/main',
-      data: fakeIsolationWardData,
-      active: { isolationWardManagement: true },
-    });
-  },
+        res.render('layouts/admin/createManagerAcc',
+            {
+                layout: 'admin/main',
+                active: { createAcc: true }
+            }
+        )
+    },
+    getAccount: async (req, res) => {
+        res.render('layouts/admin/accountManagement',
+            {
+                layout: 'admin/main',
+                data: fakeData,
+                active: { accManagement: true }
+            }
+        )
+    },
+    getAccountHistory: async (req, res) => {
+        res.render('layouts/admin/accountHistory',
+            {
+                layout: 'admin/main',
+                data: fakeManagementData,
+                active: { accManagement: true }
+            }
+        )
+    },
+    getIsolationWard: async (req, res) => {
+        const { data } = await locationModel.findAll()
+        res.render('layouts/admin/isolationWardManagement',
+            {
+                layout: 'admin/main',
+                data: data,
+                active: { isolationWardManagement: true }
+            }
+        )
+    },
+
+    createIsolationWard: async (req, res) => {
+        
+        await locationModel.create(req.body)
+        res.redirect('/admin/isolation-ward')
+    },
+
+    updateIsolationWard: async (req, res) => {
+        await locationModel.update(req.body)
+        res.redirect('/admin/isolation-ward')
+    },
+
+    deleteIsolationWard: async (req, res) => {
+        const id = req.body.delete_location_id
+        await locationModel.deleteById(id)
+        res.redirect('/admin/isolation-ward')
+    },
+
   firstCreate: async (req, res) => {
     res.render('layouts/admin/firstCreate', {
       layout: '',
@@ -143,3 +145,4 @@ module.exports = {
     }
   },
 };
+ 

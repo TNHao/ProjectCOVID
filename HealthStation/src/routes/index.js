@@ -11,19 +11,21 @@ const locationRoute = require('./sites/location.route');
 const userM = require('../models/user/user.model');
 const { setFirstGenerate } = require('../models/admin/admin.model');
 function route(app) {
-  app.use('/category', categoryRoute);
-  app.use('/product', productRoute);
-  app.use('/necessary-packet', necessaryPacketRoute);
-  app.use('/admin', adminRoute);
-  app.use('/manager', managerRoute);
-  app.use('/user', userRoute);
-  app.use('/login', logInRoute);
-  app.use('/logout', logOutRoute);
-  app.use('/location', locationRoute);
-  app.use('/', homeRoute);
-  app.use((req, res, next) => {
-    res.render('404');
-  });
+
+    app.use('/category', categoryRoute);
+    app.use('/product', productRoute);
+    app.use('/necessary-packet', necessaryPacketRoute);
+    app.use('/admin', adminRoute);
+    app.use('/manager', managerRoute);
+    app.use('/user', userRoute);
+    app.use('/login', logInRoute);
+    app.use('/logout', logOutRoute);
+    app.use('/location', locationRoute);
+    app.use('/', homeRoute);
+    app.use((req, res, next) => {
+        res.render('error/404')
+    })
+
 }
 
 module.exports = route;
