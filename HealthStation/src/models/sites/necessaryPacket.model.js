@@ -21,6 +21,7 @@ class NecessaryPacketModel {
 
   helpers = {
     findNecessaryPackageById: async (id) => {
+
       const necessaryQueryString = `select * from $(table) where package_id = $(id)`
       const necessaries = await db.any(necessaryQueryString, {
         table: this.necessaryPackageTable,
@@ -55,7 +56,10 @@ class NecessaryPacketModel {
     for (const id of ids) {
       const _package = await this.findById(id)
       const item = await _package.data
+      data.push(item)
+
     }
+
     return { data };
   }
 
@@ -69,6 +73,15 @@ class NecessaryPacketModel {
     return { data };
   }
 
+  async findByName(name) {
+    const _package = await db.one('select * from ${table} where name = ${name}', {
+      table: this.table,
+      name: name,
+    });
+    const necessaries = await this.helpers.findNecessaryPackageById(_package.package_id)
+    const data = { ..._package, products: necessaries }
+    return { data };
+  }
 
   async create(_package) {
     const queryString = `
