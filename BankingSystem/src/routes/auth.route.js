@@ -8,6 +8,7 @@ const authController = require('../controllers/auth.controller');
 // router.get('/login', (req, res, next) => { });
 // router.get('/reset-password', (req, res, next) => { });
 
+router.get('/test', (req, res, next) => { res.json({ status: "ok" }) });
 router.get('/test-jwt',
     (req, res, next) => {
         passport.authenticate('jwt', { session: false }, (err, user) => {

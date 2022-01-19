@@ -17,9 +17,16 @@ function route(app) {
     app.use('/category', categoryRoute);
     app.use('/product', productRoute);
     app.use('/necessary-packet', necessaryPacketRoute);
+
     app.use('/admin', isAdmin, adminRoute);
     app.use('/manager', isManager, managerRoute);
-    app.use('/user', userRoute);
+
+    app.use('/user', (req, res, next) => {
+        if (res.locals.isLoggedIn) next(); 
+        else 
+            res.redirect('/login')
+    }, userRoute);
+
     app.use('/login', logInRoute);
     app.use('/logout', logOutRoute);
     app.use('/location', locationRoute);

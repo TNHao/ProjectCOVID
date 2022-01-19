@@ -39,7 +39,7 @@
                             </button>
                         </div>
                         {{#if active.profile}}
-                        <a class="navbar-brand" href="javascript:;">Tài khoản của Trần Nhật Hào</a>
+                        <a class="navbar-brand" href="javascript:;">Tài khoản của {{profile.fullname}}</a>
                         {{/if}}
                         {{#if active.payment}}
                         <a class="navbar-brand" href="javascript:;">Quản lý tài khoản thanh toán</a>
@@ -88,7 +88,7 @@
                                     <a class="dropdown-item" href="/user/5/management">Lịch sử được quản lý</a>
                                     <a class="dropdown-item" href="/user/5/purchase">Lịch sử mua hàng</a>
                                     <a class="dropdown-item" href="/user/5/payment">Tài khoản thanh toán</a>
-                                    <a class="dropdown-item" href="/user/5/change-password">Đổi mật khẩu</a>
+                                    <a class="dropdown-item" href="/user/{{id}}/change-password">Đổi mật khẩu</a>
                                     <a class="dropdown-item" href="/logout">Đăng xuất</a>
                                 </div>
                             </li>
