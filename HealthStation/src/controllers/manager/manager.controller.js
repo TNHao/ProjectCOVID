@@ -1,3 +1,26 @@
+const fakePaymentData = [
+    {
+        name: "Sage Rodriguez",
+        debt: 50000,
+        status: 'F0'
+    },
+    {
+        name: 'Doris Greene',
+        debt: 10000,
+        status: 'F1',
+    },
+    {
+        name: 'Mason Porter',
+        debt: 0,
+        status: 'F2',
+    },
+    {
+        name: 'Jon Porter',
+        debt: 40000,
+        status: 'F0',
+    },
+]
+
 const fakeData = [
     {
         name: "Sage Rodriguez",
@@ -69,6 +92,7 @@ const fakePatientData = {
 const categoryModel = require('../../models/sites/category.model')
 const productModel = require('../../models/sites/product.model')
 const packageModel = require('../../models/sites/necessaryPacket.model')
+const minimumPaymentModel = require('../../models/sites/minimumPayment.model')
 const { uploadMultipleFiles, deleteFile } = require('../../config/firebase')
 
 module.exports = {
@@ -300,5 +324,25 @@ module.exports = {
         res.redirect('/manager/package-management')
     },
     // end package
+
+
+    // start payment
+    getPayment: async(req, res, next) => {
+        const { data: amount } = await minimumPaymentModel.find()
+        res.render('layouts/manager/paymentManagement',
+            {
+                layout: 'manager/main',
+                amount: amount,
+                data: fakePaymentData,
+                active: { paymentManagement: true }
+            }
+        )
+    },
+
+    updatePayment: async(req, res, next) => {
+        const amount = req.body.amount
+        await minimumPaymentModel.update(amount)
+        res.redirect('/manager/payment-management')
+    },
 
 }
