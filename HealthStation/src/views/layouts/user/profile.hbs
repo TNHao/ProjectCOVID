@@ -11,13 +11,13 @@
                 <div class="col-md-8 pr-1">
                     <div class="form-group">
                         <label>Họ tên</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="Trần Nhật Hào">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.fullname}}">
                     </div>
                 </div>
                 <div class="col-md-4 pl-1">
                     <div class="form-group">
                         <label>Năm sinh</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="2001">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.dob}}">
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 <div class="col-md-8 pr-1">
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="michael23">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.username}}">
                     </div>
                 </div>
                 <div class="col-md-4 pl-1">
@@ -39,13 +39,14 @@
                 <div class="col-md-8 pr-1">
                     <div class="form-group">
                         <label>Nơi đang điều trị / cách ly</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="Ngoài công viên">
+                        <input type="text" readonly class="form-control bg-transparent"
+                            value="{{profile.quarantineLocation}}">
                     </div>
                 </div>
                 <div class="col-md-4 pl-1">
                     <div class="form-group">
                         <label>Trạng thái hiện tại</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="F0">
+                        <input type="text" readonly class="form-control bg-transparent" value="F{{profile.state}}">
                     </div>
                 </div>
             </div>
@@ -53,19 +54,19 @@
                 <div class="col-md-4 pr-1">
                     <div class="form-group">
                         <label>Tỉnh / Thành phố</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="Melbourne">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.city}}">
                     </div>
                 </div>
                 <div class="col-md-4 px-1">
                     <div class="form-group">
                         <label>Quận / Huyện</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="Australia">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.district}}">
                     </div>
                 </div>
                 <div class="col-md-4 pl-1">
                     <div class="form-group">
                         <label>Phường / xã</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="xxx">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.ward}}">
                     </div>
                 </div>
             </div>

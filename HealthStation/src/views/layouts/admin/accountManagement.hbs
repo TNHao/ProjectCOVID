@@ -18,18 +18,12 @@
                     <thead class=" text-primary">
                         <tr>
                             <th>
-                                Name
+                                ID
                             </th>
                             <th>
-                                Country
-                            </th>
-                            <th>
-                                City
+                                Username
                             </th>
                             <th class="text-right">
-                                Salary
-                            </th>
-                            <th class="text-center">
                                 Action
                             </th>
                         </tr>
@@ -38,21 +32,15 @@
                         {{#each data}}
                         <tr>
                             <td>
-                                {{this.name}}
+                                {{this.account_id}}
                             </td>
                             <td>
-                                {{this.country}}
-                            </td>
-                            <td>
-                                {{this.city}}
+                                {{this.username}}
                             </td>
                             <td class="text-right">
-                                {{this.salary}}
-                            </td>
-                            <td class="text-center">
-                                <a href="/admin/account-management/5" class="btn btn-success">History</a>
-                                <button class="btn btn-danger">Block</button>
-                                <button class="btn btn-info">Unblock</button>
+                                <a href="/admin/account-management/{{this.account_id}}" class="btn btn-success">History</a>
+                                <a href="/admin/account-management/{{this.account_id}}/toggle-active" {{#ifCond this.permission '==' 3}} disabled {{/ifCond}} class="btn btn-danger">Block</a>
+                                <a href="/admin/account-management/{{this.account_id}}/toggle-active" {{#ifCond this.permission '==' 2}} disabled {{/ifCond}} class="btn btn-info">Unblock</a>
                             </td>
                         </tr>
                         {{/each}}

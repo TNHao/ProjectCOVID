@@ -12,9 +12,12 @@
         <div class="card-header">
             <h4 class="card-title"> Quản lý gói nhu yếu phẩm</h4>
         </div>
-         <a href="/manager/package-management/create" class="btn btn-info w-25 ml-4"> Thêm gói nhu yếu phẩm </a>
+        <div class="d-flex justify-content-between">
+            <a href="/manager/package-management/create" class="btn btn-info w-25 ml-4"> Thêm gói nhu yếu phẩm </a>
+            <button class="btn btn-info w-25 mr-4 switch-view-btn"> Đổi dạng hiển thị </button>
+        </div>
         <div class="card-body">
-            <div class="table-responsive p-3">
+            <div class="table-responsive table-view p-3">
                 <table class="table table-hover" id="table_package_management">
                     <thead class=" text-primary">
                         <tr>
@@ -65,6 +68,24 @@
                     </tbody>
                 </table>
             </div>
+            <div class="table-responsive card-view p-3">
+                <div class="container">
+                    <div class="row">
+                        {{#each data}}
+                        <div class="card col-12 col-md-6 col-lg-4">
+                            <a href="/manager/package-management/{{this.package_id}}">
+                                <img src="" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">{{this.name}}</h5>
+                                    <p class="card-text text-dark">Tối đa 1 người: {{this.max_per_person}} gói</p>
+                                    <p class="card-text text-dark">Thời gian giới hạn: {{this.period}} ngày</p>
+                                </div>
+                            </a>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -111,4 +132,6 @@
 </script>
 {{!-- Modal --}}
 <script src="/js/custom/modal.js"></script>
+<script src="/js/custom/toggleTableCardView.js"></script>
+
 {{/section}}
