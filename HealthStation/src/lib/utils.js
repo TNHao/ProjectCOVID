@@ -1,6 +1,6 @@
-const { DEPOSIT, WITHDRAWAL, PAYMENT } = require("../constants");
+const { DEPOSIT, WITHDRAWAL, PAYMENT, API_URL } = require("../constants");
 const bcrypt = require('bcrypt')
-
+const axios = require('axios')
 module.exports = {
     getTransactionName: (action) => {
         switch (action) {
@@ -18,5 +18,23 @@ module.exports = {
 
     generatePassword: async (password) => {
         return await bcrypt.hash(password.toString(), 10)
+    },
+
+    isValidPassword: async (password, userPassword) => {
+        return await bcrypt.compare(password, userPassword)
+    },
+
+    callBankingApi: async(endpoint, method = 'GET', payload = {}) => {
+
+        if(!endpoint) {
+            return {}
+        }
+        const url = API_URL + endpoint
+        const { data } = await axios({
+            method: method,
+            url: url,
+            data: payload
+        })
+        return { data }
     }
 }

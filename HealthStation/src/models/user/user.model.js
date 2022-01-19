@@ -58,6 +58,7 @@ class UserModel {
     return { data };
   }
   async create(user) {
+    
     const hashedPass = await bcrypt.hash(user.password, saltRounds);
     const q_checkUsername = await this.findByUsername(user.username);
     if (q_checkUsername.data) {
@@ -180,14 +181,14 @@ class UserModel {
        update $(table) set password = $(password) where account_id = $(id)
     `;
     try {
-      await db.none(queryString, {
+      const data = await db.one(queryString, {
         table: this.account_tb,
         id,
         password: new_hashedPass,
       });
-      return 'Success';
+      return { data };
     } catch (error) {
-      return error;
+      return {};
     }
   }
   async updateStateById(id, newState) {

@@ -76,15 +76,20 @@ const fakeManagementData = [
   },
 ];
 
-const categoryModel = require('../../models/sites/category.model');
-const productModel = require('../../models/sites/product.model');
-const packageModel = require('../../models/sites/necessaryPacket.model');
-const userModel = require('../../models/user/user.model');
-const minimumPaymentModel = require('../../models/sites/minimumPayment.model');
-const quarantineLocationModel = require('../../models/sites/location.model');
-const { uploadMultipleFiles, deleteFile } = require('../../config/firebase');
-const moment = require('moment');
-const { PERMISSIONS } = require('../../constants/index');
+const categoryModel = require("../../models/sites/category.model");
+const productModel = require("../../models/sites/product.model");
+const packageModel = require("../../models/sites/necessaryPacket.model");
+const userModel = require("../../models/user/user.model");
+const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
+const quarantineLocationModel = require("../../models/sites/location.model");
+const { uploadMultipleFiles, deleteFile } = require("../../config/firebase");
+const moment = require('moment')
+const {
+  updateStateOfAllRelated,
+  updateStateById,
+} = require("../../models/user/user.model");
+const { PERMISSIONS } = require('../../constants/index')
+const { callBankingApi } = require('../../lib/utils')
 
 module.exports = {
   get: async (req, res) => {
@@ -110,6 +115,7 @@ module.exports = {
       district: req.body.district,
       ward: req.body.ward,
       national_id: req.body.identity,
+
       quarantine_location_id: req.body.isolation,
       password: '',
       permission: PERMISSIONS['user'],
@@ -135,6 +141,9 @@ module.exports = {
     } else {
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
+
+      await callBankingApi('/auth/register', "POST", { id: user_id})
+      
       for (let i = 0; i < related_id.length; i++) {
         await userModel.createRelated(user_id, related_id[i]);
         await userModel.createRelated(related_id[i], user_id);

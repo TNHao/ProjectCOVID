@@ -1,5 +1,6 @@
 const userModel = require('../../models/user/user.model');
-
+const moment = require('moment')
+const { isValidPassword } = require('../../lib/utils')
 const fakePaymentData = [
     {
         transaction_id: '1',
@@ -106,9 +107,8 @@ module.exports = {
         let { data: profile } = await userModel.findById(id);
         const { data: quarantineLocation } = await userModel.getUserQuarantineLocation(id);
 
-        console.log(quarantineLocation)
-
         profile = { ...profile, quarantineLocation }
+        profile.dob = moment(profile.dob).format('YYYY-MM-DD')
 
         res.render('layouts/user/profile',
             {
@@ -121,14 +121,46 @@ module.exports = {
     },
     getChangePassword: async (req, res) => {
         const { id } = req.params;
-
+        const message = req.session.message || {};
+        req.session.message = null;
         res.render('layouts/user/changePassword',
             {
                 layout: 'user/main',
                 active: { profile: true },
-                id
+                id,
+                message
             }
         )
+    },
+    postChangePassword: async (req, res) => {
+        const { id } = req.params;
+        const { password, newPassword, password_confirmation } = req.body
+
+        let message = {
+            content: 'Đổi mật khẩu thành công!',
+            status: 'success'
+        }
+        // confirm password does not match
+        if(newPassword !== password_confirmation) {
+            message = {
+                content: 'Mật khẩu nhập lại không chính xác!',
+                status: 'danger'
+            } 
+        } else {
+            const { data: user } = await userModel.findById(id)
+            const isValid = await isValidPassword(password, user.password)
+            if(!isValid) {
+                message = {
+                    content: 'Mật khẩu hiện tại không chính xác!',
+                    status: 'danger'
+                } 
+            } else {
+                await userModel.updatePasswordById(id, newPassword)
+            }
+        }
+        
+        req.session.message = message;
+        return res.redirect(`/user/${id}/change-password`);
     },
     getPayment: async (req, res) => {
         const { id } = req.params;
