@@ -2,7 +2,12 @@ const {
   createAdmin,
   setFirstGenerate,
 } = require('../../models/admin/admin.model');
+
+
+
 const userM = require('../../models/user/user.model');
+const managerModel = require('../../models/manager/manager.model')
+const { generatePassword } = require('../../lib/utils')
 
 const fakeData = [
   {
@@ -64,9 +69,12 @@ const locationModel = require('../../models/sites/location.model')
 module.exports = {
   
   get: async (req, res) => {
+    const message = req.session.message || {}
+    req.session.message = null
         res.render('layouts/admin/createManagerAcc',
             {
                 layout: 'admin/main',
+                message: message,
                 active: { createAcc: true }
             }
         )
@@ -80,6 +88,35 @@ module.exports = {
             }
         )
     },
+    createAccount: async (req, res) => {
+      const { username, password, password_confirmation } = req.body
+
+      // confirm password does not match
+      if(password !== password_confirmation) {
+        req.session.message = {
+            content: 'Mật khẩu nhập lại không chính xác!',
+            status: 'danger'
+        } 
+        return res.redirect('/admin')
+      }
+
+      const hashPassword = await generatePassword(password)
+      const response = await managerModel.createManager(username, hashPassword)
+      let message = {
+        content: 'Tạo tài khoản thành công!',
+        status: 'success'
+      }
+      if(!response || typeof response === 'string' || response instanceof String) {
+        message = {
+          content: 'Đã có lỗi hoặc tài khoản đã tồn tại!',
+          status: 'danger'
+      }
+    } 
+
+    req.session.message = message
+    return res.redirect('/admin')
+    
+  },
     getAccountHistory: async (req, res) => {
         res.render('layouts/admin/accountHistory',
             {
