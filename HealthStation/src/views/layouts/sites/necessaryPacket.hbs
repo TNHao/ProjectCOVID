@@ -36,7 +36,7 @@
             <div class="col-md-10 offset-md-1 col-lg-4 offset-lg-0">
                 <div class="sidebar">
                     <div class="widget user-dashboard-profile">
-                        <h2 class="text-center">Tên gói hàng</h2>
+                        <h2 class="text-center">{{package.name}}</h2>
                         <p style="font-size: 1.2rem;">Tổng tiền: <span id="total"></span></p>
                         <a href="user-profile.html" class="btn btn-main-sm">Thanh toán</a>
                     </div>
@@ -46,8 +46,11 @@
                         <ul>
                             <li><a><i class="fa fa-folder-open-o"></i>Tên category</a></li>
                             <li>
-                                <a><i class="fa fa-bookmark-o"></i> Số gói mỗi nguời mỗi ... :
-                                    <span>5</span></a>
+                                <a>
+                                    <i class="fa fa-bookmark-o"></i>
+                                    Số lượng: <span style="float: none;">{{package.max_per_person}}</span> gói / <span style="float: none;">1</span> người /
+                                    <span style="float: none;">{{package.period}}</span> ngày
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -69,56 +72,34 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{#each products}}
                             <tr>
                                 <td class="product-thumb">
                                     <img width="80px" height="auto"
-                                        src="https://secure.img1-fg.wfcdn.com/im/06069880/resize-h800-w800%5Ecompr-r85/7236/72369552/Falmouth+Corner+Patio+Chair+with+Cushions.jpg"
+                                        src="{{this.images.[0]}}"
                                         alt="image description">
                                 </td>
                                 <td class="product-details">
-                                    <a href="/product/5" class="title">Macbook Pro 15inch</a>
+                                    <a href="/product/{{this.necessary_id}}" class="title">{{this.name}}</a>
                                 </td>
                                 <td class="product-category"><span class="categories">Laptops</span></td>
                                 <td class="action" data-title="Action">
                                     <div class="w-75 text-center mx-auto">
                                         {{!-- Id Input is product ID --}}
-                                        <input type="number" class="w-100 user-input" id="prodID"
-                                            value="5">
+                                        <input type="number" class="w-100 user-input" id="prodID{{this.necessary_id}}"
+                                            min="1" value="1" max="{{this.max_necessary_per_package}}">
                                     </div>
                                 </td>
                                 <td class="product-details text-right">
-                                    <h3 class="title" id="prodID_price">5</h3>
+                                    <h3 class="title" id="prodID{{this.necessary_id}}_price">{{this.price}}</h3>
                                 </td>
                                 <td class="product-details text-right">
                                     {{!-- Id of this tag is <product ID>_total --}}
-                                        <h3 class="title product_total_price" id="prodID_total">0</h3>
+                                        <h3 class="title product_total_price" id="prodID{{this.necessary_id}}_total">
+                                            {{this.price}}</h3>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="product-thumb">
-                                    <img width="80px" height="auto"
-                                        src="https://secure.img1-fg.wfcdn.com/im/06069880/resize-h800-w800%5Ecompr-r85/7236/72369552/Falmouth+Corner+Patio+Chair+with+Cushions.jpg"
-                                        alt="image description">
-                                </td>
-                                <td class="product-details">
-                                    <a href="/product/5" class="title">Macbook Pro 15inch</a>
-                                </td>
-                                <td class="product-category"><span class="categories">Laptops</span></td>
-                                <td class="action" data-title="Action">
-                                    <div class="w-75 text-center mx-auto">
-                                        {{!-- Id Input is product ID --}}
-                                        <input type="number" class="w-100 user-input" id="prodID2"
-                                            value="5">
-                                    </div>
-                                </td>
-                                <td class="product-details text-right">
-                                    <h3 class="title" id="prodID2_price">5</h3>
-                                </td>
-                                <td class="product-details text-right">
-                                    {{!-- Id of this tag is <product ID>_total --}}
-                                        <h3 class="title product_total_price" id="prodID2_total">0</h3>
-                                </td>
-                            </tr>
+                            {{/each}}
                         </tbody>
                     </table>
 
