@@ -100,7 +100,7 @@ module.exports = {
     
     manager.permission = permission
     // TODO: add to log
-    await userM.update(manager)
+    await userM.update(manager, true)
     res.redirect('/admin/account-management')
   },
 

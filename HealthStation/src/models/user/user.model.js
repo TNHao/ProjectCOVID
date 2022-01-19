@@ -68,7 +68,7 @@ class UserModel {
       return false;
     }
   }
-  async update(user) {
+  async update(user, isHash = false) {
     const queryString = `
         update $(table) 
         set username = $(username), 
@@ -91,7 +91,7 @@ class UserModel {
         table: this.account_tb,
         id: user.account_id,
         username: user.username,
-        password: hashedPass,
+        password: isHash ? user.password : hashedPass,
         permission: user.permission,
         fullname: user.fullname,
         national_id: user.national_id,
