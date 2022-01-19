@@ -14,7 +14,7 @@ const userM = require('./models/user/user.model');
 const managerM = require('./models/manager/manager.model');
 const { rmSync } = require('fs');
 const { isFirstGenerate } = require('./models/admin/admin.model');
-const { findAllPatient } = require('./models/user/user.model');
+const { findById } = require('./models/sites/location.model');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
@@ -29,21 +29,7 @@ app.use((req, res, next) => {
   res.locals = { isLoggedIn: req.user ? true : false, user: req.user };
   next();
 });
-// app.use(async (req, res, next) => {
-//   const firstGenerate = await isFirstGenerate();
-//   console.log(req.url);
-//   console.log(firstGenerate);
-//   if (firstGenerate == true) {
-//     if (req.url != '/admin/firstCreate') {
-//       return res.redirect('/admin/firstCreate');
-//     } else {
-//       if (req.method == 'POST') {
-//         next();
-//       }
-//     }
-//   }
-//   next();
-// });
+
 app.use(async (req, res, next) => {
   const firstGenerate = await isFirstGenerate();
   if (firstGenerate == true) {
@@ -53,11 +39,6 @@ app.use(async (req, res, next) => {
   }
   next();
 });
-// app.get('/testapp', async (req, res) => {
-//   const data = await findAllPatient();
-//   console.log(data.data);
-//   return res.redirect('/');
-// });
 route(app);
 
 app.listen(port, () => {

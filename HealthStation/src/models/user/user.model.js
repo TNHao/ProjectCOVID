@@ -16,10 +16,22 @@ class UserModel {
     );
     return { data };
   }
+  // Hàm này là tìm cho user ( bao gồm cả bệnh và không luôn )
   async findAllPatient() {
     try {
       const data = await db.any(
         `select * from public."Account" where "permission"=4 order by account_id`
+      );
+      return { data };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // Hàm này là tìm cho user ( bao gồm cả bệnh và không luôn ) trừ thằng id
+  async findAllPatientWithout(id) {
+    try {
+      const data = await db.any(
+        `select * from public."Account" where "permission"=4 and "account_id"!=${id} order by account_id`
       );
       return { data };
     } catch (error) {
@@ -116,6 +128,39 @@ class UserModel {
       return error;
     }
   }
+  async updatePatientInformation(user) {
+    const queryString = `
+        update $(table) 
+        set permission = $(permission), 
+        fullname = $(fullname), 
+        national_id = $(national_id), 
+        dob = $(dob), 
+        state = $(state), 
+        quarantine_location_id = $(quarantine_location_id), 
+        city =  $(city), 
+        district = $(district), 
+        ward = $(ward)
+        where username = $(username)
+    `;
+    try {
+      await db.none(queryString, {
+        table: this.account_tb,
+        username: user.username,
+        permission: user.permission,
+        fullname: user.fullname,
+        national_id: user.national_id,
+        dob: user.dob,
+        state: user.state,
+        quarantine_location_id: user.quarantine_location_id,
+        city: user.city,
+        district: user.district,
+        ward: user.ward,
+      });
+      return 'Success';
+    } catch (error) {
+      return error;
+    }
+  }
 
   async deleteById(id) {
     await this.deleteAllRelatedAccount(id);
@@ -149,8 +194,8 @@ class UserModel {
   async updateStateById(id, newState) {
     id = parseInt(id);
     const user = await this.findById(id);
-    const cur_state = parseInt(user.data.state);
-    if (parseInt(newState) < cur_state) {
+    const cur_state = user.data.state;
+    if (parseInt(newState) < parseInt(cur_state) && cur_state != null) {
       const queryString = `
        update $(table) set state = $(state) where account_id = $(id)
     `;
@@ -321,7 +366,10 @@ class UserModel {
       SET banking_token=$(token)
       WHERE account_id=$(id);
     `;
-    const data = await db.oneOrNone(queryString, { id: account_id, token: token });
+    const data = await db.oneOrNone(queryString, {
+      id: account_id,
+      token: token,
+    });
     return { data };
   }
 }
