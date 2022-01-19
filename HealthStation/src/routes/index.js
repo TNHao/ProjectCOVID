@@ -7,8 +7,11 @@ const productRoute = require('./sites/product.route');
 const necessaryPacketRoute = require('./sites/necessaryPacket.route');
 const userRoute = require('./user.route');
 const managerRoute = require('./manager.route');
-const locationRoute = require('./sites/location.route')
+const locationRoute = require('./sites/location.route');
+const userM = require('../models/user/user.model');
+const { setFirstGenerate } = require('../models/admin/admin.model');
 function route(app) {
+
     app.use('/category', categoryRoute);
     app.use('/product', productRoute);
     app.use('/necessary-packet', necessaryPacketRoute);
@@ -20,7 +23,7 @@ function route(app) {
     app.use('/location', locationRoute);
     app.use('/', homeRoute);
     app.use((req, res, next) => {
-        res.render('404')
+        res.render('error/404')
     })
 
 }
