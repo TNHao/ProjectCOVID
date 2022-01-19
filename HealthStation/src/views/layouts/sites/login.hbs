@@ -22,27 +22,26 @@
     {{#if isFirstLogin}}
     <form class="form-create-password" action="/login?_method=PUT" method="POST">
         <div class="text-center mb-4">
-            <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
-                height="72">
+            <a href="/"><img class="mb-4" src="/img/logo.png" alt=""></a>
             <h1 class="h3 mb-3 font-weight-normal">CREATE YOUR PASSWORD</h1>
         </div>
-
+        <small id="message"></small>
         <div class="form-label-group">
-            <input type="text" id="inputId" name="username" class="form-control" value="{{user.username}}" hidden>
+            <input type="text" id="inputUsername" name="username" class="form-control" value="{{user.username}}" hidden>
         </div>
          <div class="form-label-group">
             <input type="text" id="inputId" name="id" class="form-control" value="{{user.account_id}}" hidden>
         </div>
 
         <div class="form-label-group">
-            <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password">
+            <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password" required>
             <label for="inputPassword">New Password</label>
         </div>
          <div class="form-label-group">
-            <input type="password" id="inputConfirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm Password">
+            <input type="password" id="inputConfirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm Password" onkeyup='check();' required>
             <label for="inputConfirmPassword">Confirm Password</label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+        </div>        
+        <button class="btn btn-lg btn-primary btn-block create-password-btn" type="submit">Create</button>
     </form>
     {{else}}
     <form class="form-signin" action="/login" method="POST">
@@ -51,7 +50,6 @@
                 height="72">
             <h1 class="h3 mb-3 font-weight-normal">LOG IN</h1>
         </div>
-
         {{#if error.status}}
         <small style="color: red;">{{error.msg}}</small>
         {{/if}}
@@ -76,3 +74,5 @@
 </body>
 
 </html>
+
+<script src="/js/custom/checkCreatePassword.js"></script>
