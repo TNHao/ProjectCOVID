@@ -1,0 +1,213 @@
+{{#section 'title'}}
+<title>Thống kê</title>
+{{/section}}
+
+<div class="col-md-12 px-5">
+  <div class="card mx-5">
+    <div class="card-header">
+      <h4 class="card-title"> Thống kê số lượng bệnh nhân theo thời gian</h4>
+    </div>
+    <div class="card-body">
+      <canvas id="patientChart" style="padding: 0 50px;"></canvas>
+    </div>
+  </div>
+  <div class="card mx-5">
+    <div class="card-header">
+      <h4 class="card-title"> Thống kê tiêu thụ gói Nhu yếu phẩm</h4>
+    </div>
+    <div class="card-body">
+      <canvas id="packageChart" style="padding: 0 50px;"></canvas>
+    </div>
+  </div>
+  <div class="card mx-5">
+    <div class="card-header">
+      <h4 class="card-title"> Thống kê tiêu thụ Sản phẩm</h4>
+    </div>
+    <div class="card-body">
+      <canvas id="productChart" style="padding: 0 50px;"></canvas>
+    </div>
+  </div>
+  <div class="card mx-5">
+    <div class="card-header">
+      <h4 class="card-title"> Thống kê dư nợ, thanh toán</h4>
+    </div>
+    <div class="card-body">
+      <canvas id="moneyChart" style="padding: 0 50px;"></canvas>
+    </div>
+  </div>
+</div>
+
+{{#section 'script'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+  const patientChartCanvas = document.getElementById('patientChart')
+  const data1 = {
+    labels: {{{ patients.dates }}},
+    datasets: [
+    {
+      label: 'Khỏi bệnh',
+      data: {{ patients.data.normal }},
+      fill: false,
+      borderColor: 'rgb(172, 33, 227)',
+      backgroundColor: 'rgb(172, 33, 227, 0.5)',
+      tension: 0.1
+    },
+    {
+      label: 'F0',
+      data: {{ patients.data.F0 }},
+      fill: false,
+      borderColor: 'rgb(75, 192, 192)',
+      backgroundColor: 'rgb(75, 192, 192, 0.5)',
+      tension: 0.1
+    },
+    {
+      label: 'F1',
+      data: {{ patients.data.F1 }},
+      fill: false,
+      borderColor: 'rgb(227, 0, 4)',
+      backgroundColor: 'rgb(227, 0, 4, 0.5)',
+      tension: 0.1
+    },
+    {
+      label: 'F2',
+      data: {{ patients.data.F2 }},
+      fill: false,
+      borderColor: 'rgb(0, 227, 25)',
+      backgroundColor: 'rgb(0, 227, 25, 0.5)',
+      tension: 0.1
+    },
+    {
+      label: 'F3',
+      data: {{ patients.data.F3 }},
+      fill: false,
+      borderColor: 'rgb(227, 196, 29)',
+      backgroundColor: 'rgb(227, 196, 29, 0.5)',
+      tension: 0.1
+    }]
+  }
+  const config1 = {
+    type: 'line',
+    data: data1,
+    option: {
+      responsive: false,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      layout: {
+        padding: {
+          x: 50
+        }
+      }
+    }
+  }
+  var patientsChart = new Chart(patientChartCanvas, config1);
+
+  const packageChartCanvas = document.getElementById('packageChart');
+  const data2 = {
+    labels: {{{ packages.dates }}},
+    datasets: [
+      {{#each packages.data}}
+      {
+        label: {{{ this.name }}},
+        data: {{ this.data }},
+        fill: false,
+        borderColor: {{{ this.color }}},
+        tension: 0.1
+      },
+      {{/each}}
+  ]
+  }
+  const config2 = {
+    type: 'line',
+    data: data2,
+    option: {
+      responsive: false,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      layout: {
+        padding: {
+          x: 50
+        }
+      }
+    }
+  }
+  var packageChart = new Chart(packageChartCanvas, config2)
+
+  const productChartCanvas = document.getElementById('productChart');
+  const data3 = {
+    labels: {{{ products.dates }}},
+    datasets: [
+      {{#each products.data}}
+      {
+        label: {{{ this.name }}},
+        data: {{ this.data }},
+        fill: false,
+        borderColor: {{{ this.color }}},
+        tension: 0.1
+      },
+      {{/each}}
+  ]
+  }
+  const config3 = {
+    type: 'line',
+    data: data3,
+    option: {
+      responsive: false,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      layout: {
+        padding: {
+          x: 50
+        }
+      }
+    }
+  }
+  var productChart = new Chart(productChartCanvas, config3)
+
+
+  const moneyChartCanvas = document.getElementById('moneyChart');
+  const data4 = {
+    labels: {{{ money.months }}},
+    datasets: [
+    {
+      label: 'Dư nợ',
+      data: {{ money.data.debt }},
+      borderColor: 'rgb(255, 42, 51)',
+      backgroundColor: 'rgb(255, 42, 51, 0.5)',
+      stack: 'combined',
+      type: 'bar'
+    },
+    {
+      label: 'Thanh toán',
+      data: {{ money.data.payment }},
+      borderColor: 'rgb(70, 107, 255)',
+      backgroundColor: 'rgb(70, 107, 255, 0.5)',
+      stack: 'combined'
+    }
+  ]
+  }
+  const config4 = {
+    type: 'line',
+    data: data4,
+    options: {
+      scales: {
+        y: {
+          stacked: true
+        }
+      }
+    },
+  };
+  const moneyChart = new Chart(moneyChartCanvas, config4)
+</script>
+{{/section}}

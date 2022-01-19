@@ -58,6 +58,12 @@
           </tbody>
         </table>
       </div>
+    <div class="card">
+    <div class="card-header">
+      <h4 class="card-title"> Thống kê số lượng bệnh nhân theo thời gian</h4>
+    </div>
+    <div class="card-body">
+      <canvas id="patientChart" style="padding: 0 50px;"></canvas>
     </div>
   </div>
 </div>
@@ -72,5 +78,69 @@
   <script>
     $(document).ready(function () { $('#table_account_management').DataTable();
     });
-  </script>
+    const patientChartCanvas = document.getElementById('patientChart')
+    const data = {
+    labels: {{{ patients.dates }}},
+    datasets: [
+    {
+        label: 'Khỏi bệnh',
+        data: {{ patients.data.normal }},
+        fill: false,
+        borderColor: 'rgb(172, 33, 227)',
+        backgroundColor: 'rgb(172, 33, 227, 0.5)',
+        tension: 0.1
+    },
+    {
+        label: 'F0',
+        data: {{ patients.data.F0 }},
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgb(75, 192, 192, 0.5)',
+        tension: 0.1
+    },
+    {
+      label: 'F1',
+      data: {{ patients.data.F1 }},
+      fill: false,
+      borderColor: 'rgb(227, 0, 4)',
+      backgroundColor: 'rgb(227, 0, 4, 0.5)',
+      tension: 0.1
+    },
+    {
+      label: 'F2',
+      data: {{ patients.data.F2 }},
+      fill: false,
+      borderColor: 'rgb(0, 227, 25)',
+      backgroundColor: 'rgb(0, 227, 25, 0.5)',
+      tension: 0.1
+    },
+    {
+      label: 'F3',
+      data: {{ patients.data.F3 }},
+      fill: false,
+      borderColor: 'rgb(227, 196, 29)',
+      backgroundColor: 'rgb(227, 196, 29, 0.5)',
+      tension: 0.1
+    }]
+  }
+  const config = {
+    type: 'line',
+    data: data,
+    option: {
+      responsive: false,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      layout: {
+        padding: {
+          x: 50
+        }
+      }
+    }
+  }
+  var patientsChart = new Chart(patientChartCanvas, config);
+</script>
 {{/section}}
