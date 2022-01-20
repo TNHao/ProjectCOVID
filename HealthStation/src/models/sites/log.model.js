@@ -60,18 +60,18 @@ class log {
     }
     async findByUserId(id) {
         const queryString =
-            `select * from $(table) where account_id=$(id)`;
+            `select * from $(table) where user_id=$(id)`;
         const listLog = await db.manyOrNone(queryString, {
             table: this.table,
             id: id
         })
-        const data = [];
+        let data = [];
         for (const log of listLog) {
             data.push({
                 action: log.action,
                 description: log.description,
                 date: log.create_at,
-                manager: manager_id
+                // manager: manager_id
             })
         }
         return { data };
