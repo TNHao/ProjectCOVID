@@ -1,6 +1,8 @@
 const userModel = require('../../models/user/user.model');
 const moment = require('moment')
-const { isValidPassword } = require('../../lib/utils')
+const { isValidPassword } = require('../../lib/utils');
+const logModel = require('../../models/sites/log.model');
+const orderModel = require('../../models/sites/order.model');
 const fakePaymentData = [
     {
         transaction_id: '1',
@@ -141,24 +143,24 @@ module.exports = {
             status: 'success'
         }
         // confirm password does not match
-        if(newPassword !== password_confirmation) {
+        if (newPassword !== password_confirmation) {
             message = {
                 content: 'Mật khẩu nhập lại không chính xác!',
                 status: 'danger'
-            } 
+            }
         } else {
             const { data: user } = await userModel.findById(id)
             const isValid = await isValidPassword(password, user.password)
-            if(!isValid) {
+            if (!isValid) {
                 message = {
                     content: 'Mật khẩu hiện tại không chính xác!',
                     status: 'danger'
-                } 
+                }
             } else {
                 await userModel.updatePasswordById(id, newPassword)
             }
         }
-        
+
         req.session.message = message;
         return res.redirect(`/user/${id}/change-password`);
     },
@@ -192,24 +194,57 @@ module.exports = {
     },
     getManagement: async (req, res) => {
         const { id } = req.params;
+        const { data } = await logModel.findByUserId(id)
+
+        let isEmpty = false;
+        if (data.length === 0)
+            isEmpty = true;
 
         res.render('layouts/user/management',
             {
                 layout: 'user/main',
                 active: { management: true },
                 data: fakeManagementData,
+                isEmpty,
                 id
             }
         )
     },
     getPurchase: async (req, res) => {
         const { id } = req.params;
+        let { data = [] } = await orderModel.findOrderByAccountID(id);
 
+        let isEmpty = false;
+        if (data.length === 0)
+            isEmpty = true;
+
+        data = data.map(detail => ({ ...detail, create_at: moment(detail.create_at).format('YYYY-MM-DD') }))
+
+        // res.json(data);
         res.render('layouts/user/purchase',
             {
                 layout: 'user/main',
                 active: { purchase: true },
-                data: fakePurchaseData,
+                data: data,
+                isEmpty,
+                id
+            }
+        )
+    },
+    getOrderDetail: async (req, res) => {
+        const { id, orderId } = req.params;
+        const { data } = await orderModel.findOrderByID(orderId);
+
+        console.log("order:", data);
+
+        const package = data[0].packages[0];
+
+        package.necessaries = package.necessaries.map(necessary => ({ ...necessary, total: Number(necessary.price) * Number(necessary.amount) }))
+
+        res.render('layouts/user/orderDetail',
+            {
+                layout: 'user/main',
+                package,
                 id
             }
         )

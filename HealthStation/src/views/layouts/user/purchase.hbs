@@ -34,7 +34,7 @@
                             <th>
                                 Tên gói
                             </th>
-                             <th class="text-center">
+                            <th class="text-center">
                                 Số lượng
                             </th>
                             <th class="text-center">
@@ -43,25 +43,37 @@
                             <th class="text-center">
                                 Ngày
                             </th>
+                            <th class="text-center">
+                                Hành động
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#each data}}
                         <tr>
                             <td>
-                                {{this.detail_id}}
+                                {{this.order_id}}
                             </td>
                             <td>
+                                {{#each this.packages}}
                                 {{this.package_name}}
+                                {{/each}}
                             </td>
                             <td class="text-center">
+                                {{#each this.packages}}
                                 {{this.amount}}
+                                {{/each}}
                             </td>
-                             <td class="text-center">
+                            <td class="text-center">
                                 {{this.total}}
                             </td>
                             <td class="text-center">
                                 {{this.create_at}}
+                            </td>
+                            <td class="text-center">
+                                <a href="/user/{{../id}}/purchase/order/{{this.order_id}}" class="btn btn-info">
+                                    Chi tiết
+                                </a>
                             </td>
                         </tr>
                         {{/each}}

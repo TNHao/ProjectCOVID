@@ -23,6 +23,9 @@
             <h4 class="card-title">Lịch sử được quản lý</h4>
         </div>
         <div class="card-body">
+            {{#if isEmpty}}
+            <h5 class="text-center">Dữ liệu trống</h5>
+            {{else}}            
             <div class="table-responsive p-3">
                 <table class="table table-hover" id="table_management_history">
                     <thead class=" text-primary">
@@ -55,6 +58,7 @@
                     </tbody>
                 </table>
             </div>
+            {{/if}}
         </div>
     </div>
 </div>
