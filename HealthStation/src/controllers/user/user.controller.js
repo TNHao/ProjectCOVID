@@ -7,7 +7,6 @@ const { PAYMENT } = require('../../constants/index')
 const moment = require('moment')
 
 const logModel = require('../../models/sites/log.model');
-const orderModel = require('../../models/sites/order.model');
 const { isValidPassword, callBankingApi } = require('../../lib/utils')
 
 const fakePaymentData = [
@@ -334,6 +333,7 @@ module.exports = {
         res.render('layouts/user/orderDetail',
             {
                 layout: 'user/main',
+                active: { purchase: true },
                 package,
                 id
             }
