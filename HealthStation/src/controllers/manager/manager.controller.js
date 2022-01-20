@@ -726,8 +726,12 @@ module.exports = {
 
   postCreatePackage: async (req, res) => {
     const file = await uploadFile(req.files[0]);
-
-    const _package = { ...req.body, file };
+    let _package;
+    if(file) {
+      _package = { ...req.body, file };
+    } else {
+      _package = { ...req.body };
+    }
     _package.products = _package.products
       .split(',')
       .filter((product) => product !== '')

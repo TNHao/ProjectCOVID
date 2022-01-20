@@ -12,12 +12,12 @@ class CategoryModel {
   table = new pgp.helpers.TableName({ table: "Category"});
 
   async findAll() {
-    const data = await db.any(`select * from $1 order by category_id `, this.table);
+    const data = await db.any(`select * from $1 where is_delete = '0' order by category_id `, this.table);
     return { data };
   }
 
   async findById(id) {
-    const data = await db.one('select * from ${table} where category_id = ${id}', {
+    const data = await db.one(`select * from $(table) where category_id = $(id) and is_delete = '0'`, {
       table: this.table,
       id: id,
     });
@@ -40,7 +40,7 @@ class CategoryModel {
     await productModel.deleteByCategoryId(id)
 
     const queryString = `
-       delete from $(table) where category_id=$(id)
+       update $(table) set is_delete = '1' where category_id=$(id)
     `;
     await db.none(queryString, {
       table: this.table,
