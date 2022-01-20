@@ -162,6 +162,14 @@ const fakePackageChartData = {
   ],
 };
 
+const fakePaymentChartData = {
+  months: "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
+  data: {
+    debt: "[16326000, 32883000, 41044000, 23759000, 37569000, 27091000, 34904000, 25865000]",
+    payment: "[63101000, 49837000, 23081000, 47989000, 22778000, 52021000, 29205000, 76020000]"
+  }
+}
+
 
 const categoryModel = require("../../models/sites/category.model");
 const productModel = require("../../models/sites/product.model");
