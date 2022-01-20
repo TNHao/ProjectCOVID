@@ -185,8 +185,14 @@ module.exports = {
   getAccountEdit: async (req, res, next) => {
     const id = parseInt(req.params.id);
     const { data: user } = await userModel.findById(id);
-    const { data: locations } =
-      await quarantineLocationModel.findAvailableLocation();
+    let { data: locations } =
+      await quarantineLocationModel.findAll();
+
+    locations = locations.map(location => {
+        if(location.num_patients < location.capacity || location.location_id == user.quarantine_location_id) {
+          return location
+        }
+    })
     const related_base_data = (await userModel.findAllPatientWithout(id)).data;
     const related_with_user = (await userModel.findAllRelatedById(id)).data;
     user.relate = related_with_user.join(',');
