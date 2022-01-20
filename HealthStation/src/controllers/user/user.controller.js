@@ -262,12 +262,15 @@ module.exports = {
 
         const { data: isVerified } = await userModel.checkVerify(id)
 
+        balance = Number(userBankingDetail.balance);
+        const isDebt = balance < 0;
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
                 data: data || null,
-                balance: (userBankingDetail.balance || "---"),
+                balance: Math.abs(balance) || "---",
+                isDebt: isDebt,
                 isVerified,
                 isLoggedIn: token ? true : false,
                 id,
