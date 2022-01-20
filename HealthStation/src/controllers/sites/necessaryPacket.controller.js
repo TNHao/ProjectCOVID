@@ -8,7 +8,17 @@ module.exports = {
         const { id } = req.params;
 
         const { data: package } = await necessaryPacketModel.findById(id);
-        const { data: products } = await productModel.findByPackageId(package.package_id);
+        let { data: products } = await productModel.findByPackageId(package.package_id);
+
+        
+        products = products.map(product => {
+            package.products.forEach(_product => {
+                if(product.necessary_id === _product.necessary_id) {
+                    product.max_necessary_per_package = _product.max_necessary_per_package
+                } 
+            })
+            return product
+        })
 
         res.render('layouts/sites/necessaryPacket',
             {

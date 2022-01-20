@@ -47,6 +47,7 @@
                     </div>
                 </div>
             </div>
+            <p class="text-{{message.status}} my-2">{{message.content}}</p>
             <div class="modal fade text-left" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
@@ -153,15 +154,16 @@
 {{else}}
 <div class="col-lg text-center" id="loginBtn">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
-        Liên kết tài khoản thanh toán
+        Đăng nhập
     </button>
+    <p class="text-{{message.status}}">{{message.content}}</p>
     <!-- Bank Login Modal -->
     <div class="modal fade text-left" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Liên kết tài khoản thanh toán</h5>
+                    <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -188,7 +190,7 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPasswordModal">
         Liên kết tài khoản thanh toán
     </button>
-
+    <p class="text-{{message.status}}">{{message.content}}</p>
     <!-- Set New Password Modal -->
     <div class="modal fade text-left" id="newPasswordModal" tabindex="-1" aria-labelledby="newPasswordModalLabel"
         aria-hidden="true">

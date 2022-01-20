@@ -46,7 +46,7 @@ module.exports = {
         return await bcrypt.compare(password, userPassword)
     },
 
-    callBankingApi: async(endpoint, method = 'GET', payload = {}) => {
+    callBankingApi: async(endpoint, method = 'GET', payload = {}, token = '') => {
 
         if(!endpoint) {
             return {}
@@ -55,6 +55,9 @@ module.exports = {
         const { data } = await axios({
             method: method,
             url: url,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
             data: payload
         })
         return { data }
