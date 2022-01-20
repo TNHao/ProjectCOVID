@@ -1,51 +1,52 @@
 const utils = require('../../lib/utils')
+
 const fakePaymentData = [
   {
-    name: "Sage Rodriguez",
+    name: 'Sage Rodriguez',
     debt: 50000,
-    status: "F0",
+    status: 'F0',
   },
   {
-    name: "Doris Greene",
+    name: 'Doris Greene',
     debt: 10000,
-    status: "F1",
+    status: 'F1',
   },
   {
-    name: "Mason Porter",
+    name: 'Mason Porter',
     debt: 0,
-    status: "F2",
+    status: 'F2',
   },
   {
-    name: "Jon Porter",
+    name: 'Jon Porter',
     debt: 40000,
-    status: "F0",
+    status: 'F0',
   },
 ];
 
 const fakeData = [
   {
-    name: "Sage Rodriguez",
-    country: "Netherlands",
-    city: "Baileux",
-    status: "F0",
+    name: 'Sage Rodriguez',
+    country: 'Netherlands',
+    city: 'Baileux',
+    status: 'F0',
   },
   {
-    name: "Doris Greene",
-    country: "Malawi",
-    city: "Feldkirchen in Kärnten",
-    status: "F1",
+    name: 'Doris Greene',
+    country: 'Malawi',
+    city: 'Feldkirchen in Kärnten',
+    status: 'F1',
   },
   {
-    name: "Mason Porter",
-    country: "Chile",
-    city: "Gloucester",
-    status: "F2",
+    name: 'Mason Porter',
+    country: 'Chile',
+    city: 'Gloucester',
+    status: 'F2',
   },
   {
-    name: "Jon Porter",
-    country: "Portugal",
-    city: "Gloucester",
-    status: "F0",
+    name: 'Jon Porter',
+    country: 'Portugal',
+    city: 'Gloucester',
+    status: 'F0',
   },
 ];
 
@@ -171,19 +172,19 @@ const categoryModel = require("../../models/sites/category.model");
 const productModel = require("../../models/sites/product.model");
 const packageModel = require("../../models/sites/necessaryPacket.model");
 const userModel = require("../../models/user/user.model");
-const statModel = require('../../models/statistic/stat.model')
 const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
 const quarantineLocationModel = require("../../models/sites/location.model");
-const numPatientsLogModel = require('../../models/sites/numPatientsLog.model');
+const logModel = require("../../models/sites/log.model");
 const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
-
 const moment = require('moment')
 const {
   updateStateOfAllRelated,
   updateStateById,
 } = require("../../models/user/user.model");
-const { PERMISSIONS } = require('../../constants/index')
-const { callBankingApi } = require('../../lib/utils')
+const { PERMISSIONS } = require('../../constants/index');
+const { db } = require("../../config/db");
+const { callBankingApi } = require('../../lib/utils');
+const locationModel = require("../../models/sites/location.model");
 
 module.exports = {
   get: async (req, res) => {
@@ -196,10 +197,11 @@ module.exports = {
       quarantine_location: locations,
       active: { createAcc: true },
     });
+    console.log(res.locals.user.account_id);
   },
 
   addPatient: async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     const user = {
       fullname: req.body.fullname,
       username: req.body.identity,
@@ -235,7 +237,7 @@ module.exports = {
     } else {
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
-
+      await logModel.create(res.locals.user.account_id, "Account", "add", null, req.body.status, "state", user.id, `Thêm ${req.body.fullname} vào khu cách ly`);
       await callBankingApi('/auth/register', "POST", { id: user_id })
 
       for (let i = 0; i < related_id.length; i++) {
@@ -283,6 +285,14 @@ module.exports = {
     });
   },
 
+  getAccount: async (req, res) => {
+    const data = await userModel.findAllPatient();
+    res.render('layouts/manager/accountManagement', {
+      layout: 'manager/main',
+      data: data.data,
+      active: { accManagement: true },
+    });
+  },
 
   getAccountDetails: async (req, res) => {
     console.log(req.params);
@@ -344,9 +354,23 @@ module.exports = {
     };
     console.log(user);
     const update_patient = await userModel.updatePatientInformation(user);
+
     console.log(update_patient);
     if (update_patient == 'Success') {
+      if (req.body.state != req.body.oldState) {
+        if (req.body.state == 'KB') {
+          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, null, "quarantine_location", req.params.id, `Cho ${req.body.fullname} xuất viện`);
+        }
+        else {
+          const oldState = `F${req.body.state}`;
+          const newState = `F${req.body.state}`
+          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, req.body.state, "quarantine_location", req.params.id, `Đổi trạng thái ${req.body.fullname} từ F${oldState} sang F${newState}`);
+        }
+      }
       if (req.body.isolation != req.body.oldIsolation) {
+        const oldName = (await locationModel.findById(req.body.oldIsolation)).data.name;
+        const newName = (await locationModel.findById(req.body.isolation)).data.name;
+        await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Chuyển bệnh nhân ${req.body.fullname} từ ${oldName} sang ${newName}`);
         if (req.body.oldIsolation != '') {
           const old_q_location = await quarantineLocationModel.findById(
             parseInt(req.body.oldIsolation)
@@ -426,7 +450,8 @@ module.exports = {
   createCategory: async (req, res) => {
     const name = req.body.name;
     await categoryModel.create({ name });
-    res.redirect('/manager/category-management');
+    await logModel.create(res.locals.user.account_id, "Category", "add", null, null, null, null, `Thêm ${name} vào Category`);
+    res.redirect("/manager/category-management");
   },
 
   updateCategory: async (req, res) => {
@@ -436,7 +461,9 @@ module.exports = {
 
   deleteCategory: async (req, res) => {
     const id = req.body.delete_category_id;
+    const name = (await categoryModel.findById(id)).data.name
     await categoryModel.deleteById(id);
+    await logModel.create(res.locals.user.account_id, "Category", "delete", null, null, null, null, `Xóa ${name} khỏi Category`);
     res.redirect('/manager/category-management');
   },
   // end category
@@ -470,7 +497,8 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files };
     await productModel.create(product);
-    res.redirect('/manager/product-management');
+    await logModel.create(res.locals.user.account_id, "Necessary", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách sản phẩm`);
+    res.redirect("/manager/product-management");
   },
 
   detailsProduct: async (req, res) => {
@@ -490,16 +518,18 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files, necessary_id: id };
     await productModel.update(product);
-    res.redirect('/manager/product-management/');
+    await logModel.create(res.locals.user.account_id, "Necessary", "update", null, null, null, null, `Sửa sản phẩm ${req.body.name}`);
+    res.redirect("/manager/product-management/");
   },
 
   deleteProduct: async (req, res) => {
     const id = req.body.delete_product_id;
+    const name = (await productModel.findById(id)).data.name;
     await productModel.deleteById(id);
+    await logModel.create(res.locals.user.account_id, "Necessary", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách sản phẩm`);
     res.redirect('/manager/product-management');
   },
   // end product
-
 
   // start package
   getPackage: async (req, res) => {
@@ -537,7 +567,8 @@ module.exports = {
       });
 
     await packageModel.create(_package);
-    res.redirect('/manager/package-management');
+    await logModel.create(res.locals.user.account_id, "Package", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách giỏ hàng`);
+    res.redirect("/manager/package-management");
   },
 
   detailsPackage: async (req, res) => {
@@ -572,7 +603,8 @@ module.exports = {
       file = req.body.file;
 
     const id = req.params.id;
-    const _package = { ...req.body, package_id: id, file };
+    const oldPackage = (await packageModel.findById(id)).data.name;
+    const _package = { ...req.body, package_id: id };
     _package.products = _package.products
       .split(',')
       .filter((product) => product !== '')
@@ -584,12 +616,15 @@ module.exports = {
       });
 
     await packageModel.update(_package);
-    res.redirect('/manager/package-management');
+    await logModel.create(res.locals.user.account_id, "Package", "update", null, null, null, null, `Sửa ${req.body.name} trong danh sách giỏ hàng`);
+    res.redirect("/manager/package-management");
   },
 
   deletePackage: async (req, res) => {
     const id = req.body.delete_package_id;
+    const name = (await packageModel.findById(id)).data.name
     await packageModel.deleteById(id);
+    await logModel.create(res.locals.user.account_id, "Package", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách gói`);
     res.redirect('/manager/package-management');
   },
   // end package
@@ -607,11 +642,11 @@ module.exports = {
     });
   },
 
-
   updatePayment: async (req, res, next) => {
     const amount = req.body.amount;
     await minimumPaymentModel.update(amount);
-    res.redirect('/manager/payment-management');
+    await logModel.create(res.locals.user.account_id, "Minimum_Payment", "update", null, null, null, null, `Sửa hạn mức`);
+    res.redirect("/manager/payment-management");
   },
   // end payment
 };
