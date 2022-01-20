@@ -18,6 +18,7 @@ module.exports = (app) => {
 
     try {
       const { data } = await authModel.findUser(id);
+      console.log('user', data);
       if (data)
         return done(null, data)
       else

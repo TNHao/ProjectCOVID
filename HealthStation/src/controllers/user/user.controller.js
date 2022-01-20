@@ -107,6 +107,7 @@ const fakeManagementData = [
     },
 ]
 
+// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2NDEwNTc2MTY1OTksImV4cCI6MTY0MTA1NzcwMjk5OX0.cdTrTbGwUt-3PJw3jeav8UfM2BEM9iFXa8GySM7prMM"
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2NDEwNTc2MTY1OTksImV4cCI6MTY0MTA1NzcwMjk5OX0.cdTrTbGwUt-3PJw3jeav8UfM2BEM9iFXa8GySM7prMM"
 
 module.exports = {
@@ -267,12 +268,13 @@ module.exports = {
 
         balance = Number(userBankingDetail.balance);
         const isDebt = balance < 0;
+
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
                 data: data || null,
-                balance: Math.abs(balance) || "---",
+                balance: Math.abs(balance),
                 isDebt: isDebt,
                 isVerified,
                 isLoggedIn: token ? true : false,
@@ -347,6 +349,11 @@ module.exports = {
     },
     deposit: async (req, res) => {
         const { amount, send_id } = req.body;
+        console.log(amount, send_id);
+
+        const { data: user } = await userModel.findById(send_id)
+        const token = user.banking_token
+
         const { data } = await userModel.deposit(send_id, amount, token);
         res.redirect(`/user/${send_id}/payment`);
     },

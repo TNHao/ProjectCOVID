@@ -50,117 +50,6 @@ const fakeData = [
   },
 ];
 
-const fakeManagementData = [
-  {
-    type: 'Thêm mới',
-    description: 'Thêm bệnh nhân A vào danh sách những người F0 ',
-    create_at: '22/12/2021',
-  },
-  {
-    type: 'Thêm nhu yếu phẩm',
-    description: 'Thêm Đường vào danh sách nhu yếu phẩm',
-    create_at: '22/12/2021',
-  },
-  {
-    type: 'Xóa gói nhu yếu phẩm',
-    description: 'Xóa gói hỗ trợ 69',
-    create_at: '22/12/2021',
-  },
-  {
-    type: 'Chuyển nơi điều trị',
-    description: 'Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B',
-    create_at: '22/12/2021',
-  },
-  {
-    type: 'Xuất viện',
-    description: 'Cho phép bệnh nhân A rời khỏi khu cách ly',
-    create_at: '22/12/2021',
-  },
-];
-
-const fakeProductChartData = {
-  dates:
-    "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
-  data: [
-    {
-      name: "'Nước ngọt'",
-      data: '[2, 17, 10, 38, 27, 21]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Bim bim'",
-      data: '[8, 7, 25, 35, 5, 14]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Bánh ngọt'",
-      data: '[37, 29, 14, 15, 26, 23]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Mì tôm'",
-      data: '[1, 27, 36, 35, 12, 15]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Thịt bò'",
-      data: '[29, 26, 3, 37, 13, 1]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Thịt bò'",
-      data: '[19, 33, 34, 5, 1, 15]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Thịt bò'",
-      data: '[16, 36, 13, 1, 38, 18]',
-      color: utils.randomColor(),
-    },
-  ],
-};
-
-const fakePackageChartData = {
-  dates:
-    "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
-  data: [
-    {
-      name: "'Gói thực phẩm 1'",
-      data: '[1, 3, 10, 11, 14, 18]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Gói thực phẩm 2'",
-      data: '[2, 17, 12, 16, 19, 8]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Gói sinh hoạt cá nhân'",
-      data: '[11, 20, 4, 18, 5, 7]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Gói ăn vặt 1'",
-      data: '[2, 1, 11, 9, 8, 18]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Gói ăn vặt 2'",
-      data: '[12, 8, 18, 9, 10, 3]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Gói chống virus'",
-      data: '[19, 33, 34, 5, 1, 15]',
-      color: utils.randomColor(),
-    },
-    {
-      name: "'Gói luxury'",
-      data: '[28, 22, 18, 21, 20, 37]',
-      color: utils.randomColor(),
-    },
-  ],
-};
 
 const fakePaymentChartData = {
   months: "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
@@ -249,7 +138,7 @@ module.exports = {
         req.body.status,
         'state',
         user_id,
-        `Thêm ${req.body.username} vào khu cách ly`
+        `Thêm ${req.body.identity} vào khu cách ly ${selected_location.name}`
       );
       await callBankingApi('/auth/register', 'POST', { id: user_id });
 
@@ -384,7 +273,7 @@ module.exports = {
             null,
             'quarantine_location',
             req.params.id,
-            `Cho ${req.username} xuất viện`
+            `Cho ${req.body.identity} xuất viện`
           );
         } else {
           const oldState = `F${req.body.state}`;
@@ -397,7 +286,7 @@ module.exports = {
             req.body.state,
             'quarantine_location',
             req.params.id,
-            `Đổi trạng thái ${req.body.username} từ F${oldState} sang F${newState}`
+            `Đổi trạng thái ${req.body.identity} từ ${oldState} sang ${newState}`
           );
         }
       }
@@ -417,7 +306,7 @@ module.exports = {
           req.body.isolation,
           'quarantine_location',
           req.params.id,
-          `Chuyển bệnh nhân ${req.body.username} từ ${oldName} sang ${newName}`
+          `Chuyển bệnh nhân ${req.body.identity} từ ${oldName} sang ${newName}`
         );
         if (req.body.oldIsolation != '') {
           const old_q_location = await quarantineLocationModel.findById(

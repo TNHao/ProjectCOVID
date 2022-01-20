@@ -17,10 +17,12 @@ module.exports = {
     deposit: async (req, res) => {
         const { send_id, amount } = req.body;
         const transaction = { send_id, amount, action: DEPOSIT }
-
+        console.log(transaction);
         try {
-            await transactionModel.updateBalance(send_id, amount);
+            const dummy = await transactionModel.updateBalance(send_id, amount);
+            console.log('dummy', dummy);
             const { data } = await transactionModel.newTransaction(transaction);
+            console.log('transaction', dummy, data);
 
             res.json({ status: 200, msg: "SUCCESS", data });
         } catch (error) {
