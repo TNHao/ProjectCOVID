@@ -17,6 +17,9 @@
         <table class='table table-hover' id='table_account_management'>
           <thead class='text-primary'>
             <tr>
+               <th>
+                ID
+              </th>
               <th>
                 Họ tên
               </th>
@@ -34,6 +37,9 @@
           <tbody>
             {{#each data}}
               <tr>
+                <td>
+                  {{this.account_id}}
+                </td>
                 <td>
                   {{this.fullname}}
                 </td>

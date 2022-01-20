@@ -83,8 +83,8 @@ class NecessaryPacketModel {
 
   async create(_package) {
     const queryString = `
-        insert into $(table)(name, max_per_person, period)
-        values($(name), $(max_per_person), $(period))
+        insert into $(table)(name, max_per_person, period, img_url)
+        values($(name), $(max_per_person), $(period), $(img_url))
         returning package_id;
     `;
     const response = await db.one(queryString, {
@@ -92,6 +92,7 @@ class NecessaryPacketModel {
       name: _package.name,
       max_per_person: _package.max_per_person,
       period: _package.period,
+      img_url: _package.file
     });
 
     const id = response.package_id
@@ -111,7 +112,7 @@ class NecessaryPacketModel {
 
   async update(_package) {
     const queryString = `
-       update $(table) set name = $(name), max_per_person = $(max_per_person), period = $(period) where package_id = $(id)
+       update $(table) set name = $(name), max_per_person = $(max_per_person), period = $(period), img_url = $(img_url) where package_id = $(id)
     `;
     await db.none(queryString, {
       table: this.table,
@@ -119,6 +120,7 @@ class NecessaryPacketModel {
       name: _package.name,
       max_per_person: _package.max_per_person,
       period: _package.period,
+      img_url: _package.file
     });
 
     await this.helpers.deleteNecessaryPackageById(_package.package_id)
@@ -127,7 +129,7 @@ class NecessaryPacketModel {
 
   async getPackageByCategory(category_id) {
     const queryString = `
-      Select distinct P.package_id, P.name, P.period, P.max_per_person
+      Select distinct P.package_id, P.name, P.period, P.max_per_person, P.img_url
       from public."Package" P, public."Necessary_Package" NP, public."Necessary" N
       where 
         P.package_id = NP.package_id 
@@ -136,6 +138,30 @@ class NecessaryPacketModel {
     `
 
     const data = await db.manyOrNone(queryString, { id: category_id });
+    return { data }
+  }
+  async searchPackage(searchTerm) {
+    const queryString = `
+      SELECT *
+      FROM public."Package"
+      where name like $(searchTerm)
+    `;
+
+    const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%` });
+    return { data }
+  }
+  async searchPackageWithCategory(searchTerm, category_id) {
+    const queryString = `
+      SELECT *
+      FROM public."Package" P, public."Category" C, public."Necessary_Package" NP, public."Necessary" N
+      where P.name like $(searchTerm)
+        and C.category_id=$(id)
+        and C.category_id=N.category_id
+        and N.necessary_id=NP.necessary_id 
+        and NP.package_id=P.package_id
+    `;
+
+    const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%`, id: category_id });
     return { data }
   }
 }

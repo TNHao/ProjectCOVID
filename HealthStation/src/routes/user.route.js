@@ -8,6 +8,7 @@ router.get('/:id/payment', userController.getPayment);
 router.get('/:id/management', userController.getManagement);
 router.get('/:id/purchase', userController.getPurchase);
 router.get('/:id/change-password', userController.getChangePassword);
+router.post('/:id/change-password', userController.postChangePassword);
 
 router.post('/:id/deposit', userController.deposit);
 router.post('/:id/set-token', userController.setToken);
