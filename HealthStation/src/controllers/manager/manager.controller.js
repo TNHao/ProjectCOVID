@@ -225,14 +225,6 @@ module.exports = {
     const related_id = req.body.relate.split(',');
     const add_create = await userModel.create(user);
     if (add_create != true) {
-      const data = await userModel.findAllPatient();
-      const location = await quarantineLocationModel.findAvailableLocation();
-      const { data: selected_location } =
-        await quarantineLocationModel.findByLocationId(req.body.isolation);
-      selected_location.num_patients += 1;
-      const update_selected_location = await quarantineLocationModel.update(
-        selected_location
-      );
       res.render('layouts/manager/createAcc', {
         layout: 'manager/main',
         data: data.data,
@@ -241,6 +233,12 @@ module.exports = {
         message: { status: 'danger', content: add_create },
       });
     } else {
+      const { data: selected_location } =
+        await quarantineLocationModel.findByLocationId(req.body.isolation);
+      selected_location.num_patients += 1;
+      const update_selected_location = await quarantineLocationModel.update(
+        selected_location
+      );
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
       await logModel.create(
