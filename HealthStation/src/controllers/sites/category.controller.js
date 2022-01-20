@@ -5,11 +5,21 @@ module.exports = {
     get: async (req, res) => {
         const { data: categories } = await categoryModel.findAll();
         const { id } = req.params;
+        const { order } = req.query;
+
         const { isLoggedIn, user } = res.locals;
 
         const mainCategory = categories.find(category => Number(category.category_id) === Number(id));
 
-        const { data: packages } = await necessaryPacketModel.getPackageByCategory(id);
+        let { data: packages } = await necessaryPacketModel.getPackageByCategory(id);
+
+        if (order !== undefined) {
+            packages.sort(
+                (a, b) => a.name.localeCompare(b.name)
+            );
+
+            if (order === "false") packages = [...packages].reverse();
+        }
 
         if (!mainCategory)
             return res.redirect('/404-page-not-found');
@@ -21,7 +31,8 @@ module.exports = {
                 mainCategory,
                 packages,
                 isLoggedIn,
-                user
+                user,
+                id
             }
         )
     },

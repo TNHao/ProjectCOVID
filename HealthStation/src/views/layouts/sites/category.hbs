@@ -35,13 +35,17 @@
             </div>
             <div class="col-md-9">
                 <div class="category-search-filter">
-                    <div class="row">
+                    <div class="row justify-content-end">
                         <div class="col-md-6">
-                            <select class="custom-select mt-lg-1 mt-md-2">
-                                <option>Hiển thị</option>
-                                <option value="">Giá thấp</option>
-                                <option value="">Giá cao</option>
-                            </select>
+                            <div class="nav-item dropdown dropdown-slide">
+                                <a class="nav-link dropdown-toggle text-right shadow" data-toggle="dropdown">Hiển thị {{{'  '}}}<span></span></a>
+
+                                <!-- Dropdown list -->
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/category/{{id}}?order=true">A - Z</a>
+                                    <a class="dropdown-item" href="/category/{{id}}?order=false">Z - A</a>
+                                </div>
+                            </div>
                             <div class="form-group">
                             </div>
                         </div>
@@ -67,8 +71,8 @@
                         {{#each packages}}
                         <div class="col-sm-12 col-lg-4 col-md-6">
                             {{> packetPartial
-                            imgSrc='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxASEhUQEhIQDxAQFQ8QFRAQEBAQEBAPFRIWFhURFRUYHSggGBolHhUXITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGw8QFS0dFR0rKy0rKy0rKy0tNy0tLSsrLS8tLS0rKystOC0rLTctKysrNysrKy0rKysrKysrKysrK//AABEIAOAA4AMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABAUCAwYBB//EAEQQAAIBAgEHBwYLBwUAAAAAAAABAgMRBAUGEiExUWETIkFScZGhU2KBsdHSFBUyM0JzkpOjssEWI3KCwuHwJDRDg6L/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EAB8RAQEAAgMBAQEBAQAAAAAAAAABAhESITFRQXEyIv/aAAwDAQACEQMRAD8A+ngA5O4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABobcq3JPVGEFVkus5ScYx7Oa2/QBIgr7Oy/R2BpLpM5y9nYiLUZSM51orpKvHZbVPbHV1r6v7GyuioyhSTTT1pkrckbnnQuhI1SznfDuRxkm4ycG9jaM0zG3ThHXPOSe/wQ/aOW85VIyjFja8I6j9pJb/UZxzilvXcjlkjyzGzhHWLOOXDuRlHOXhFnHtGVFO9ltdi7ThHeYTLPKNRUG3weziW0da16nu1MrcjYPkoJW5zScn033dhZRizUjllp7Y8PZQNFSTKy3AiU8XaahL6d1GXnJX0X6L2JZFAAEAAAAAAAAbKELvgiHjZaFeFV6oyjKjN7talDxuvSWeGjzbkbH0k4tPWmi6SXtjVItSRzuVco16DUYNTj599Jek1YTOSMmoSTjN77WfYybdOLoCLj4ajOhXUtaNuMjzQsfPMv0tGrfrLxItOqT85vlJ8WU8Z6zm7TxZQmZ6RXxqEqEwJFxKRr0zyUgNkZFlm/TU68F1XpP0FOp2L/M6F6kpblbvLGcvHc0Ym69jClsMas+noOrz/AK8q1CDXrlflnOClRVm1d7F0y7FtOallmtWlaEeTT+lPb9lGbW8cXQOu516ceim3Vb9DjFeJ0ad9ZzmRcOo7W5SeuUntb/RcDoaGwRMmYADIAAAAAAACdhFzfSzXilqPMmYmMnOH0qbjdcJLUzdi4c1mpdxj9cbljCqV2cti8Dd2tx4rimdllPpOerrWYr1Y+NmbmJdtCT50HovjF7H4HRY+dqdzkcHzcQvPg16Yu/tL3ODE6FGPERMp247OSrdrtKGFXWScr4q7XaVLqmHRbKRtp1SphiDZHEBV1TqGUplbRxK3mzl0E0laZ0uaVSzfFo5GNZF/kDEJP0liZTp9MwzvEqc4so8jTckrv5MVvm9i/wA3FhkuppQucnnNX068YdFKDqtefN6Me6MX3nS3pwxn/TnoUHKTnN6dSTvKTvfsW5FjRgtRrSN1NHN2X+TWXtDYUWSo3Zc8tGNtJ20morjJ9HgbcsvW8ABgAAAAAAABHqUJxny9JpTtoyjL5FWPVe57mT8PlGFW9Np06yV3Sn8rR60X9JcUZYRXUl2FLl+k6cViI35TCvlY73Sv+8pcU14oz3j3PE9/qPlWFmyirQOjys07Ti7xmozT3xaumUtdItdsb0qZ82rSl52j9pWNOfWPtKnRjrloub4J6l+pJxsfm3uqU+65zuV6zr4yo1rUNGknwgva2Zb/AFGp4TS26yyw2Sk+helEjC0IxRYU6kV0oLtHpZKh0pdyN6yXBfRXcjfDER4G6OKjvRdREN5Oh1V3IjVsmR6q7kWzxMN6NU8TDegbc7icmR3WIS5Sk7xfoetHTVqsH0lTjIJ7DLUrtsw8qqvRl0Sg2pLpWrUVGVH/AKivLz4Q9Eacf1bKTMXGujjlBu0MQpU3u5Ra4Pt2ovcev3tb66p4KJrfTnrWSG2Z030HljZQjeS7V6w0uqWOp0IKU29KWqEEtKc7bbJeswwTrYmrGc1ydOk9KMNrv15vfuRBlT5RxlTtylRfLevkqK+RCG5vW32nU5Lwipwtrbett62+0neX8c70lgA25gAAAAAAAJGCetrejXjaak9B7JqUH2OLQoStJDKOqUX5wy/zUnrl8jzcsDR301Uofd1JRXgkRsQtRuzb/wBtUj1MTiPFp/qasTIz+OuKjynKbdOnFc5zTW5JRbbfBWImFyboJqOtttuT2yk3dsu8i03UxFW9v3dCq1wcpRj6mzLkkg3tVxwLe1mccAWairnjQ0u1f8C4mMsIWVjFoaNq/wCCI8eDW8n6J5ogVssJxNcsJxLNwNckQ2pa+Dd1KLtKLUoyXRJa0y5wuLdXTnJaM3Um5R4tRel2M1ygu80J6OJceh0aM3/Feav3BU9xMcXPQo1JraoSUf4pWgvzGekK6UoqPWk//MJSXikL4lWGbEfo9VRXcjrIrUjmc1YXu97frOnZrHxyz9AAVgAAAAAAAANuL50U9zV+01GutC+tSlFrbbWpR6YyW71Eyuos9c3m7K8cTHdiJ+MIkPKdN67NolYXJ2KoSrONOOIjVqOonSqQfNslsdteoi4ypXep4XEJ/wACfqZiZTTpj6j5pVbYirFu+lh6vp0Zw9pJkiBkTTpYjlKlGvSp8lXg5ypTaTlo2XNTfQWEsXh1/wAkl/0Yj3Syxd9sUImt4/DeVf3GI90fGeF8sl206y/pKbjbYOJollPCeXj9it7p78b4Ty8fu63uja7bFEwasYPK+D8uvu63umuWV8H5dfdVfdBuN0jU49BpWV8J5b8Kt7pl8a4Py/4Vb3QbjKUSsxzfwpfUUU/tTJ08qYTorfhVvdINfn1pVIxm46NOEXo2UopPWr69rJbFlTqUje3z6a4V3+Hb9SFCcuiD/mqUIfmmiZSo1HOM3yajFVNlWnNvSilZKLfrM5ZTRXS5s00o8dtumzb1l0U2beAlTjKc3JzqNPnbdFXsrdC1lydMfHHL0ABWQAAAAAAAA8k9X+bj0xqvU+xkvixWZDpRdOWpX5Sr0edsNtXJ7dWE07UoqWlC8rybjZeJjm/83L6yr6yyMzGWRbe2j4JDc/RKXtPHg4ed9qRIBrjPibqN8Bhx+0zF5Np7n3slgnGfDdQnkqjuff8A2MXkij1fH+xPA4z4bqu+JKHU9XsHxHh+ovD2FiBxnw3Vd8R4fqLuXsCyJh+ovD2FiBxnw2r/AIlw/k4+HsPfibD+Tj3E8F4z4bqjxuRL1aUqcacaUW+Ui3ZyXRbV+p7lrC04xWjCMflbEr9BdlRnG+bH+f8ApMZYySrL2taexdi9RkY09i7F6jI6RkAAAAAAAAAAA11/kvsZsNWKfMl2Ml8WeoObvzT+sq/mLMqs2vme2pV/My1GPkL6AAqAAAAAAAAAAAAAAUuc7tCP83riXRQZ3StCPbL+kxn/AJWer2nsXYvUZGNPYuxeoyNxAAAAAAAAAAADycE009aepo9AGrC4aFOOhBaMbt24t3ZtAAAAAAAAAAAAAAAAAAEXH5Pp1ko1E2ou6s2tfoJQAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//Z'
-                            name=this.name 
+                            imgSrc=this.img_url
+                            name=this.name
                             id=this.package_id
                             category=../mainCategory
                             }}
@@ -76,7 +80,7 @@
                         {{/each}}
                     </div>
                 </div>
-                <div class="pagination justify-content-center">
+                {{!-- <div class="pagination justify-content-center">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item">
@@ -96,7 +100,7 @@
                             </li>
                         </ul>
                     </nav>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
