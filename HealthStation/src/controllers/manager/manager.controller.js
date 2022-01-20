@@ -230,19 +230,18 @@ module.exports = {
     if (update_patient == 'Success') {
       if (req.body.state != req.body.oldState) {
         if (req.body.state == 'KB') {
-          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Cho ${req.body.fullname} xuất viện`);
+          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, null, "quarantine_location", req.params.id, `Cho ${req.body.fullname} xuất viện`);
         }
         else {
           const oldState = `F${req.body.state}`;
           const newState = `F${req.body.state}`
-          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Đổi trạng thái ${req.body.fullname} từ ${oldState} sang ${newState}`);
+          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, req.body.state, "quarantine_location", req.params.id, `Đổi trạng thái ${req.body.fullname} từ F${oldState} sang F${newState}`);
         }
-
       }
       if (req.body.isolation != req.body.oldIsolation) {
         const oldName = (await locationModel.findById(req.body.oldIsolation)).data.name;
         const newName = (await locationModel.findById(req.body.isolation)).data.name;
-        await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Đổi ${req.body.fullname} từ ${oldName} sang ${newName}`);
+        await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Chuyển bệnh nhân ${req.body.fullname} từ ${oldName} sang ${newName}`);
         if (req.body.oldIsolation != '') {
           const old_q_location = await quarantineLocationModel.findById(
             parseInt(req.body.oldIsolation)
@@ -333,7 +332,9 @@ module.exports = {
 
   deleteCategory: async (req, res) => {
     const id = req.body.delete_category_id;
+    const name = (await categoryModel.findById(id)).data.name
     await categoryModel.deleteById(id);
+    await logModel.create(res.locals.user.account_id, "Category", "delete", null, null, null, null, `Xóa ${name} khỏi Category`);
     res.redirect('/manager/category-management');
   },
   // end category
@@ -393,7 +394,9 @@ module.exports = {
 
   deleteProduct: async (req, res) => {
     const id = req.body.delete_product_id;
+    const name = (await productModel.findById(id)).data.name;
     await productModel.deleteById(id);
+    await logModel.create(res.locals.user.account_id, "Necessary", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách sản phẩm`);
     res.redirect('/manager/product-management');
   },
   // end product
@@ -488,7 +491,9 @@ module.exports = {
 
   deletePackage: async (req, res) => {
     const id = req.body.delete_package_id;
+    const name = (await packageModel.findById(id)).data.name
     await packageModel.deleteById(id);
+    await logModel.create(res.locals.user.account_id, "Package", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách gói`);
     res.redirect('/manager/package-management');
   },
   // end package
