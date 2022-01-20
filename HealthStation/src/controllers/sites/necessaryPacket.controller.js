@@ -23,9 +23,18 @@ module.exports = {
     search: async (req, res) => {
         const { isLoggedIn, user } = res.locals;
         const { searchTerm, category } = req.query;
-
         const { data: categories } = await categoryModel.findAll();
-        const { data: packages } = await necessaryPacketModel.searchPackage(searchTerm);                 
+
+        let packages = [];
+        let isEmpty = false;
+
+        if (category !== "")
+            packages = (await necessaryPacketModel.searchPackageWithCategory(searchTerm, category)).data;
+        else
+            packages = (await necessaryPacketModel.searchPackage(searchTerm)).data;
+
+        if (packages.length === 0)
+            isEmpty = true;
 
         res.render('layouts/sites/search',
             {
@@ -34,7 +43,8 @@ module.exports = {
                 user,
                 categories,
                 packages,
-                searchTerm
+                searchTerm,
+                isEmpty
             }
         )
     },

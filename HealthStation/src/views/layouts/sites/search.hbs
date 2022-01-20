@@ -30,6 +30,12 @@
                 </div>
             </div>
             <div class="col-md-9">
+                {{#if isEmpty}}
+                <div class="text-center">
+                    <h2>Không tồn tại kết quả</h2>
+                    <a href="/" class="btn btn-info">Trang chủ</a>
+                </div>
+                {{else}}
                 <div class="product-grid-list">
                     <div class="row mt-30">
                         {{#each packages}}
@@ -44,6 +50,7 @@
                         {{/each}}
                     </div>
                 </div>
+                {{/if}}
             </div>
         </div>
     </div>

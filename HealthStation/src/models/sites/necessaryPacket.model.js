@@ -152,6 +152,20 @@ class NecessaryPacketModel {
     const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%` });
     return { data }
   }
+  async searchPackageWithCategory(searchTerm, category_id) {
+    const queryString = `
+      SELECT *
+      FROM public."Package" P, public."Category" C, public."Necessary_Package" NP, public."Necessary" N
+      where P.name like $(searchTerm)
+        and C.category_id=$(id)
+        and C.category_id=N.category_id
+        and N.necessary_id=NP.necessary_id 
+        and NP.package_id=P.package_id
+    `;
+
+    const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%`, id: category_id });
+    return { data }
+  }
 }
 
 module.exports = new NecessaryPacketModel();
