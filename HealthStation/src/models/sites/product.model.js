@@ -62,12 +62,12 @@ class ProductModel {
     },
   }
 
-
   async findById(id) {
-    const necessary = await db.oneOrNone('select * from ${table} where necessary_id = ${id}', {
+    const necessary = await db.oneOrNone(`select * from $(table) where necessary_id = $(id) and is_delete = '0'`, {
       table: this.table,
       id: id,
     });
+    
     const response = await this.helpers.findImagesById(necessary.necessary_id)
     const images = response.map(item => item.img_url)
     const data = {...necessary, images: images}
@@ -75,7 +75,7 @@ class ProductModel {
   }
 
   async findAll() {
-    const response = await db.any('select necessary_id from $1 order by necessary_id', this.table)
+    const response = await db.any(`select necessary_id from $1 where is_delete = '0' order by necessary_id`, this.table)
     const ids = response.map(item => item.necessary_id)
     const data = []
     for(const id of ids) {
@@ -88,7 +88,7 @@ class ProductModel {
   }
 
   async findByCategoryId(categoryId) {
-    const response = await db.any('select necessary_id from ${table} where category_id = ${id}', {
+    const response = await db.any(`select necessary_id from $(table) where category_id = $(id) and is_delete = '0' `, {
       table: this.table,
       id: categoryId,
     });
@@ -136,16 +136,15 @@ class ProductModel {
   }
 
   async deleteById(id) {
-
-    const data = await this.helpers.findNecessaryPackageById(id)
     await this.helpers.deleteImagesById(id)
+    const data = await this.helpers.findNecessaryPackageById(id)
     await this.helpers.deleteNecessaryPackageById(id)
     for (const item of data) {
         await packageModel.deleteById(item.package_id)
     }
 
     const queryString = `
-       delete from $(table) where necessary_id=$(id)
+       update $(table) set is_delete = '1' where necessary_id=$(id)
     `;
     await db.none(queryString, {
       table: this.table,
@@ -160,7 +159,6 @@ class ProductModel {
     for (const id of ids){
       await this.deleteById(id)
     }
-
   }
 
   async update(necessary) {
