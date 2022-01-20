@@ -31,7 +31,7 @@
                 <div class="col-md-4 pl-1">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Số CMND / Căn cước công dân</label>
-                        <input type="text" readonly class="form-control bg-transparent" value="0099559955">
+                        <input type="text" readonly class="form-control bg-transparent" value="{{profile.national_id}}">
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <div class="form-group">
                         <label>Nơi đang điều trị / cách ly</label>
                         <input type="text" readonly class="form-control bg-transparent"
-                            value="{{profile.quarantineLocation}}">
+                            value="{{profile.quarantineLocation.name}}">
                     </div>
                 </div>
                 <div class="col-md-4 pl-1">

@@ -19,7 +19,7 @@ module.exports = {
         //console.log(packageStat);
         const trendingPackage = [];
         for (let i = 0; i < 5; i++) {
-            if (packageStat.lenght < i) break;
+            if (packageStat.length < i) break;
             trendingPackage.push((await packageModel.findByName(packageStat[i].package_name)).data)
         }
         const package = trendingPackage;
