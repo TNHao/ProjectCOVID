@@ -1,4 +1,4 @@
-const URL = "https://localhost:5000";
+const URL = "http://localhost:5000";
 
 const setLoading = () => {
     document.getElementById('loading').style.display = 'block';
@@ -41,6 +41,11 @@ const handleBankingConnect = () => {
     const password = document.getElementById('registerPassword').value;
     const passwordConfirm = document.getElementById('registerPasswordConfirmation').value;
 
+    if (password === "") {
+        alert("Vui lòng nhập mật khẩu");
+        return;
+    }
+
     if (password !== passwordConfirm)
         return document.getElementById('registerPasswordError').innerHTML = "Mật khẩu không khớp.";
     else document.getElementById('registerPasswordError').innerHTML = "";
@@ -63,6 +68,7 @@ const handleBankingConnect = () => {
         })
         .catch(err => console.log(err))
 
+    location.reload();
     // console.log(bankingToken);
 
     // fetch(`/user/${userID}/set-token`, {

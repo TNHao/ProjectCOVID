@@ -82,7 +82,7 @@ module.exports = {
     const { username: username, id: id, Password: password } = req.body;
     await userModel.updatePasswordById(id, password);
     
-    req.logIn({ permission: PERMISSIONS['user'], username, id }, function (err) {
+    req.logIn({ permission: PERMISSIONS['user'], username, account_id: id }, function (err) {
       if (err) {
         return res.redirect("/login?err=404");
       } else {

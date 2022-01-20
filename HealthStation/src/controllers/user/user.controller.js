@@ -109,7 +109,7 @@ module.exports = {
 
         profile = { ...profile, quarantineLocation }
         profile.dob = moment(profile.dob).format('YYYY-MM-DD')
-
+        console.log('profile', profile);
         res.render('layouts/user/profile',
             {
                 layout: 'user/main',
