@@ -304,14 +304,6 @@ module.exports = {
     });
   },
 
-  getAccount: async (req, res) => {
-    const data = await userModel.findAllPatient();
-    res.render('layouts/manager/accountManagement', {
-      layout: 'manager/main',
-      data: data.data,
-      active: { accManagement: true },
-    });
-  },
 
   getAccountDetails: async (req, res) => {
     console.log(req.params);

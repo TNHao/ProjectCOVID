@@ -192,7 +192,11 @@
                   {{this.city}}
                 </td>
                 <td class='text-center'>
+                  {{#if this.state}}
                   F{{this.state}}
+                  {{else}}
+                  Khỏi bệnh
+                  {{/if}}
                 </td>
                 <td class='text-center'>
                   <input

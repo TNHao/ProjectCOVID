@@ -46,7 +46,11 @@
                 <div class="col-md-4 pl-1">
                     <div class="form-group">
                         <label>Trạng thái hiện tại</label>
+                        {{#if profile.state}}
                         <input type="text" readonly class="form-control bg-transparent" value="F{{profile.state}}">
+                        {{else}}
+                        <input type="text" readonly class="form-control bg-transparent" value="Khỏi bệnh">
+                        {{/if}}
                     </div>
                 </div>
             </div>
