@@ -1,4 +1,4 @@
-const utils = require('../../lib/utils')
+const utils = require('../../lib/utils');
 
 const fakePaymentData = [
   {
@@ -52,139 +52,147 @@ const fakeData = [
 
 const fakeManagementData = [
   {
-    type: "Thêm mới",
-    description: "Thêm bệnh nhân A vào danh sách những người F0 ",
-    create_at: "22/12/2021",
+    type: 'Thêm mới',
+    description: 'Thêm bệnh nhân A vào danh sách những người F0 ',
+    create_at: '22/12/2021',
   },
   {
-    type: "Thêm nhu yếu phẩm",
-    description: "Thêm Đường vào danh sách nhu yếu phẩm",
-    create_at: "22/12/2021",
+    type: 'Thêm nhu yếu phẩm',
+    description: 'Thêm Đường vào danh sách nhu yếu phẩm',
+    create_at: '22/12/2021',
   },
   {
-    type: "Xóa gói nhu yếu phẩm",
-    description: "Xóa gói hỗ trợ 69",
-    create_at: "22/12/2021",
+    type: 'Xóa gói nhu yếu phẩm',
+    description: 'Xóa gói hỗ trợ 69',
+    create_at: '22/12/2021',
   },
   {
-    type: "Chuyển nơi điều trị",
-    description: "Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B",
-    create_at: "22/12/2021",
+    type: 'Chuyển nơi điều trị',
+    description: 'Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B',
+    create_at: '22/12/2021',
   },
   {
-    type: "Xuất viện",
-    description: "Cho phép bệnh nhân A rời khỏi khu cách ly",
-    create_at: "22/12/2021",
+    type: 'Xuất viện',
+    description: 'Cho phép bệnh nhân A rời khỏi khu cách ly',
+    create_at: '22/12/2021',
   },
 ];
 
 const fakeProductChartData = {
-  dates: "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
+  dates:
+    "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
   data: [
     {
       name: "'Nước ngọt'",
       data: '[2, 17, 10, 38, 27, 21]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Bim bim'",
       data: '[8, 7, 25, 35, 5, 14]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Bánh ngọt'",
       data: '[37, 29, 14, 15, 26, 23]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Mì tôm'",
       data: '[1, 27, 36, 35, 12, 15]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Thịt bò'",
       data: '[29, 26, 3, 37, 13, 1]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Thịt bò'",
       data: '[19, 33, 34, 5, 1, 15]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Thịt bò'",
       data: '[16, 36, 13, 1, 38, 18]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
-  ]
-}
+  ],
+};
 
 const fakePackageChartData = {
-  dates: "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
+  dates:
+    "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
   data: [
     {
       name: "'Gói thực phẩm 1'",
       data: '[1, 3, 10, 11, 14, 18]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Gói thực phẩm 2'",
       data: '[2, 17, 12, 16, 19, 8]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Gói sinh hoạt cá nhân'",
       data: '[11, 20, 4, 18, 5, 7]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Gói ăn vặt 1'",
       data: '[2, 1, 11, 9, 8, 18]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Gói ăn vặt 2'",
       data: '[12, 8, 18, 9, 10, 3]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Gói chống virus'",
       data: '[19, 33, 34, 5, 1, 15]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
     {
       name: "'Gói luxury'",
       data: '[28, 22, 18, 21, 20, 37]',
-      color: utils.randomColor()
+      color: utils.randomColor(),
     },
-  ]
-}
+  ],
+};
 
 const fakePaymentChartData = {
-  months: "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
+  months:
+    "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
   data: {
-    debt: "[16326000, 32883000, 41044000, 23759000, 37569000, 27091000, 34904000, 25865000]",
-    payment: "[63101000, 49837000, 23081000, 47989000, 22778000, 52021000, 29205000, 76020000]"
-  }
-}
+    debt: '[16326000, 32883000, 41044000, 23759000, 37569000, 27091000, 34904000, 25865000]',
+    payment:
+      '[63101000, 49837000, 23081000, 47989000, 22778000, 52021000, 29205000, 76020000]',
+  },
+};
 
-const categoryModel = require("../../models/sites/category.model");
-const productModel = require("../../models/sites/product.model");
-const packageModel = require("../../models/sites/necessaryPacket.model");
-const userModel = require("../../models/user/user.model");
-const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
-const quarantineLocationModel = require("../../models/sites/location.model");
-const logModel = require("../../models/sites/log.model");
-const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
-const moment = require('moment')
+const categoryModel = require('../../models/sites/category.model');
+const productModel = require('../../models/sites/product.model');
+const packageModel = require('../../models/sites/necessaryPacket.model');
+const userModel = require('../../models/user/user.model');
+const minimumPaymentModel = require('../../models/sites/minimumPayment.model');
+const quarantineLocationModel = require('../../models/sites/location.model');
+const logModel = require('../../models/sites/log.model');
+const {
+  uploadMultipleFiles,
+  uploadFile,
+  deleteFile,
+} = require('../../config/firebase');
+const moment = require('moment');
 const {
   updateStateOfAllRelated,
   updateStateById,
-} = require("../../models/user/user.model");
+} = require('../../models/user/user.model');
 const { PERMISSIONS } = require('../../constants/index');
-const { db } = require("../../config/db");
+const { db } = require('../../config/db');
 const { callBankingApi } = require('../../lib/utils');
-const locationModel = require("../../models/sites/location.model");
+const locationModel = require('../../models/sites/location.model');
 
 module.exports = {
   get: async (req, res) => {
@@ -237,8 +245,17 @@ module.exports = {
     } else {
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
-      await logModel.create(res.locals.user.account_id, "Account", "add", null, req.body.status, "state", user.id, `Thêm ${req.body.fullname} vào khu cách ly`);
-      await callBankingApi('/auth/register', "POST", { id: user_id })
+      await logModel.create(
+        res.locals.user.account_id,
+        'Account',
+        'add',
+        null,
+        req.body.status,
+        'state',
+        user_id,
+        `Thêm ${req.body.username} vào khu cách ly`
+      );
+      await callBankingApi('/auth/register', 'POST', { id: user_id });
 
       for (let i = 0; i < related_id.length; i++) {
         await userModel.createRelated(user_id, related_id[i]);
@@ -259,11 +276,13 @@ module.exports = {
         F0: [],
         F1: [],
         F2: [],
-        F3: []
-      }
+        F3: [],
+      },
     };
     for (let i = 0; i < response.data.length; i++) {
-      chart_data.dates.push(moment(response.data[i].date_created).format('DD-MM-YYYY'));
+      chart_data.dates.push(
+        moment(response.data[i].date_created).format('DD-MM-YYYY')
+      );
       chart_data.data.normal.push(response.data[i].normal);
       chart_data.data.F0.push(response.data[i].f0);
       chart_data.data.F1.push(response.data[i].f1);
@@ -277,8 +296,8 @@ module.exports = {
     chart_data.data.F2 = utils.arrayNumberToString(chart_data.data.F2);
     chart_data.data.F3 = utils.arrayNumberToString(chart_data.data.F3);
 
-    res.render("layouts/manager/accountManagement", {
-      layout: "manager/main",
+    res.render('layouts/manager/accountManagement', {
+      layout: 'manager/main',
       data: data.data,
       chart_data: chart_data,
       active: { accManagement: true },
@@ -318,14 +337,16 @@ module.exports = {
   getAccountEdit: async (req, res, next) => {
     const id = parseInt(req.params.id);
     const { data: user } = await userModel.findById(id);
-    let { data: locations } =
-      await quarantineLocationModel.findAll();
+    let { data: locations } = await quarantineLocationModel.findAll();
 
-    locations = locations.map(location => {
-      if (location.num_patients < location.capacity || location.location_id == user.quarantine_location_id) {
-        return location
+    locations = locations.map((location) => {
+      if (
+        location.num_patients < location.capacity ||
+        location.location_id == user.quarantine_location_id
+      ) {
+        return location;
       }
-    })
+    });
     const related_base_data = (await userModel.findAllPatientWithout(id)).data;
     const related_with_user = (await userModel.findAllRelatedById(id)).data;
     user.relate = related_with_user.join(',');
@@ -341,7 +362,7 @@ module.exports = {
   updatePatient: async (req, res) => {
     console.log(req.body);
     const user = {
-      username: req.body.identity,
+      username: req.body.username,
       national_id: req.body.identity,
       permission: 4,
       fullname: req.body.fullname,
@@ -359,18 +380,46 @@ module.exports = {
     if (update_patient == 'Success') {
       if (req.body.state != req.body.oldState) {
         if (req.body.state == 'KB') {
-          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, null, "quarantine_location", req.params.id, `Cho ${req.body.fullname} xuất viện`);
-        }
-        else {
+          await logModel.create(
+            res.locals.user.account_id,
+            'Account',
+            'update',
+            req.body.oldState,
+            null,
+            'quarantine_location',
+            req.params.id,
+            `Cho ${req.username} xuất viện`
+          );
+        } else {
           const oldState = `F${req.body.state}`;
-          const newState = `F${req.body.state}`
-          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, req.body.state, "quarantine_location", req.params.id, `Đổi trạng thái ${req.body.fullname} từ F${oldState} sang F${newState}`);
+          const newState = `F${req.body.state}`;
+          await logModel.create(
+            res.locals.user.account_id,
+            'Account',
+            'update',
+            req.body.oldState,
+            req.body.state,
+            'quarantine_location',
+            req.params.id,
+            `Đổi trạng thái ${req.body.username} từ F${oldState} sang F${newState}`
+          );
         }
       }
       if (req.body.isolation != req.body.oldIsolation) {
-        const oldName = (await locationModel.findById(req.body.oldIsolation)).data.name;
-        const newName = (await locationModel.findById(req.body.isolation)).data.name;
-        await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Chuyển bệnh nhân ${req.body.fullname} từ ${oldName} sang ${newName}`);
+        const oldName = (await locationModel.findById(req.body.oldIsolation))
+          .data.name;
+        const newName = (await locationModel.findById(req.body.isolation)).data
+          .name;
+        await logModel.create(
+          res.locals.user.account_id,
+          'Account',
+          'update',
+          req.body.oldIsolation,
+          req.body.isolation,
+          'quarantine_location',
+          req.params.id,
+          `Chuyển bệnh nhân ${req.body.username} từ ${oldName} sang ${newName}`
+        );
         if (req.body.oldIsolation != '') {
           const old_q_location = await quarantineLocationModel.findById(
             parseInt(req.body.oldIsolation)
@@ -450,8 +499,17 @@ module.exports = {
   createCategory: async (req, res) => {
     const name = req.body.name;
     await categoryModel.create({ name });
-    await logModel.create(res.locals.user.account_id, "Category", "add", null, null, null, null, `Thêm ${name} vào Category`);
-    res.redirect("/manager/category-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Category',
+      'add',
+      null,
+      null,
+      null,
+      null,
+      `Thêm ${name} vào Category`
+    );
+    res.redirect('/manager/category-management');
   },
 
   updateCategory: async (req, res) => {
@@ -461,9 +519,18 @@ module.exports = {
 
   deleteCategory: async (req, res) => {
     const id = req.body.delete_category_id;
-    const name = (await categoryModel.findById(id)).data.name
+    const name = (await categoryModel.findById(id)).data.name;
     await categoryModel.deleteById(id);
-    await logModel.create(res.locals.user.account_id, "Category", "delete", null, null, null, null, `Xóa ${name} khỏi Category`);
+    await logModel.create(
+      res.locals.user.account_id,
+      'Category',
+      'delete',
+      null,
+      null,
+      null,
+      null,
+      `Xóa ${name} khỏi Category`
+    );
     res.redirect('/manager/category-management');
   },
   // end category
@@ -476,8 +543,8 @@ module.exports = {
       product.category_name = category.data.name;
     }
 
-    res.render("layouts/manager/productManagement", {
-      layout: "manager/main",
+    res.render('layouts/manager/productManagement', {
+      layout: 'manager/main',
       data: data,
       chart_data: fakeProductChartData,
       active: { proManagement: true },
@@ -497,8 +564,17 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files };
     await productModel.create(product);
-    await logModel.create(res.locals.user.account_id, "Necessary", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách sản phẩm`);
-    res.redirect("/manager/product-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Necessary',
+      'add',
+      null,
+      null,
+      null,
+      null,
+      `Thêm ${req.body.name} vào danh sách sản phẩm`
+    );
+    res.redirect('/manager/product-management');
   },
 
   detailsProduct: async (req, res) => {
@@ -518,15 +594,33 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files, necessary_id: id };
     await productModel.update(product);
-    await logModel.create(res.locals.user.account_id, "Necessary", "update", null, null, null, null, `Sửa sản phẩm ${req.body.name}`);
-    res.redirect("/manager/product-management/");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Necessary',
+      'update',
+      null,
+      null,
+      null,
+      null,
+      `Sửa sản phẩm ${req.body.name}`
+    );
+    res.redirect('/manager/product-management/');
   },
 
   deleteProduct: async (req, res) => {
     const id = req.body.delete_product_id;
     const name = (await productModel.findById(id)).data.name;
     await productModel.deleteById(id);
-    await logModel.create(res.locals.user.account_id, "Necessary", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách sản phẩm`);
+    await logModel.create(
+      res.locals.user.account_id,
+      'Necessary',
+      'delete',
+      null,
+      null,
+      null,
+      null,
+      `Xóa ${name} khỏi danh sách sản phẩm`
+    );
     res.redirect('/manager/product-management');
   },
   // end product
@@ -535,8 +629,8 @@ module.exports = {
   getPackage: async (req, res) => {
     const { data } = await packageModel.findAll();
 
-    res.render("layouts/manager/packageManagement", {
-      layout: "manager/main",
+    res.render('layouts/manager/packageManagement', {
+      layout: 'manager/main',
       data: data,
       chart_data: fakePackageChartData,
       active: { packManagement: true },
@@ -567,8 +661,17 @@ module.exports = {
       });
 
     await packageModel.create(_package);
-    await logModel.create(res.locals.user.account_id, "Package", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách giỏ hàng`);
-    res.redirect("/manager/package-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Package',
+      'add',
+      null,
+      null,
+      null,
+      null,
+      `Thêm ${req.body.name} vào danh sách giỏ hàng`
+    );
+    res.redirect('/manager/package-management');
   },
 
   detailsPackage: async (req, res) => {
@@ -598,9 +701,7 @@ module.exports = {
 
     if (req.files && req.files.length > 0) {
       file = await uploadFile(req.files[0]);
-    }
-    else
-      file = req.body.file;
+    } else file = req.body.file;
 
     const id = req.params.id;
     const oldPackage = (await packageModel.findById(id)).data.name;
@@ -616,15 +717,33 @@ module.exports = {
       });
 
     await packageModel.update(_package);
-    await logModel.create(res.locals.user.account_id, "Package", "update", null, null, null, null, `Sửa ${req.body.name} trong danh sách giỏ hàng`);
-    res.redirect("/manager/package-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Package',
+      'update',
+      null,
+      null,
+      null,
+      null,
+      `Sửa ${req.body.name} trong danh sách giỏ hàng`
+    );
+    res.redirect('/manager/package-management');
   },
 
   deletePackage: async (req, res) => {
     const id = req.body.delete_package_id;
-    const name = (await packageModel.findById(id)).data.name
+    const name = (await packageModel.findById(id)).data.name;
     await packageModel.deleteById(id);
-    await logModel.create(res.locals.user.account_id, "Package", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách gói`);
+    await logModel.create(
+      res.locals.user.account_id,
+      'Package',
+      'delete',
+      null,
+      null,
+      null,
+      null,
+      `Xóa ${name} khỏi danh sách gói`
+    );
     res.redirect('/manager/package-management');
   },
   // end package
@@ -633,8 +752,8 @@ module.exports = {
   getPayment: async (req, res, next) => {
     const { data: amount } = await minimumPaymentModel.find();
 
-    res.render("layouts/manager/paymentManagement", {
-      layout: "manager/main",
+    res.render('layouts/manager/paymentManagement', {
+      layout: 'manager/main',
       amount: amount,
       data: fakePaymentData,
       chart_data: fakePaymentChartData,
@@ -645,8 +764,17 @@ module.exports = {
   updatePayment: async (req, res, next) => {
     const amount = req.body.amount;
     await minimumPaymentModel.update(amount);
-    await logModel.create(res.locals.user.account_id, "Minimum_Payment", "update", null, null, null, null, `Sửa hạn mức`);
-    res.redirect("/manager/payment-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Minimum_Payment',
+      'update',
+      null,
+      null,
+      null,
+      null,
+      `Sửa hạn mức`
+    );
+    res.redirect('/manager/payment-management');
   },
   // end payment
 };
