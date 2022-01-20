@@ -211,13 +211,13 @@ module.exports = {
             return { data: orders }
         })
     },
-    // order: { account_id, create_at, total } 
+    // order: { account_id, total } 
     // package: [
     //     { package_name, amount, price, package_id, necessaries: [ { necessary_name, unit, amount, price, necessary_id },... ] }, ...
     // ]
     createOrder: async (order, packages) => {
         try {
-            const qStr1 = pgp.helpers.insert(order, ["account_id", "create_at", "total"], table) + ' RETURNING order_id';
+            const qStr1 = pgp.helpers.insert(order, ["account_id", "total"], table) + ' RETURNING order_id';
             const t1 = await db.one(qStr1);
 
             for (let package of packages) {
