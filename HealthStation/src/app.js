@@ -16,6 +16,7 @@ const { rmSync } = require('fs');
 const { isFirstGenerate } = require('./models/admin/admin.model');
 const { findById } = require('./models/sites/location.model');
 
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
