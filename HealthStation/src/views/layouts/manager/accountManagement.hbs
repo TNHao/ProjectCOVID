@@ -1,16 +1,58 @@
 {{#section 'title'}}
-  <title>Quản lý tài khoản</title>
+<title>Quản lý tài khoản</title>
 {{/section}}
 
 {{#section 'style'}}
-  {{! DataTables }}
-  <link rel='stylesheet' type='text/css' href='/DataTables/datatables.css' />
+{{! DataTables }}
+<link rel='stylesheet' type='text/css' href='/DataTables/datatables.css' />
 {{/section}}
 
 <div class='col-md-12'>
-  <div class='card'>
-    <div class='card-header'>
-      <h4 class='card-title'> Danh sách người bệnh</h4>
+    <div class='card'>
+        <div class='card-header'>
+            <h4 class='card-title'> Danh sách người bệnh</h4>
+        </div>
+        <div class='card-body'>
+            <div class='table-responsive p-3'>
+                <table class='table table-hover' id='table_account_management'>
+                    <thead class='text-primary'>
+                        <tr>
+                            <th>
+                                Họ tên
+                            </th>
+                            <th>
+                                Địa chỉ
+                            </th>
+                            <th class='text-right'>
+                                Trạng thái
+                            </th>
+                            <th class='text-center'>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>
+                                {{this.fullname}}
+                            </td>
+                            <td>
+                                {{this.city}}
+                            </td>
+                            <td class='text-center'>
+                                F{{this.state}}
+                            </td>
+                            <td class='text-center'>
+                                <a href='/manager/account-management/{{this.account_id}}' class='btn btn-success'>Chi tiết</a>
+                                <a href='/manager/account-management/{{this.account_id}}/edit' class='btn btn-info'>Sửa</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class='card-body'>
       <div class='table-responsive p-3'>
@@ -65,18 +107,87 @@
         </table>
       </div>
     </div>
-  </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Thống kê số lượng bệnh nhân theo thời gian</h4>
+        </div>
+        <div class="card-body">
+            <canvas id="patientChart" style="padding: 0 50px;"></canvas>
+        </div>
+    </div>
 </div>
 
 {{#section 'script'}}
-  {{! Datatables }}
-  <script
-    type='text/javascript'
-    charset='utf8'
-    src='/DataTables/datatables.js'
-  ></script>
-  <script>
-    $(document).ready(function () { $('#table_account_management').DataTable();
+{{! Datatables }}
+<script type='text/javascript' charset='utf8' src='/DataTables/datatables.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table_account_management').DataTable();
     });
-  </script>
+    const patientChartCanvas = document.getElementById('patientChart')
+    const data = {
+        labels: {{{ chart_data.dates }}},
+        datasets: [
+            {
+                label: 'Khỏi bệnh',
+                data: {{ chart_data.data.normal }},
+                fill: false,
+                borderColor: 'rgb(172, 33, 227)',
+                backgroundColor: 'rgb(172, 33, 227, 0.5)',
+                tension: 0.1
+            },
+            {
+                label: 'F0',
+                data: {{ chart_data.data.F0 }},
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgb(75, 192, 192, 0.5)',
+                tension: 0.1
+            },
+            {
+                label: 'F1',
+                data: {{ chart_data.data.F1 }},
+                fill: false,
+                borderColor: 'rgb(227, 0, 4)',
+                backgroundColor: 'rgb(227, 0, 4, 0.5)',
+                tension: 0.1
+            },
+            {
+                label: 'F2',
+                data: {{ chart_data.data.F2 }},
+                fill: false,
+                borderColor: 'rgb(0, 227, 25)',
+                backgroundColor: 'rgb(0, 227, 25, 0.5)',
+                tension: 0.1
+            },
+            {
+                label: 'F3',
+                data: {{ chart_data.data.F3 }},
+                fill: false,
+                borderColor: 'rgb(227, 196, 29)',
+                backgroundColor: 'rgb(227, 196, 29, 0.5)',
+                tension: 0.1
+            }]
+    }
+    const config = {
+        type: 'line',
+        data: data,
+        option: {
+            responsive: false,
+            maintainAspectRatio: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            layout: {
+                padding: {
+                    x: 50
+                }
+            }
+        }
+    }
+    var patientsChart = new Chart(patientChartCanvas, config);
+</script>
 {{/section}}

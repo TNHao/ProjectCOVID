@@ -82,24 +82,17 @@ const packageModel = require("../../models/sites/necessaryPacket.model");
 const userModel = require("../../models/user/user.model");
 const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
 const quarantineLocationModel = require("../../models/sites/location.model");
-<<<<<<< HEAD
 const logModel = require("../../models/sites/log.model");
-const { uploadMultipleFiles, deleteFile } = require("../../config/firebase");
-=======
 const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
->>>>>>> master
 const moment = require('moment')
 const {
   updateStateOfAllRelated,
   updateStateById,
 } = require("../../models/user/user.model");
-<<<<<<< HEAD
 const { PERMISSIONS } = require('../../constants/index');
 const { db } = require("../../config/db");
-=======
-const { PERMISSIONS } = require('../../constants/index')
-const { callBankingApi } = require('../../lib/utils')
->>>>>>> master
+const { callBankingApi } = require('../../lib/utils');
+const locationModel = require("../../models/sites/location.model");
 
 module.exports = {
   get: async (req, res) => {
@@ -152,13 +145,9 @@ module.exports = {
     } else {
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
-<<<<<<< HEAD
-      const log = await logModel.create(res.locals.user.account_id, "Account", "add", null, req.body.status, "state", user.id, `Thêm ${req.body.fullname} vào khu cách ly`);
-=======
+      await logModel.create(res.locals.user.account_id, "Account", "add", null, req.body.status, "state", user.id, `Thêm ${req.body.fullname} vào khu cách ly`);
+      await callBankingApi('/auth/register', "POST", { id: user_id })
 
-      await callBankingApi('/auth/register', "POST", { id: user_id})
-      
->>>>>>> master
       for (let i = 0; i < related_id.length; i++) {
         await userModel.createRelated(user_id, related_id[i]);
         await userModel.createRelated(related_id[i], user_id);
@@ -204,9 +193,9 @@ module.exports = {
       await quarantineLocationModel.findAll();
 
     locations = locations.map(location => {
-        if(location.num_patients < location.capacity || location.location_id == user.quarantine_location_id) {
-          return location
-        }
+      if (location.num_patients < location.capacity || location.location_id == user.quarantine_location_id) {
+        return location
+      }
     })
     const related_base_data = (await userModel.findAllPatientWithout(id)).data;
     const related_with_user = (await userModel.findAllRelatedById(id)).data;
@@ -236,9 +225,24 @@ module.exports = {
     };
     console.log(user);
     const update_patient = await userModel.updatePatientInformation(user);
+
     console.log(update_patient);
     if (update_patient == 'Success') {
+      if (req.body.state != req.body.oldState) {
+        if (req.body.state == 'KB') {
+          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Cho ${req.body.fullname} xuất viện`);
+        }
+        else {
+          const oldState = `F${req.body.state}`;
+          const newState = `F${req.body.state}`
+          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Đổi trạng thái ${req.body.fullname} từ ${oldState} sang ${newState}`);
+        }
+
+      }
       if (req.body.isolation != req.body.oldIsolation) {
+        const oldName = (await locationModel.findById(req.body.oldIsolation)).data.name;
+        const newName = (await locationModel.findById(req.body.isolation)).data.name;
+        await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Đổi ${req.body.fullname} từ ${oldName} sang ${newName}`);
         if (req.body.oldIsolation != '') {
           const old_q_location = await quarantineLocationModel.findById(
             parseInt(req.body.oldIsolation)
@@ -318,12 +322,8 @@ module.exports = {
   createCategory: async (req, res) => {
     const name = req.body.name;
     await categoryModel.create({ name });
-<<<<<<< HEAD
     await logModel.create(res.locals.user.account_id, "Category", "add", null, null, null, null, `Thêm ${name} vào Category`);
     res.redirect("/manager/category-management");
-=======
-    res.redirect('/manager/category-management');
->>>>>>> master
   },
 
   updateCategory: async (req, res) => {
@@ -366,12 +366,8 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files };
     await productModel.create(product);
-<<<<<<< HEAD
     await logModel.create(res.locals.user.account_id, "Necessary", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách sản phẩm`);
     res.redirect("/manager/product-management");
-=======
-    res.redirect('/manager/product-management');
->>>>>>> master
   },
 
   detailsProduct: async (req, res) => {
@@ -391,12 +387,8 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files, necessary_id: id };
     await productModel.update(product);
-<<<<<<< HEAD
     await logModel.create(res.locals.user.account_id, "Necessary", "update", null, null, null, null, `Sửa sản phẩm ${req.body.name}`);
     res.redirect("/manager/product-management/");
-=======
-    res.redirect('/manager/product-management/');
->>>>>>> master
   },
 
   deleteProduct: async (req, res) => {
@@ -441,12 +433,8 @@ module.exports = {
       });
 
     await packageModel.create(_package);
-<<<<<<< HEAD
     await logModel.create(res.locals.user.account_id, "Package", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách giỏ hàng`);
     res.redirect("/manager/package-management");
-=======
-    res.redirect('/manager/package-management');
->>>>>>> master
   },
 
   detailsPackage: async (req, res) => {
@@ -481,12 +469,8 @@ module.exports = {
       file = req.body.file;
 
     const id = req.params.id;
-<<<<<<< HEAD
     const oldPackage = (await packageModel.findById(id)).data.name;
     const _package = { ...req.body, package_id: id };
-=======
-    const _package = { ...req.body, package_id: id, file };
->>>>>>> master
     _package.products = _package.products
       .split(',')
       .filter((product) => product !== '')
@@ -498,12 +482,8 @@ module.exports = {
       });
 
     await packageModel.update(_package);
-<<<<<<< HEAD
     await logModel.create(res.locals.user.account_id, "Package", "update", null, null, null, null, `Sửa ${req.body.name} trong danh sách giỏ hàng`);
     res.redirect("/manager/package-management");
-=======
-    res.redirect('/manager/package-management');
->>>>>>> master
   },
 
   deletePackage: async (req, res) => {
@@ -527,11 +507,7 @@ module.exports = {
   updatePayment: async (req, res, next) => {
     const amount = req.body.amount;
     await minimumPaymentModel.update(amount);
-<<<<<<< HEAD
     await logModel.create(res.locals.user.account_id, "Minimum_Payment", "update", null, null, null, null, `Sửa hạn mức`);
     res.redirect("/manager/payment-management");
-=======
-    res.redirect('/manager/payment-management');
->>>>>>> master
   },
 };
