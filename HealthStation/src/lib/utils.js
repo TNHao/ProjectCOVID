@@ -40,7 +40,7 @@ module.exports = {
         }
         str += + arr[arr.length - 1] + "]";
         return str;
-    },
+    }, 
 
     isValidPassword: async (password, userPassword) => {
         return await bcrypt.compare(password, userPassword)

@@ -3,6 +3,7 @@ const { db, pgp } = require('../../config/db');
 const table = new pgp.helpers.TableName({ table: "Order", schema: "public" });
 const orderDetailTable = new pgp.helpers.TableName({ table: "Order_Details", schema: "public" });
 const orderDetailPackageTable = new pgp.helpers.TableName({ table: "Order_Details_Package", schema: "public" });
+const moment = require('moment');
 
 // Ví dụ trả về 1 đơn hàng
 //  {
@@ -32,7 +33,7 @@ module.exports = {
     // Tìm thông tin của tất cả đơn hàng
     findAllOrder: async () => {
         return await db.task(async t => {
-            const orders = await t.any('Select * from $(table)', { table });
+            const orders = await t.any('Select * from $(table) order by create_at ASC', { table });
             for (let order of orders) {
                 order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                     table: orderDetailTable,
@@ -248,5 +249,21 @@ module.exports = {
             console.log('orderModel/create', error);
         }
     },
-    
+    statPackagesByDate: async () => {
+        const qStr = 'select date(o.create_at), od.package_name, count(od.package_name) from public."Order" o inner join public."Order_Details" od on o.order_id = od.order_id group by date(o.create_at), od.package_name order by date(o.create_at) ASC';
+        const data = await db.any(qStr);
+        for (let i = 0; i < data.length; i++) {
+            data[i].date = moment(data[i].date).format('DD-MM-YYYY')
+        }
+        return { data };
+    },
+    statProductsByDate: async () => {
+        const qStr = 'select date(o.create_at), necessary_name, count(necessary_name) from public."Order" o inner join public."Order_Details" od on o.order_id = od.order_id inner join public."Order_Details_Package" odp on od.detail_id = odp.order_detail_id group by date(o.create_at), necessary_name order by date(o.create_at) ASC';
+        const data = await db.any(qStr);
+        for (let i = 0; i < data.length; i++) {
+            data[i].date = moment(data[i].date).format('DD-MM-YYYY')
+        }
+        return { data };
+    }
+
 }

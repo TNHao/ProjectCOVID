@@ -162,29 +162,19 @@ const fakePackageChartData = {
   ],
 };
 
-const fakePaymentChartData = {
-  months:
-    "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
-  data: {
-    debt: '[16326000, 32883000, 41044000, 23759000, 37569000, 27091000, 34904000, 25865000]',
-    payment:
-      '[63101000, 49837000, 23081000, 47989000, 22778000, 52021000, 29205000, 76020000]',
-  },
-};
 
-const categoryModel = require('../../models/sites/category.model');
-const productModel = require('../../models/sites/product.model');
-const packageModel = require('../../models/sites/necessaryPacket.model');
-const userModel = require('../../models/user/user.model');
-const minimumPaymentModel = require('../../models/sites/minimumPayment.model');
-const quarantineLocationModel = require('../../models/sites/location.model');
-const logModel = require('../../models/sites/log.model');
-const {
-  uploadMultipleFiles,
-  uploadFile,
-  deleteFile,
-} = require('../../config/firebase');
-const moment = require('moment');
+const categoryModel = require("../../models/sites/category.model");
+const productModel = require("../../models/sites/product.model");
+const packageModel = require("../../models/sites/necessaryPacket.model");
+const userModel = require("../../models/user/user.model");
+const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
+const quarantineLocationModel = require("../../models/sites/location.model");
+const logModel = require("../../models/sites/log.model");
+const numPatientsLogModel = require('../../models/sites/numPatientsLog.model')
+const orderModel = require('../../models/sites/order.model');
+const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
+const moment = require('moment')
+
 const {
   updateStateOfAllRelated,
   updateStateById,
@@ -296,8 +286,9 @@ module.exports = {
     chart_data.data.F2 = utils.arrayNumberToString(chart_data.data.F2);
     chart_data.data.F3 = utils.arrayNumberToString(chart_data.data.F3);
 
-    res.render('layouts/manager/accountManagement', {
-      layout: 'manager/main',
+
+    res.render("layouts/manager/accountManagement", {
+      layout: "manager/main",
       data: data.data,
       chart_data: chart_data,
       active: { accManagement: true },
@@ -534,11 +525,58 @@ module.exports = {
       const category = await categoryModel.findById(product.category_id);
       product.category_name = category.data.name;
     }
+    const chart_data = {
+      dates: [],
+      data: []
+    }
 
-    res.render('layouts/manager/productManagement', {
-      layout: 'manager/main',
+    const response = await orderModel.statProductsByDate();
+    for (let i of response.data) {
+      if (!chart_data.dates.includes(i.date)) {
+        chart_data.dates.push(i.date)
+      }
+    }
+
+    for (let i of response.data) {
+      const product = {
+        name: i.necessary_name,
+        data: [],
+        color: utils.randomColor()
+      }
+      let j;
+      for (j = 0; j < chart_data.data.length; j++) {
+        if (chart_data.data[j].name === i.necessary_name) {
+          break;
+        }
+      }
+      if (j == chart_data.data.length) {
+        for (let k = 0; k < chart_data.dates.length; k++) {
+          product.data.push(0);
+        }
+        chart_data.data.push(product);
+      }
+    }
+
+    for (let i = 0; i < chart_data.dates.length; i++) {
+      for (let j = 0; j < response.data.length; j++) {
+        for (let k = 0; k < chart_data.data.length; k++) {
+          if (response.data[j].date == chart_data.dates[i] && response.data[j].necessary_name == chart_data.data[k].name) {
+            chart_data.data[k].data[i] += parseInt(response.data[j].count);
+          }
+        }
+      }
+    }
+
+    chart_data.dates = utils.arrayStringToString(chart_data.dates);
+    for (let i = 0; i < chart_data.data.length; i++) {
+      chart_data.data[i].name = `"` + chart_data.data[i].name + `"`;
+      chart_data.data[i].data = utils.arrayNumberToString(chart_data.data[i].data);
+    }
+
+    res.render("layouts/manager/productManagement", {
+      layout: "manager/main",
       data: data,
-      chart_data: fakeProductChartData,
+      chart_data: chart_data,
       active: { proManagement: true },
     });
   },
@@ -621,10 +659,58 @@ module.exports = {
   getPackage: async (req, res) => {
     const { data } = await packageModel.findAll();
 
-    res.render('layouts/manager/packageManagement', {
-      layout: 'manager/main',
+    const chart_data = {
+      dates: [],
+      data: []
+    }
+
+    const response = await orderModel.statPackagesByDate();
+    for (let i of response.data) {
+      if (!chart_data.dates.includes(i.date)) {
+        chart_data.dates.push(i.date)
+      }
+    }
+
+    for (let i of response.data) {
+      const package = {
+        name: i.package_name,
+        data: [],
+        color: utils.randomColor()
+      }
+      let j;
+      for (j = 0; j < chart_data.data.length; j++) {
+        if (chart_data.data[j].name === i.package_name) {
+          break;
+        }
+      }
+      if (j == chart_data.data.length) {
+        for (let k = 0; k < chart_data.dates.length; k++) {
+          package.data.push(0);
+        }
+        chart_data.data.push(package);
+      }
+    }
+
+    for (let i = 0; i < chart_data.dates.length; i++) {
+      for (let j = 0; j < response.data.length; j++) {
+        for (let k = 0; k < chart_data.data.length; k++) {
+          if (response.data[j].date == chart_data.dates[i] && response.data[j].package_name == chart_data.data[k].name) {
+            chart_data.data[k].data[i] += parseInt(response.data[j].count);
+          }
+        }
+      }
+    }
+
+    chart_data.dates = utils.arrayStringToString(chart_data.dates);
+    for (let i = 0; i < chart_data.data.length; i++) {
+      chart_data.data[i].name = `"` + chart_data.data[i].name + `"`;
+      chart_data.data[i].data = utils.arrayNumberToString(chart_data.data[i].data);
+    }
+
+    res.render("layouts/manager/packageManagement", {
+      layout: "manager/main",
       data: data,
-      chart_data: fakePackageChartData,
+      chart_data: chart_data,
       active: { packManagement: true },
     });
   },
