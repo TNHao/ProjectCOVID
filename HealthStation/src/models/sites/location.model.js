@@ -11,9 +11,8 @@ class quarantineLocation {
   }
   async findById(id) {
     const data = await db.one(
-      'select * from ${table} where location_id = ${id}',
+      'select * from public."Quarantine_Location" where location_id = ${id}',
       {
-        table: this.table,
         id: id,
       }
     );

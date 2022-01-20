@@ -76,6 +76,9 @@
           <thead class='text-primary'>
             <tr>
               <th>
+                ID
+              </th>
+              <th>
                 Họ tên
               </th>
               <th>
@@ -92,6 +95,9 @@
           <tbody>
             {{#each relate}}
               <tr>
+                <td>
+                  {{this.account_id}}
+                </td>
                 <td>
                   {{this.fullname}}
                 </td>
