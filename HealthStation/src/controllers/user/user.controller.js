@@ -7,7 +7,6 @@ const { PAYMENT } = require('../../constants/index')
 const moment = require('moment')
 
 const logModel = require('../../models/sites/log.model');
-const orderModel = require('../../models/sites/order.model');
 const { isValidPassword, callBankingApi } = require('../../lib/utils')
 
 const fakePaymentData = [
@@ -284,7 +283,13 @@ module.exports = {
     },
     getManagement: async (req, res) => {
         const { id } = req.params;
-        const { data } = await logModel.findByUserId(id)
+        const { data = [] } = await logModel.findByUserId(id)
+
+        const managementData = data.map(item => ({
+            type: item.action,
+            description: item.description,
+            create_at: moment(item.date).format('YYYY-MM-DD')
+        }))
 
         let isEmpty = false;
         if (data.length === 0)
@@ -294,7 +299,7 @@ module.exports = {
             {
                 layout: 'user/main',
                 active: { management: true },
-                data: fakeManagementData,
+                data: managementData,
                 isEmpty,
                 id
             }
@@ -335,6 +340,7 @@ module.exports = {
             {
                 layout: 'user/main',
                 package,
+                active: { purchase: true },
                 id
             }
         )

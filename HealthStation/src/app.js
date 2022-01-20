@@ -34,8 +34,8 @@ app.use((req, res, next) => {
 app.use(async (req, res, next) => {
   const firstGenerate = await isFirstGenerate();
   if (firstGenerate == true) {
-    if (req.url != '/admin/firstCreate') {
-      req.url = '/admin/firstCreate';
+    if (req.url != '/firstCreate') {
+      req.url = '/firstCreate';
     }
   }
   next();

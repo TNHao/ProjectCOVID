@@ -162,6 +162,14 @@ const fakePackageChartData = {
   ],
 };
 
+const fakePaymentChartData = {
+  months: "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
+  data: {
+    debt: "[16326000, 32883000, 41044000, 23759000, 37569000, 27091000, 34904000, 25865000]",
+    payment: "[63101000, 49837000, 23081000, 47989000, 22778000, 52021000, 29205000, 76020000]"
+  }
+}
+
 
 const categoryModel = require("../../models/sites/category.model");
 const productModel = require("../../models/sites/product.model");
@@ -299,6 +307,13 @@ module.exports = {
   getAccountDetails: async (req, res) => {
     console.log(req.params);
     const data = await userModel.findById(parseInt(req.params.id));
+    let { data: managementData = [] } = await logModel.findByUserId(req.params.id);
+    managementData = managementData.map(item => ({
+      type: item.action,
+      description: item.description,
+      create_at: moment(item.date).format('YYYY-MM-DD')
+    }))
+
     const related_id = await userModel.findAllRelatedById(
       parseInt(req.params.id)
     );
@@ -309,7 +324,7 @@ module.exports = {
     console.log(related);
     res.render('layouts/manager/accountDetails', {
       layout: 'manager/main',
-      data: fakeManagementData,
+      data: managementData,
       username: data.data.username,
       fullname: data.data.fullname,
       relate: related,
@@ -345,7 +360,7 @@ module.exports = {
   updatePatient: async (req, res) => {
     console.log(req.body);
     const user = {
-      username: req.body.username,
+      username: req.body.identity,
       national_id: req.body.identity,
       permission: 4,
       fullname: req.body.fullname,
@@ -389,8 +404,11 @@ module.exports = {
         }
       }
       if (req.body.isolation != req.body.oldIsolation) {
-        const oldName = (await locationModel.findById(req.body.oldIsolation))
-          .data.name;
+        let oldName = ''
+        if (req.body.oldIsolation != '') {
+          oldName = (await locationModel.findById(req.body.oldIsolation))
+            .data.name;
+        }
         const newName = (await locationModel.findById(req.body.isolation)).data
           .name;
         await logModel.create(
@@ -428,16 +446,18 @@ module.exports = {
       );
       console.log(related_remove_1, related_remove_2);
       const new_related = req.body.relate.split(',');
-      for (let i = 0; i < new_related.length; i++) {
-        const create1 = await userModel.createRelated(
-          req.body.account_id,
-          new_related[i]
-        );
-        const create2 = await userModel.createRelated(
-          new_related[i],
-          req.body.account_id
-        );
-        console.log(create1, create2);
+      if (user.state != null) {
+        for (let i = 0; i < new_related.length; i++) {
+          const create1 = await userModel.createRelated(
+            req.body.account_id,
+            new_related[i]
+          );
+          const create2 = await userModel.createRelated(
+            new_related[i],
+            req.body.account_id
+          );
+          console.log(create1, create2);
+        }
       }
       console.log('Heloal related Create');
 
@@ -727,7 +747,7 @@ module.exports = {
   postCreatePackage: async (req, res) => {
     const file = await uploadFile(req.files[0]);
     let _package;
-    if(file) {
+    if (file) {
       _package = { ...req.body, file };
     } else {
       _package = { ...req.body };
