@@ -195,7 +195,23 @@ class UserModel {
     id = parseInt(id);
     const user = await this.findById(id);
     const cur_state = user.data.state;
-    if (parseInt(newState) < parseInt(cur_state) && cur_state != null) {
+    // if (cur_state == null) {
+    //   const queryString = `
+    //    update $(table) set state = $(state) where account_id = $(id)
+    // `;
+    //   try {
+    //     await db.none(queryString, {
+    //       table: this.account_tb,
+    //       state: newState,
+    //       id,
+    //     });
+    //     await this.updateStateOfAllRelated(id);
+    //     return 'Success';
+    //   } catch (error) {
+    //     return error;
+    //   }
+    // }
+    if (parseInt(newState) < parseInt(cur_state)) {
       const queryString = `
        update $(table) set state = $(state) where account_id = $(id)
     `;
@@ -217,15 +233,18 @@ class UserModel {
     id = parseInt(id);
     const user_data = await this.findById(id);
     const new_state = parseInt(user_data.data.state) + 1 + '';
-    const all_related_id = await this.findAllRelatedById(id);
-    all_related_id.data.forEach(async (e) => {
-      try {
-        let rs = await this.updateStateById(e, new_state + '');
-        return 'Success';
-      } catch (error) {
-        return error;
-      }
-    });
+    console.log(id + " " + new_state);
+    if (new_state != NaN) {
+      const all_related_id = await this.findAllRelatedById(id);
+      all_related_id.data.forEach(async (e) => {
+        try {
+          let rs = await this.updateStateById(e, new_state + '');
+          return 'Success';
+        } catch (error) {
+          return error;
+        }
+      });
+    }
   }
   async findAllRelatedById(id) {
     const queryString = `select related_id from $(table) where account_id = $(id)`;
