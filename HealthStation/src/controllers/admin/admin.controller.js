@@ -29,6 +29,7 @@ const fakeManagementData = [
 const {
   createAdmin,
   setFirstGenerate,
+  isFirstGenerate,
 } = require('../../models/admin/admin.model');
 
 const { PERMISSIONS } = require('../../constants/index');
@@ -151,9 +152,13 @@ module.exports = {
   // end location
 
   firstCreate: async (req, res) => {
-    res.render('layouts/admin/firstCreate', {
-      layout: '',
-    });
+    const firstGenerate = await isFirstGenerate();
+    if (firstGenerate == true)
+      return res.render('layouts/admin/firstCreate', {
+        layout: '',
+      });
+    else
+      return res.redirect('/404');
   },
 
   setUpAdmin: async (req, res) => {
