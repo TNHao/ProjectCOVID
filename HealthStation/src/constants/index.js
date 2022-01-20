@@ -1,6 +1,6 @@
 module.exports = {
-    // API_URL: "https://localhost:5000",
-    API_URL: "http://localhost:5000",
+    API_URL: "https://localhost:5000",
+    // API_URL: "http://localhost:5000",
     DEPOSIT: 'Nạp',
     WITHDRAWAL: 'Rút',
     PAYMENT: 'Chuyển',
