@@ -21,12 +21,7 @@ function route(app) {
 
     app.use('/admin', isAdmin, adminRoute);
     app.use('/manager', isManager, managerRoute);
-
-    app.use('/user', (req, res, next) => {
-        if (res.locals.isLoggedIn) next();
-        else
-            res.redirect('/login')
-    }, userRoute);
+    app.use('/user', isUser, userRoute);
 
     app.use('/login', logInRoute);
     app.use('/logout', logOutRoute);

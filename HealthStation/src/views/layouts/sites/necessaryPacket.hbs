@@ -38,7 +38,7 @@
                     <div class="widget user-dashboard-profile">
                         <h2 class="text-center">{{package.name}}</h2>
                         <p style="font-size: 1.2rem;">Tổng tiền: <span id="total"></span></p>
-                        <a href="user-profile.html" class="btn btn-main-sm">Thanh toán</a>
+                        <button form="order-form" type="submit" class="btn btn-main-sm">Thanh toán</button>
                     </div>
                     <!-- Dashboard Links -->
                     <div class="widget user-dashboard-menu">
@@ -60,49 +60,53 @@
                 <!-- Recently Favorited -->
                 <div class="widget dashboard-container my-adslist">
                     <h3 class="widget-header">Danh sách sản phẩm</h3>
-                    <table id="table_product" class="table table-responsive product-dashboard-table">
-                        <thead>
-                            <tr>
-                                <th>Ảnh</th>
-                                <th>Tên sản phẩm</th>
-                                {{!-- <th class="text-center text-nowrap">Danh mục</th> --}}
-                                <th class="text-center">Số lượng</th>
-                                <th class="text-center text-nowrap">Đơn giá</th>
-                                <th class="text-center text-nowrap">Thành tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each products}}
-                            <tr>
-                                <td class="product-thumb">
-                                    <img width="80px" height="auto"
-                                        src="{{this.images.[0]}}"
-                                        alt="image description">
-                                </td>
-                                <td class="product-details">
-                                    <a href="/product/{{this.necessary_id}}" class="title">{{this.name}}</a>
-                                </td>
-                                {{!-- <td class="product-category"><span class="categories">Laptops</span></td> --}}
-                                <td class="action" data-title="Action">
-                                    <div class="w-75 text-center mx-auto">
-                                        {{!-- Id Input is product ID --}}
-                                        <input type="number" class="w-100 user-input" id="prodID{{this.necessary_id}}"
-                                            min="1" value="1" max="{{this.max_necessary_per_package}}">
-                                    </div>
-                                </td>
-                                <td class="product-details text-right">
-                                    <h3 class="title" id="prodID{{this.necessary_id}}_price">{{this.price}}</h3>
-                                </td>
-                                <td class="product-details text-right">
-                                    {{!-- Id of this tag is <product ID>_total --}}
-                                        <h3 class="title product_total_price" id="prodID{{this.necessary_id}}_total">
-                                            {{this.price}}</h3>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-
+                    <form id="order-form" action="/user/order" method="POST">
+                        <table id="table_product" class="table table-responsive product-dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    {{!-- <th class="text-center text-nowrap">Danh mục</th> --}}
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-center text-nowrap">Đơn giá</th>
+                                    <th class="text-center text-nowrap">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each products}}
+                                <tr>
+                                    <td class="product-thumb">
+                                        <img width="80px" height="auto"
+                                            src="{{this.images.[0]}}"
+                                            alt="image description">
+                                    </td>
+                                    <td class="product-details">
+                                        <a href="/product/{{this.necessary_id}}" class="title">{{this.name}}</a>
+                                    </td>
+                                    {{!-- <td class="product-category"><span class="categories">Laptops</span></td> --}}
+                                    <td class="action" data-title="Action">
+                                        <div class="w-75 text-center mx-auto">
+                                            {{!-- Id Input is product ID --}}
+                                            <input type="number" class="w-100 user-input" name="{{this.necessary_id}}" id="prodID{{this.necessary_id}}"
+                                                min="1" value="1" max="{{this.max_necessary_per_package}}">
+                                        </div>
+                                    </td>
+                                    <td class="product-details text-right">
+                                        <h3 class="title" id="prodID{{this.necessary_id}}_price">{{this.price}}</h3>
+                                    </td>
+                                    <td class="product-details text-right">
+                                        {{!-- Id of this tag is <product ID>_total --}}
+                                        <h3 class="title product_total_price" id="prodID{{this.necessary_id}}_total">{{this.price}}</h3>
+                                        <input id="prodID{{this.necessary_id}}_total_input" type="number" name="{{this.necessary_id}}" value="{{this.price}}" hidden>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        <input  type="text" name="package_name" value="{{package.name}}" hidden>
+                        <input  type="text" name="package_id" value="{{package.package_id}}" hidden>
+                        <input id="hidden-total-input" value="0" type="number" name="total" hidden>
+                    </form>
                 </div>
             </div>
         </div>

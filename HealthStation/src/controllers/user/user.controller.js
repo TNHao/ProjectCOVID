@@ -1,6 +1,11 @@
 const userModel = require('../../models/user/user.model');
+const orderModel = require('../../models/sites/order.model')
+const productModel = require('../../models/sites/product.model')
+const minimumPaymentModel = require('../../models/sites/minimumPayment.model')
+
+const { PAYMENT } = require('../../constants/index')
 const moment = require('moment')
-const { isValidPassword } = require('../../lib/utils')
+const { isValidPassword, callBankingApi } = require('../../lib/utils')
 const fakePaymentData = [
     {
         transaction_id: '1',
@@ -162,6 +167,81 @@ module.exports = {
         req.session.message = message;
         return res.redirect(`/user/${id}/change-password`);
     },
+
+    order: async(req, res, next) => {
+        const { account_id } = req.user;
+        const { data: user } = await userModel.findById(account_id)
+        const { banking_token } = user;
+        
+        // check if payment account exists
+        if(!banking_token) {
+            req.session.message = {
+                status: 'danger',
+                content: 'Vui lòng liên kết tài khoản trước khi thanh toán.'
+            }
+            return res.redirect(`/user/${account_id}/payment`)
+        }
+
+        const { data: response } = await userModel.getBalance(account_id, banking_token);
+        const balance = Number(response.balance);
+        const { data: minimumPaymentAmount } = await minimumPaymentModel.find();
+        const { total, package_name, package_id, ...products } = req.body;
+
+        // check if exceeding the minimum payment
+        if((balance - Number(total)) * -1 > Number(minimumPaymentAmount)) {
+            req.session.message = {
+                status: 'danger',
+                content: 'Vượt quá hạn mức thanh toán, vui lòng nạp thêm vào tài khoản.'
+            }
+            return res.redirect(`/user/${account_id}/payment`)
+        }
+
+        // TODO: check if exceeding number of package per person in the period
+        // if(false) {
+        //     req.session.message = {
+        //         status: 'danger',
+        //         content: 'Vượt quá số lần mua gói nhu yếu phẩm, vui lòng chọn gói khác.'
+        //     }
+        //     return res.redirect(`/user/${account_id}/payment`)
+        // }
+
+        const order = { account_id, total }
+        const package = {
+            package_name,
+            package_id,
+            amount: 1,
+            price: total
+        }
+
+        const necessaries = []
+        for (const [productId, productInfo] of Object.entries(products)) {
+           const { data: necessary } = await productModel.findById(productId)
+           necessary.necessary_name = necessary.name
+           necessary.amount = productInfo[0]
+           necessary.price = productInfo[1]
+           necessaries.push(necessary)
+        }
+       package.necessaries = necessaries;
+       const packages = []
+       packages.push(package)
+       try {
+           await orderModel.createOrder(order, packages)
+           const paymentResponse = await callBankingApi(
+               '/api/transactions/payment', 'POST',
+               {
+                   send_id: account_id,
+                   amount: total,
+                   action: PAYMENT
+                },
+                banking_token)
+                
+           return res.redirect('/')
+       } catch(err) {
+           console.log(err);
+           return res.redirect('/404')
+       }
+    }, 
+
     getPayment: async (req, res) => {
         const { id } = req.params;
 
@@ -176,17 +256,25 @@ module.exports = {
             userBankingDetail = (await userModel.getBalance(id, token)).data;
         }
 
+        const message = req.session.message;
+        req.session.message = null;
+        console.log(message);
+
         const { data: isVerified } = await userModel.checkVerify(id)
 
+        balance = Number(userBankingDetail.balance);
+        const isDebt = balance < 0;
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
                 data: data || null,
-                balance: (userBankingDetail.balance || "---"),
+                balance: Math.abs(balance) || "---",
+                isDebt: isDebt,
                 isVerified,
                 isLoggedIn: token ? true : false,
-                id
+                id,
+                message
             }
         )
     },
