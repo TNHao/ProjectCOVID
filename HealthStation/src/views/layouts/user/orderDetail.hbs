@@ -1,0 +1,76 @@
+{{#section 'title'}}
+<title>Chi tiết gói nhu yếu phẩm</title>
+{{/section}}
+
+{{#section 'style'}}
+{{!-- DataTables --}}
+<link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/custom.css">
+{{/section}}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Chi tiết gói nhu yếu phẩm: {{package.package_name}}</h4>
+            <p style="margin-bottom: 0;">Tổng: {{package.price}}</p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive p-3">
+                <table class="table table-hover" id="table_product_management">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>
+                                Tên nhu yếu phẩm
+                            </th>
+                            <th>
+                                Số lượng
+                            </th>
+                            <th>
+                                Đơn giá
+                            </th>
+                            <th class="text-right">
+                                Thành tiền
+                            </th>
+                            <th class="text-center">
+                                Hành động
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each package.necessaries}}
+                        <tr>
+                            <td>
+                                {{this.necessary_name}}
+                            </td>
+                            <td>
+                                {{this.amount}}
+                            </td>
+                            <td>
+                                {{this.price}}
+                            </td>
+                            <td class="text-right">
+                                {{this.total}}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-info" href="/product/{{this.necessary_id}}">Chi tiết</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#section 'script'}}
+{{!-- Datatables --}}
+<script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table_product_management').DataTable();
+    });
+</script>
+{{!-- relate account --}}
+<script type="text/javascript" charset="utf8" src="/js/custom/packageProduct.js"></script>
+{{/section}}
