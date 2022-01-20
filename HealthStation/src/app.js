@@ -53,10 +53,10 @@ app.use(async (req, res, next) => {
   }
   next();
 });
-// app.get('/testapp', async (req, res) => {
-//   const data = await findAllPatient();
-//   console.log(data.data);
-//   return res.redirect('/');
+
+// app.get('/test', async (req, res) => {
+
+//   return res.redirect('/')
 // });
 route(app);
 

@@ -24,4 +24,20 @@ module.exports = {
         const b = Math.floor(Math.random() * 256);
         return `'rgb(${r}, ${g}, ${b})'`
     },
+    arrayStringToString: (arr) => {
+        let str = "[";
+        for (let i = 0; i < arr.length - 1; i++) {
+            str += "'" + arr[i] + "', ";
+        }
+        str += "'" + arr[arr.length - 1] + "']";
+        return str;
+    },
+    arrayNumberToString: (arr) => {
+        let str = "[";
+        for (let i = 0; i < arr.length - 1; i++) {
+            str += arr[i] + ", ";
+        }
+        str += + arr[arr.length - 1] + "]";
+        return str;
+    }
 }

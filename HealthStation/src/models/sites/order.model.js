@@ -34,13 +34,13 @@ module.exports = {
         return await db.task(async t => {
             const orders = await t.any('Select * from $(table)', { table });
             for (let order of orders) {
-                order.packages = await t.any('Select detail_id, package_name, amount, price from $(table) where order_id = $(order_id)', {
+                order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                     table: orderDetailTable,
                     order_id: order.order_id
                 });
 
                 for (let package of order.packages) {
-                    package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
+                    package.necessaries = await t.any('Select necessary_name, unit, amount, price, necessary_id from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
                 }
             }
             return { data: orders }
@@ -53,12 +53,12 @@ module.exports = {
             if (order == null) {
                 return { data: null }
             }
-            order.packages = await t.any('Select detail_id, package_name, amount, price from $(table) where order_id = $(order_id)', {
+            order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                 table: orderDetailTable,
                 order_id: order.order_id
             });
             for (let package of order.packages) {
-                package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
+                package.necessaries = await t.any('Select necessary_name, unit, amount, price, necessary_id from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
             }
             return { data: [order] }
         })
@@ -93,12 +93,12 @@ module.exports = {
         return await db.task(async t => {
             const orders = await t.any('Select * from $(table) where account_id = $(account_id)', { table, account_id });
             for (let order of orders) {
-                order.packages = await t.any('Select detail_id, package_name, amount, price from $(table) where order_id = $(order_id)', {
+                order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                     table: orderDetailTable,
                     order_id: order.order_id
                 });
                 for (let package of order.packages) {
-                    package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
+                    package.necessaries = await t.any('Select necessary_name, unit, amount, price, necessary_id from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
                 }
             }
             return { data: orders }
@@ -140,12 +140,12 @@ module.exports = {
         return await db.task(async t => {
             const orders = await t.any('Select * from $(table) where create_at between $(start) and $(end)', { table, start, end });
             for (let order of orders) {
-                order.packages = await t.any('Select detail_id, package_name, amount, price from $(table) where order_id = $(order_id)', {
+                order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                     table: orderDetailTable,
                     order_id: order.order_id
                 });
                 for (let package of order.packages) {
-                    package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
+                    package.necessaries = await t.any('Select necessary_name, unit, amount, price, necessary_id from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
                 }
             }
             return { data: orders }
@@ -156,12 +156,12 @@ module.exports = {
         return await db.task(async t => {
             const orders = await t.any('Select * from $(table) where total between $(min) and $(max)', { table, min, max });
             for (let order of orders) {
-                order.packages = await t.any('Select detail_id, package_name, amount, price from $(table) where order_id = $(order_id)', {
+                order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                     table: orderDetailTable,
                     order_id: order.order_id
                 });
                 for (let package of order.packages) {
-                    package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
+                    package.necessaries = await t.any('Select necessary_name, unit, amount, price, necessary_id from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
                 }
             }
             return { data: orders }
@@ -200,12 +200,12 @@ module.exports = {
         return await db.task(async t => {
             const orders = await t.any(qStr, context);
             for (let order of orders) {
-                order.packages = await t.any('Select detail_id, package_name, amount, price from $(table) where order_id = $(order_id)', {
+                order.packages = await t.any('Select detail_id, package_name, amount, price, package_id from $(table) where order_id = $(order_id)', {
                     table: orderDetailTable,
                     order_id: order.order_id
                 });
                 for (let package of order.packages) {
-                    package.necessaries = await t.any('Select necessary_name, unit, amount, price from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
+                    package.necessaries = await t.any('Select necessary_name, unit, amount, price, necessary_id from $(table) where order_detail_id = $(detail_id)', { table: orderDetailPackageTable, detail_id: package.detail_id });
                 }
             }
             return { data: orders }
@@ -213,7 +213,7 @@ module.exports = {
     },
     // order: { account_id, create_at, total } 
     // package: [
-    //     { package_name, amonut, price, necessaries: [ { necessary_name, unit, amount, price },... ] }, ...
+    //     { package_name, amount, price, package_id, necessaries: [ { necessary_name, unit, amount, price, necessary_id },... ] }, ...
     // ]
     createOrder: async (order, packages) => {
         try {
@@ -225,9 +225,10 @@ module.exports = {
                     order_id: t1.order_id,
                     package_name: package.package_name,
                     amount: package.amount,
-                    price: package.price
+                    price: package.price,
+                    package_id: package.package_id
                 }
-                const qStr2 = pgp.helpers.insert(orderDetail, ["order_id", "package_name", "amount", "price"], orderDetailTable) + ' RETURNING detail_id';
+                const qStr2 = pgp.helpers.insert(orderDetail, ["order_id", "package_name", "amount", "price", "package_id"], orderDetailTable) + ' RETURNING detail_id';
                 const t2 = await db.one(qStr2);
                 for (let necessary of package.necessaries) {
                     const orderDetailPackage = {
@@ -235,9 +236,10 @@ module.exports = {
                         necessary_name: necessary.necessary_name,
                         unit: necessary.unit,
                         amount: necessary.amount,
-                        price: necessary.price
+                        price: necessary.price,
+                        necessary_id: necessary.necessary_id
                     }
-                    const qStr3 = pgp.helpers.insert(orderDetailPackage, ["order_detail_id", "necessary_name", "unit", "amount", "price"], orderDetailPackageTable);
+                    const qStr3 = pgp.helpers.insert(orderDetailPackage, ["order_detail_id", "necessary_name", "unit", "amount", "price", "necessary_id"], orderDetailPackageTable);
                     await db.none(qStr3);
                 }
             }
@@ -245,5 +247,6 @@ module.exports = {
         catch (error) {
             console.log('orderModel/create', error);
         }
-    }
+    },
+    
 }

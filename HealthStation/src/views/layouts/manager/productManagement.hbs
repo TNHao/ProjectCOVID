@@ -87,6 +87,14 @@
             </div>
         </div>
     </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Thống kê tiêu thụ Nhu yếu phẩm</h4>
+        </div>
+        <div class="card-body">
+            <canvas id="productChart" style="padding: 0 50px;"></canvas>
+        </div>
+    </div>
 </div>
 
 {{!-- Confirm delete product modal --}}
@@ -123,10 +131,45 @@
 {{#section 'script'}}
 {{!-- Datatables --}}
 <script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#table_product_management').DataTable();
     });
+    const productChartCanvas = document.getElementById('productChart');
+    const data = {
+        labels: {{{ chart_data.dates }}},
+        datasets: [
+            {{#each chart_data.data}}
+            {
+                label: {{{ this.name }}},
+                data: {{ this.data }},
+                fill: false,
+                borderColor: {{{ this.color }}},
+                tension: 0.1
+            },
+            {{/each}}
+        ]
+    }
+    const config = {
+        type: 'line',
+        data: data,
+        option: {
+            responsive: false,
+            maintainAspectRatio: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            layout: {
+                padding: {
+                    x: 50
+                }
+            }
+        }
+    }
+    var productChart = new Chart(productChartCanvas, config)
 </script>
 {{!-- Modal --}}
 <script src="/js/custom/modal.js"></script>
