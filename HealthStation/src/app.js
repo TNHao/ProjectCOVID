@@ -39,6 +39,7 @@ app.use(async (req, res, next) => {
   }
   next();
 });
+
 route(app);
 
 app.listen(port, () => {
