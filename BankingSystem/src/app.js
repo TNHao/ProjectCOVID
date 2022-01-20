@@ -2,8 +2,8 @@ const express = require('express');
 const passport = require('./middlewares/passport');
 const cors = require('cors');
 const route = require('./routes');
-// const app = require("https-localhost")()
-const app = express()
+const app = require("https-localhost")()
+// const app = express()
 const port = 5000;
 
 
