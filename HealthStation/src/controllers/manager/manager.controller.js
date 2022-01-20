@@ -82,7 +82,7 @@ const packageModel = require("../../models/sites/necessaryPacket.model");
 const userModel = require("../../models/user/user.model");
 const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
 const quarantineLocationModel = require("../../models/sites/location.model");
-const { uploadMultipleFiles, deleteFile } = require("../../config/firebase");
+const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
 const moment = require('moment')
 const {
   updateStateOfAllRelated,
@@ -397,8 +397,9 @@ module.exports = {
   },
 
   postCreatePackage: async (req, res) => {
-    const _package = { ...req.body };
+    const file = await uploadFile(req.files[0]);
 
+    const _package = { ...req.body, file };
     _package.products = _package.products
       .split(',')
       .filter((product) => product !== '')
@@ -436,8 +437,16 @@ module.exports = {
   },
 
   updatePackage: async (req, res) => {
+    let file = null;
+
+    if (req.files && req.files.length > 0) {
+      file = await uploadFile(req.files[0]);
+    }
+    else
+      file = req.body.file;
+
     const id = req.params.id;
-    const _package = { ...req.body, package_id: id };
+    const _package = { ...req.body, package_id: id, file };
     _package.products = _package.products
       .split(',')
       .filter((product) => product !== '')
