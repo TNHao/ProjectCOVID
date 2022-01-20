@@ -1,18 +1,18 @@
-{{#section 'title'}}
+{{#section "title"}}
   <title>Lịch sử quản lý</title>
 {{/section}}
 
-{{#section 'style'}}
+{{#section "style"}}
   {{! DataTables }}
-  <link rel='stylesheet' type='text/css' href='/DataTables/datatables.css' />
+  <link rel="stylesheet" type="text/css" href="/DataTables/datatables.css" />
 {{/section}}
 
-{{#section 'script'}}
+{{#section "script"}}
   {{! Datatables }}
   <script
-    type='text/javascript'
-    charset='utf8'
-    src='/DataTables/datatables.js'
+    type="text/javascript"
+    charset="utf8"
+    src="/DataTables/datatables.js"
   ></script>
   <script>
     $(document).ready(function () { $('#table_account_history').DataTable(); });
@@ -20,18 +20,18 @@
   </script>
 {{/section}}
 
-<div class='col-md-12 p-0'>
-  <div class='card'>
-    <div class='card-header'>
-      <h4 class='card-title'>Lịch sử được quản lý của bệnh nhân
+<div class="col-md-12 p-0">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Lịch sử được quản lý của bệnh nhân
         {{username}}
         /
         {{fullname}}</h4>
     </div>
-    <div class='card-body'>
-      <div class='table-responsive p-3'>
-        <table class='table table-hover' id='table_account_history'>
-          <thead class='text-primary'>
+    <div class="card-body">
+      <div class="table-responsive p-3">
+        <table class="table table-hover" id="table_account_history">
+          <thead class="text-primary">
             <tr>
               <th>
                 Hành động
@@ -39,7 +39,7 @@
               <th>
                 Mô tả
               </th>
-              <th class='text-center'>
+              <th class="text-center">
                 Ngày
               </th>
             </tr>
@@ -53,7 +53,7 @@
                 <td>
                   {{this.description}}
                 </td>
-                <td class='text-center'>
+                <td class="text-center">
                   {{this.create_at}}
                 </td>
               </tr>
@@ -65,18 +65,21 @@
   </div>
 </div>
 
-<div class='col-md-12 p-0'>
-  <div class='card'>
-    <div class='card-header'>
-      <h4 class='card-title'> Danh sách những người liên quan</h4>
+<div class="col-md-12 p-0">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title"> Danh sách những người liên quan</h4>
     </div>
-    <div class='card-body'>
-      <div class='table-responsive p-3'>
-        <table class='table table-hover' id='table_account_relate'>
-          <thead class='text-primary'>
+    <div class="card-body">
+      <div class="table-responsive p-3">
+        <table class="table table-hover" id="table_account_relate">
+          <thead class="text-primary">
             <tr>
               <th>
                 ID
+              </th>
+              <th>
+                Username
               </th>
               <th>
                 Họ tên
@@ -84,10 +87,10 @@
               <th>
                 Địa chỉ
               </th>
-              <th class='text-right'>
+              <th class="text-right">
                 Trạng thái
               </th>
-              <th class='text-center'>
+              <th class="text-center">
                 Action
               </th>
             </tr>
@@ -99,22 +102,29 @@
                   {{this.account_id}}
                 </td>
                 <td>
+                  {{this.username}}
+                </td>
+                <td>
                   {{this.fullname}}
                 </td>
                 <td>
                   {{this.city}}
                 </td>
-                <td class='text-center'>
+                <td class="text-center">
+                  {{#if this.state}}
                   F{{this.state}}
+                  {{else}}
+                  Khỏi bệnh
+                  {{/if}}
                 </td>
-                <td class='text-center'>
+                <td class="text-center">
                   <a
-                    href='/manager/account-management/{{this.account_id}}'
-                    class='btn btn-success'
+                    href="/manager/account-management/{{this.account_id}}"
+                    class="btn btn-success"
                   >Chi tiết</a>
                   <a
-                    href='/manager/account-management/{{this.account_id}}/edit'
-                    class='btn btn-info'
+                    href="/manager/account-management/{{this.account_id}}/edit"
+                    class="btn btn-info"
                   >Sửa</a>
                 </td>
               </tr>

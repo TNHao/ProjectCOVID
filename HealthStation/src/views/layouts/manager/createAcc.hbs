@@ -162,6 +162,9 @@
                 ID
               </th>
               <th>
+                Username
+              </th>
+              <th>
                 Họ tên
               </th>
               <th>
@@ -181,6 +184,7 @@
                 <td>
                   {{this.account_id}}
                 </td>
+                <td>{{this.username}}</td>
                 <td>
                   {{this.fullname}}
                 </td>
@@ -188,7 +192,11 @@
                   {{this.city}}
                 </td>
                 <td class='text-center'>
+                  {{#if this.state}}
                   F{{this.state}}
+                  {{else}}
+                  Khỏi bệnh
+                  {{/if}}
                 </td>
                 <td class='text-center'>
                   <input

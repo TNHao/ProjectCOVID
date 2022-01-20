@@ -1,60 +1,63 @@
 {{#section 'title'}}
-<title>Lịch sử quản lý</title>
+  <title>Lịch sử quản lý</title>
 {{/section}}
 
 {{#section 'style'}}
-{{!-- DataTables --}}
-<link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
+  {{! DataTables }}
+  <link rel='stylesheet' type='text/css' href='/DataTables/datatables.css' />
 {{/section}}
 
 {{#section 'script'}}
-{{!-- Datatables --}}
-<script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#table_management_history').DataTable();
+  {{! Datatables }}
+  <script
+    type='text/javascript'
+    charset='utf8'
+    src='/DataTables/datatables.js'
+  ></script>
+  <script>
+    $(document).ready(function () { $('#table_management_history').DataTable();
     });
-</script>
+  </script>
 {{/section}}
 
-<div class="col-md-12 p-0">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Lịch sử quản lý </h4>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive p-3">
-                <table class="table table-hover" id="table_management_history">
-                    <thead class=" text-primary">
-                        <tr>
-                            <th>
-                                Hành động
-                            </th>
-                            <th>
-                                Mô tả
-                            </th>
-                            <th class="text-center">
-                                Ngày
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each data}}
-                        <tr>
-                            <td>
-                                {{this.type}}
-                            </td>
-                            <td >
-                                {{this.description}}
-                            </td>
-                            <td class="text-center">
-                                {{this.create_at}}
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class='col-md-12 p-0'>
+  <div class='card'>
+    <div class='card-header'>
+      <h4 class='card-title'>Lịch sử quản lý của {{username}}</h4>
     </div>
+    <div class='card-body'>
+      <div class='table-responsive p-3'>
+        <table class='table table-hover' id='table_management_history'>
+          <thead class='text-primary'>
+            <tr>
+              <th>
+                Hành động
+              </th>
+              <th>
+                Mô tả
+              </th>
+              <th class='text-center'>
+                Ngày (yyyy-mm-dd)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data}}
+              <tr>
+                <td>
+                  {{this.action}}
+                </td>
+                <td>
+                  {{this.description}}
+                </td>
+                <td class='text-center'>
+                  {{this.date}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
