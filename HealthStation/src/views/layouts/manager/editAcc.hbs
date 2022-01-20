@@ -1,153 +1,265 @@
 {{#section 'title'}}
-<title>Tạo tài khoản</title>
+  <title>Tạo tài khoản</title>
 {{/section}}
 
 {{#section 'style'}}
-{{!-- DataTables --}}
-<link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
+  {{! DataTables }}
+  <link rel='stylesheet' type='text/css' href='/DataTables/datatables.css' />
 {{/section}}
 
-<div class="col-md-12">
-    <div class="card px-3 pb-3">
-        <form id="registerFormValidation" action="" method="" required>
-            <div class="card-header">
-                <h4 class="card-title">
-                    Thông tin bệnh nhân
-                </h4>
-            </div>
-            <div class="card-content">
-                <div class="d-flex align-items-center">
-                    <div class="form-group mr-4" style="flex: 1;">
-                        <label class="control-label">Họ tên <star class="text-danger">*</star></label>
-                        <input class="form-control" name="fullname" id="registerFullname" type="text" required="true" value="{{patient.fullname}}">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="control-label">Số CMND/ Căn cước công dân <star class="text-danger">*</star></label>
-                        <input class="form-control" name="identity" id="registerIdentity" type="number" required="true" value="{{patient.username}}">
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="form-group mr-4" style="flex: 1;">
-                        <label class="control-label">Ngày sinh <star class="text-danger">*</star></label>
-                        <input class="form-control" name="birthday" id="registerBirthday" type="date" required="true" value="{{patient.dob}}">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="control-label">Trạng thái hiện tại <star class="text-danger">*</star></label>
-                        {{#select patient.state}}
-                        <select class="form-control" name="status" id="registerStatus" required="true">
-                            <option value="0">F0</option>
-                            <option value="1">F1</option>
-                            <option value="2">F2</option>
-                            <option value="3">Khỏi bệnh</option>
-                        </select>
-                        {{/select}}
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="form-group mr-4" style="flex: 1;">
-                        <label class="control-label">Tỉnh thành <star class="text-danger">*</star></label>
-                        <input class="form-control" name="city" id="registerCity" type="text" value="{{patient.city}}" style="background-color: #fff;" disabled>
+<div class='col-md-12'>
+  <div class='card px-3 pb-3'>
+    <form
+      id='registerFormValidation'
+      action='/manager/account-management/{{patient.account_id}}/edit'
+      method='POST'
+      required
+    >
+      <div class='card-header'>
+        <h4 class='card-title'>
+          Thông tin bệnh nhân
+        </h4>
+      </div>
+      <div class='card-content'>
+        <div class='d-flex align-items-center'>
+          <div class='form-group mr-4' style='flex: 1;'>
+            <label class='control-label'>Họ tên
+              <star class='text-danger'>*</star></label>
+            <input
+              class='form-control'
+              name='fullname'
+              id='registerFullname'
+              type='text'
+              required='true'
+              value='{{patient.fullname}}'
+            />
+          </div>
+          <div class='form-group' style='flex: 1;'>
+            <label class='control-label'>Số CMND/ Căn cước công dân
+              <star class='text-danger'>*</star></label>
+            <input
+              class='form-control'
+              name='identity'
+              id='registerIdentity'
+              type='number'
+              required='true'
+              value='{{patient.username}}'
+              style='background-color: #fff;'
+              autocomplete='off'
+              onkeypress='return false;'
+              onkeydown='return false;'
+            />
+          </div>
+        </div>
+        <div class='d-flex align-items-center'>
+          <div class='form-group mr-4' style='flex: 1;'>
+            <label class='control-label'>Ngày sinh
+              <star class='text-danger'>*</star></label>
+            <input
+              class='form-control'
+              name='birthday'
+              id='registerBirthday'
+              type='date'
+              required='true'
+              value='{{patient.dob}}'
+            />
+          </div>
+          <div class='form-group' style='flex: 1;'>
+            <label class='control-label'>Trạng thái hiện tại
+              <star class='text-danger'>*</star></label>
+            {{#select patient.state}}
+              <select
+                class='form-control'
+                name='state'
+                id='registerStatus'
+                required='true'
+              >
+                <option value='0'>F0</option>
+                <option value='1'>F1</option>
+                <option value='2'>F2</option>
+                <option value='3'>F3</option>
+                <option value='KB'>Khỏi bệnh</option>
+              </select>
+            {{/select}}
+          </div>
+        </div>
+        <div class='d-flex align-items-center'>
+          <div class='form-group mr-4' style='flex: 1;'>
+            <label class='control-label'>Tỉnh thành
+              <star class='text-danger'>*</star></label>
+            <input
+              class='form-control'
+              name='city'
+              id='registerCity'
+              type='text'
+              value='{{patient.city}}'
+              style='background-color: #fff;'
+              autocomplete='off'
+              onkeypress='return false;'
+              onkeydown='return false;'
+            />
 
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="control-label">Quận huyện <star class="text-danger">*</star></label>
-                        <input class="form-control" name="district" id="registerDistrict" type="text" value="{{patient.district}}" style="background-color: #fff;" disabled>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="form-group mr-4" style="flex: 1;">
-                        <label class="control-label">Phường Xã <star class="text-danger">*</star></label>
-                        <input class="form-control" name="ward" id="registerWard" type="text" value="{{patient.ward}}" style="background-color: #fff;" disabled>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="control-label">Nơi điều trị / cách ly <star class="text-danger">*</star></label>
-                        {{#select patient.quarantine_location_id}}
-                        <select class="form-control" name="isolation" id="registerIsolation" required="true">
-                            {{#each quarantine_location}}
-                                <option value='{{this.location_id}}'>{{this.name}}</option>
-                            {{/each}}
-                        </select>
-                        {{/select}}
-                    </div>
-                </div>
-                <div class="form-group">
-                        <label class="control-label">ID những người liên quan (Vui lòng chọn trong danh sách người bệnh) <star class="text-danger">*</star></label>
-                        <input class="form-control"
-                            name="relate"
-                            id="registerRelate"
-                            type="text"
-                            autocomplete="off"
-                            onkeypress="return false;"
-                            onkeydown="return false;"
-                            style="background-color: #FFF;"
-                            value="{{patient.relate}}"
-                        >
-                    </div>
-            </div>
-            <div class="card-footer">
-                <button id="btn-register" type="submit" class="btn btn-info btn-fill pull-right">Cập nhật</button>
-            </div>
-        </form>
-    </div>
+          </div>
+          <div class='form-group' style='flex: 1;'>
+            <label class='control-label'>Quận huyện
+              <star class='text-danger'>*</star></label>
+            <input
+              class='form-control'
+              name='district'
+              id='registerDistrict'
+              type='text'
+              value='{{patient.district}}'
+              style='background-color: #fff;'
+              autocomplete='off'
+              onkeypress='return false;'
+              onkeydown='return false;'
+            />
+          </div>
+        </div>
+        <div class='d-flex align-items-center'>
+          <div class='form-group mr-4' style='flex: 1;'>
+            <label class='control-label'>Phường Xã
+              <star class='text-danger'>*</star></label>
+            <input
+              class='form-control'
+              name='ward'
+              id='registerWard'
+              type='text'
+              value='{{patient.ward}}'
+              style='background-color: #fff;'
+              autocomplete='off'
+              onkeypress='return false;'
+              onkeydown='return false;'
+            />
+          </div>
+          <input
+            type='hidden'
+            value='{{patient.quarantine_location_id}}'
+            name='oldIsolation'
+          />
+          <input
+            type='hidden'
+            value='{{patient.account_id}}'
+            name='account_id'
+          />
+          <div class='form-group' style='flex: 1;'>
+            <label class='control-label'>Nơi điều trị / cách ly
+              <star class='text-danger'>*</star></label>
+            {{#select patient.quarantine_location_id}}
+              <select
+                class='form-control'
+                name='isolation'
+                id='registerIsolation'
+                required='true'
+              >
+                {{#each quarantine_location}}
+                  <option value='{{this.location_id}}'>{{this.name}}</option>
+                {{/each}}
+              </select>
+            {{/select}}
+          </div>
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>ID những người liên quan (Vui lòng chọn
+            trong danh sách người bệnh)
+            <star class='text-danger'>*</star></label>
+          <input
+            class='form-control'
+            name='relate'
+            id='registerRelate'
+            type='text'
+            autocomplete='off'
+            onkeypress='return false;'
+            onkeydown='return false;'
+            style='background-color: #FFF;'
+            value='{{patient.relate}}'
+          />
+        </div>
+      </div>
+      <div class='card-footer'>
+        <button
+          id='btn-register'
+          type='submit'
+          class='btn btn-info btn-fill pull-right'
+        >Cập nhật</button>
+      </div>
+      <p class='text-{{message.status}}'>{{message.content}}</p>
+    </form>
+  </div>
 </div>
 
-
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Danh sách người bệnh</h4>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive p-3">
-                <table class="table table-hover" id="table_relate_account">
-                    <thead class=" text-primary">
-                        <tr>
-                            <th>
-                                Họ tên
-                            </th>
-                            <th>
-                                Địa chỉ
-                            </th>
-                            <th class="text-center">
-                                Trạng thái
-                            </th>
-                            <th class="text-center">
-                                Đánh dấu liên quan
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each relate}}
-                        <tr>
-                            <td>
-                                {{this.fullname}}
-                            </td>
-                            <td>
-                                {{this.city}}
-                            </td>
-                            <td class="text-center">
-                                F{{this.state}}
-                            </td>
-                            <td class="text-center">
-                                <input type="checkbox" name="{{@index}}" id="{{@index}}">
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class='col-md-12'>
+  <div class='card'>
+    <div class='card-header'>
+      <h4 class='card-title'>Danh sách người bệnh</h4>
     </div>
+    <div class='card-body'>
+      <div class='table-responsive p-3'>
+        <table class='table table-hover' id='table_relate_account'>
+          <thead class='text-primary'>
+            <tr>
+              <th>
+                ID
+              </th>
+              <th>
+                Họ tên
+              </th>
+              <th>
+                Địa chỉ
+              </th>
+              <th class='text-center'>
+                Trạng thái
+              </th>
+              <th class='text-center'>
+                Đánh dấu liên quan
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each relate}}
+              <tr>
+                <td>
+                  {{this.account_id}}
+                </td>
+                <td>
+                  {{this.fullname}}
+                </td>
+                <td>
+                  {{this.city}}
+                </td>
+                <td class='text-center'>
+                  F{{this.state}}
+                </td>
+                <td class='text-center'>
+                  <input
+                    type='checkbox'
+                    name='{{this.account_id}}'
+                    id='{{this.account_id}}'
+                  />
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{#section 'script'}}
-{{!-- Datatables --}}
-<script type="text/javascript" charset="utf8" src="/DataTables/datatables.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#table_relate_account').DataTable();
-    });
-</script>
-{{!-- relate account --}}
-<script type="text/javascript" charset="utf8" src="/js/custom/relateAcc.js"></script>
+  {{! Datatables }}
+  <script
+    type='text/javascript'
+    charset='utf8'
+    src='/DataTables/datatables.js'
+  ></script>
+  <script>
+    $(document).ready(function () { $('#table_relate_account').DataTable(); });
+  </script>
+  {{! relate account }}
+  <script
+    type='text/javascript'
+    charset='utf8'
+    src='/js/custom/relateAcc.js'
+  ></script>
 {{/section}}
