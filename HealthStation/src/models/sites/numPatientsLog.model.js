@@ -3,7 +3,7 @@ const { db, pgp } = require('../../config/db')
 class log {
     table = new pgp.helpers.TableName({ table: "Num_Patients_Log" });
     async findAll() {
-        const data = await db.any(`select * from $1 order by date_created`, this.table)
+        const data = await db.any(`select * from $1 order by date_created ASC`, this.table)
         return { data }
     }
     async findByDate(date) {

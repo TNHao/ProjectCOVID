@@ -175,6 +175,8 @@ const userModel = require("../../models/user/user.model");
 const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
 const quarantineLocationModel = require("../../models/sites/location.model");
 const logModel = require("../../models/sites/log.model");
+const numPatientsLogModel = require('../../models/sites/numPatientsLog.model')
+const orderModel = require('../../models/sites/order.model');
 const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
 const moment = require('moment')
 const {
@@ -281,15 +283,6 @@ module.exports = {
       layout: "manager/main",
       data: data.data,
       chart_data: chart_data,
-      active: { accManagement: true },
-    });
-  },
-
-  getAccount: async (req, res) => {
-    const data = await userModel.findAllPatient();
-    res.render('layouts/manager/accountManagement', {
-      layout: 'manager/main',
-      data: data.data,
       active: { accManagement: true },
     });
   },
@@ -476,10 +469,58 @@ module.exports = {
       product.category_name = category.data.name;
     }
 
+    const chart_data = {
+      dates: [],
+      data: []
+    }
+
+    const response = await orderModel.statProductsByDate();
+    for (let i of response.data) {
+      if (!chart_data.dates.includes(i.date)) {
+        chart_data.dates.push(i.date)
+      }
+    }
+
+    for (let i of response.data) {
+      const product = {
+        name: i.necessary_name,
+        data: [],
+        color: utils.randomColor()
+      }
+      let j;
+      for (j = 0; j < chart_data.data.length; j++) {
+        if (chart_data.data[j].name === i.necessary_name) {
+          break;
+        }
+      }
+      if (j == chart_data.data.length) {
+        for (let k = 0; k < chart_data.dates.length; k++) {
+          product.data.push(0);
+        }
+        chart_data.data.push(product);
+      }
+    }
+
+    for (let i = 0; i < chart_data.dates.length; i++) {
+      for (let j = 0; j < response.data.length; j++) {
+        for (let k = 0; k < chart_data.data.length; k++) {
+          if (response.data[j].date == chart_data.dates[i] && response.data[j].necessary_name == chart_data.data[k].name) {
+            chart_data.data[k].data[i] += parseInt(response.data[j].count);
+          }
+        }
+      }
+    }
+
+    chart_data.dates = utils.arrayStringToString(chart_data.dates);
+    for (let i = 0; i < chart_data.data.length; i++) {
+      chart_data.data[i].name = `"` + chart_data.data[i].name + `"`;
+      chart_data.data[i].data = utils.arrayNumberToString(chart_data.data[i].data);
+    }
+
     res.render("layouts/manager/productManagement", {
       layout: "manager/main",
       data: data,
-      chart_data: fakeProductChartData,
+      chart_data: chart_data,
       active: { proManagement: true },
     });
   },
@@ -535,10 +576,58 @@ module.exports = {
   getPackage: async (req, res) => {
     const { data } = await packageModel.findAll();
 
+    const chart_data = {
+      dates: [],
+      data: []
+    }
+
+    const response = await orderModel.statPackagesByDate();
+    for (let i of response.data) {
+      if (!chart_data.dates.includes(i.date)) {
+        chart_data.dates.push(i.date)
+      }
+    }
+
+    for (let i of response.data) {
+      const package = {
+        name: i.package_name,
+        data: [],
+        color: utils.randomColor()
+      }
+      let j;
+      for (j = 0; j < chart_data.data.length; j++) {
+        if (chart_data.data[j].name === i.package_name) {
+          break;
+        }
+      }
+      if (j == chart_data.data.length) {
+        for (let k = 0; k < chart_data.dates.length; k++) {
+          package.data.push(0);
+        }
+        chart_data.data.push(package);
+      }
+    }
+
+    for (let i = 0; i < chart_data.dates.length; i++) {
+      for (let j = 0; j < response.data.length; j++) {
+        for (let k = 0; k < chart_data.data.length; k++) {
+          if (response.data[j].date == chart_data.dates[i] && response.data[j].package_name == chart_data.data[k].name) {
+            chart_data.data[k].data[i] += parseInt(response.data[j].count);
+          }
+        }
+      }
+    }
+
+    chart_data.dates = utils.arrayStringToString(chart_data.dates);
+    for (let i = 0; i < chart_data.data.length; i++) {
+      chart_data.data[i].name = `"` + chart_data.data[i].name + `"`;
+      chart_data.data[i].data = utils.arrayNumberToString(chart_data.data[i].data);
+    }
+
     res.render("layouts/manager/packageManagement", {
       layout: "manager/main",
       data: data,
-      chart_data: fakePackageChartData,
+      chart_data: chart_data,
       active: { packManagement: true },
     });
   },
