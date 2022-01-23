@@ -47,7 +47,11 @@
                                 {{this.city}}
                             </td>
                             <td class='text-center'>
+                                {{#if this.state}}
                                 F{{this.state}}
+                                {{else}}
+                                Khỏi bệnh
+                                {{/if}}
                             </td>
                             <td class='text-center'>
                                 <a href='/manager/account-management/{{this.account_id}}' class='btn btn-success'>Chi tiết</a>
