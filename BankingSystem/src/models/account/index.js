@@ -1,5 +1,5 @@
 const { db, pgp } = require('../../config/db');
-const { genPassword } = require('../../lib/Utils');
+const { genPassword } = require('../../lib/utils');
 
 const table = new pgp.helpers.TableName({ table: 'Payment_Account', schema: 'public' })
 

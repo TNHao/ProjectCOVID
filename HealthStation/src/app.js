@@ -6,11 +6,11 @@ const route = require('./routes');
 const handlebars = require('./middlewares/handlebars.middleware');
 const session = require('./middlewares/session.middleware');
 const passport = require('./middlewares/passport.middeware');
-
+require('dotenv').config();
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
-const app = require('https-localhost')();
-// const app = express();
-const port = 3000;
+// const app = require('https-localhost')();
+const app = express();
+const port = process.env.PORT || 3000;
 const userM = require('./models/user/user.model');
 const managerM = require('./models/manager/manager.model');
 const { rmSync } = require('fs');

@@ -1,4 +1,4 @@
-const { validPassword, issueJWT } = require('../lib/Utils');
+const { validPassword, issueJWT } = require('../lib/utils');
 const accountModel = require('../models/account');
 const authModel = require('../models/auth');
 
