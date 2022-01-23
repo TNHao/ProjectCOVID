@@ -1,4 +1,8 @@
-const URL = "https://localhost:5000";
+// local
+// const URL = "https://localhost:5000";
+
+// deployment
+const URL = "https://bank-system-hcmus.herokuapp.com";
 
 const setLoading = () => {
     document.getElementById('loading').style.display = 'block';
@@ -12,30 +16,6 @@ const setLoaded = () => {
 
 const userID = document.getElementById('user_id').innerHTML;
 
-// ((id) => {
-//     setLoading();
-
-//     fetch(`${URL}/auth/verify`, {
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         method: "POST",
-//         body: JSON.stringify({ id: id })
-//     }).then(res => res.json())
-//         .then(data => {
-//             const { status, verified } = data;
-//             if (status != 200) { alert('Something went wrong'); return }
-
-//             if (verified)
-//                 document.getElementById("newPasswordBtn").style.display = 'none';
-//             else
-//                 document.getElementById("loginBtn").style.display = 'none';
-
-//             setLoaded();
-//         })
-//         .catch(err => console.log(err))
-// })(userID)
 
 const handleBankingConnect = () => {
     const password = document.getElementById('registerPassword').value;
@@ -69,12 +49,6 @@ const handleBankingConnect = () => {
         .catch(err => console.log(err))
 
     location.reload();
-    // console.log(bankingToken);
-
-    // fetch(`/user/${userID}/set-token`, {
-    //     method: "POST",
-    //     body: JSON.stringify({ token: bankingToken })
-    // })
 }
 
 const handleBankingLogin = async () => {
