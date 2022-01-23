@@ -118,7 +118,6 @@ module.exports = {
 
         profile = { ...profile, quarantineLocation }
         profile.dob = moment(profile.dob).format('YYYY-MM-DD')
-        console.log('profile', profile);
         res.render('layouts/user/profile',
             {
                 layout: 'user/main',
@@ -262,7 +261,6 @@ module.exports = {
 
         const message = req.session.message;
         req.session.message = null;
-        console.log(message);
 
         const { data: isVerified } = await userModel.checkVerify(id)
 
@@ -349,7 +347,6 @@ module.exports = {
     },
     deposit: async (req, res) => {
         const { amount, send_id } = req.body;
-        console.log(amount, send_id);
 
         const { data: user } = await userModel.findById(send_id)
         const token = user.banking_token
