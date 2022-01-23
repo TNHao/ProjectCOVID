@@ -45,10 +45,10 @@ const handleBankingConnect = () => {
                 location.reload();
                 return
             }
+            location.reload();
         })
         .catch(err => console.log(err))
 
-    location.reload();
 }
 
 const handleBankingLogin = async () => {
@@ -88,8 +88,9 @@ const handleBankingLogin = async () => {
         method: "POST",
         body: JSON.stringify({ token: bankingToken })
     })
-
-    location.reload();
+    .then(dummy => {
+        location.reload();
+    })
 }
 
 const handleDeposit = (e) => {
