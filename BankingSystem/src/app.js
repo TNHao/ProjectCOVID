@@ -3,8 +3,9 @@ const passport = require('./middlewares/passport');
 const cors = require('cors');
 const route = require('./routes');
 const app = require("https-localhost")()
+require('dotenv').config();
 // const app = express()
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 
 app.use(express.urlencoded({ extended: true }));
