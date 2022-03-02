@@ -15,7 +15,7 @@ View detail requirement [here](Project_Covid.pdf)
 
 | Student ID   | Fullname           |Main role|
 |--------|------------------|----|
-|19120070| [Trần Nhật Hào](https://github.com/TNHao) |Build basic layoutsl, banking system, connect banking system and management system |
+|19120070| [Trần Nhật Hào](https://github.com/TNHao) |Build basic layouts, banking system, connect banking system and management system |
 |19120141| [Nguyễn Quốc Toàn](https://github.com/ascorbic1230) |    |
 |19120168| [Lê Viết Bách](https://github.com/lebach168) |    |
 |19120678| [Nguyễn Hoàng Tiến](https://github.com/hoangtien1005) | Build layouts and working on manager related system  |
@@ -27,7 +27,7 @@ View detail requirement [here](Project_Covid.pdf)
 - HTML5, CSS3
 - Handlebars
 - NodeJs / ExpressJs
-- Passport, passport-local
+- Passport, passport-local, passport-jwt
 - Axios
 - Bcrypt
 - Database: PostgreSQL, Firebase (storing images)
