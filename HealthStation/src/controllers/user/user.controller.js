@@ -7,7 +7,6 @@ const { PAYMENT } = require('../../constants/index')
 const moment = require('moment')
 
 const logModel = require('../../models/sites/log.model');
-const orderModel = require('../../models/sites/order.model');
 const { isValidPassword, callBankingApi } = require('../../lib/utils')
 
 const fakePaymentData = [
@@ -172,13 +171,13 @@ module.exports = {
         return res.redirect(`/user/${id}/change-password`);
     },
 
-    order: async(req, res, next) => {
+    order: async (req, res, next) => {
         const { account_id } = req.user;
         const { data: user } = await userModel.findById(account_id)
         const { banking_token } = user;
-        
+
         // check if payment account exists
-        if(!banking_token) {
+        if (!banking_token) {
             req.session.message = {
                 status: 'danger',
                 content: 'Vui lòng liên kết tài khoản trước khi thanh toán.'
@@ -192,7 +191,7 @@ module.exports = {
         const { total, package_name, package_id, ...products } = req.body;
 
         // check if exceeding the minimum payment
-        if((balance - Number(total)) * -1 > Number(minimumPaymentAmount)) {
+        if ((balance - Number(total)) * -1 > Number(minimumPaymentAmount)) {
             req.session.message = {
                 status: 'danger',
                 content: 'Vượt quá hạn mức thanh toán, vui lòng nạp thêm vào tài khoản.'
@@ -219,32 +218,32 @@ module.exports = {
 
         const necessaries = []
         for (const [productId, productInfo] of Object.entries(products)) {
-           const { data: necessary } = await productModel.findById(productId)
-           necessary.necessary_name = necessary.name
-           necessary.amount = productInfo[0]
-           necessary.price = productInfo[1]
-           necessaries.push(necessary)
+            const { data: necessary } = await productModel.findById(productId)
+            necessary.necessary_name = necessary.name
+            necessary.amount = productInfo[0]
+            necessary.price = productInfo[1]
+            necessaries.push(necessary)
         }
-       package.necessaries = necessaries;
-       const packages = []
-       packages.push(package)
-       try {
-           await orderModel.createOrder(order, packages)
-           const paymentResponse = await callBankingApi(
-               '/api/transactions/payment', 'POST',
-               {
-                   send_id: account_id,
-                   amount: total,
-                   action: PAYMENT
+        package.necessaries = necessaries;
+        const packages = []
+        packages.push(package)
+        try {
+            await orderModel.createOrder(order, packages)
+            const paymentResponse = await callBankingApi(
+                '/api/transactions/payment', 'POST',
+                {
+                    send_id: account_id,
+                    amount: total,
+                    action: PAYMENT
                 },
                 banking_token)
-                
-           return res.redirect('/')
-       } catch(err) {
-           console.log(err);
-           return res.redirect('/404')
-       }
-    }, 
+
+            return res.redirect('/')
+        } catch (err) {
+            console.log(err);
+            return res.redirect('/404')
+        }
+    },
 
     getPayment: async (req, res) => {
         const { id } = req.params;
@@ -284,7 +283,13 @@ module.exports = {
     },
     getManagement: async (req, res) => {
         const { id } = req.params;
-        const { data } = await logModel.findByUserId(id)
+        const { data = [] } = await logModel.findByUserId(id)
+
+        const managementData = data.map(item => ({
+            type: item.action,
+            description: item.description,
+            create_at: moment(item.date).format('YYYY-MM-DD')
+        }))
 
         let isEmpty = false;
         if (data.length === 0)
@@ -294,7 +299,7 @@ module.exports = {
             {
                 layout: 'user/main',
                 active: { management: true },
-                data: fakeManagementData,
+                data: managementData,
                 isEmpty,
                 id
             }

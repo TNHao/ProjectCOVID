@@ -297,6 +297,13 @@ module.exports = {
   getAccountDetails: async (req, res) => {
     console.log(req.params);
     const data = await userModel.findById(parseInt(req.params.id));
+    let { data: managementData = [] } = await logModel.findByUserId(req.params.id);
+    managementData = managementData.map(item => ({
+      type: item.action,
+      description: item.description,
+      create_at: moment(item.date).format('YYYY-MM-DD')
+    }))
+
     const related_id = await userModel.findAllRelatedById(
       parseInt(req.params.id)
     );
@@ -307,7 +314,7 @@ module.exports = {
     console.log(related);
     res.render('layouts/manager/accountDetails', {
       layout: 'manager/main',
-      data: fakeManagementData,
+      data: managementData,
       username: data.data.username,
       fullname: data.data.fullname,
       relate: related,
