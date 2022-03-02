@@ -9,8 +9,7 @@ router.post('/account-management', adminController.createAccount);
 router.get('/account-management/:id/toggle-active', adminController.toggleActive);
 router.get('/account-management/:id/', adminController.getAccountHistory);
 
-router.get('/firstCreate', adminController.firstCreate);
-router.post('/firstCreate', adminController.setUpAdmin);
+
 
 router.get('/isolation-ward', adminController.getIsolationWard);
 router.post('/isolation-ward', adminController.createIsolationWard);

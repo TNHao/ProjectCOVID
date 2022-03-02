@@ -1,4 +1,4 @@
-const utils = require('../../lib/utils')
+const utils = require('../../lib/utils');
 
 const fakePaymentData = [
   {
@@ -50,115 +50,6 @@ const fakeData = [
   },
 ];
 
-const fakeManagementData = [
-  {
-    type: "Thêm mới",
-    description: "Thêm bệnh nhân A vào danh sách những người F0 ",
-    create_at: "22/12/2021",
-  },
-  {
-    type: "Thêm nhu yếu phẩm",
-    description: "Thêm Đường vào danh sách nhu yếu phẩm",
-    create_at: "22/12/2021",
-  },
-  {
-    type: "Xóa gói nhu yếu phẩm",
-    description: "Xóa gói hỗ trợ 69",
-    create_at: "22/12/2021",
-  },
-  {
-    type: "Chuyển nơi điều trị",
-    description: "Chuyền bệnh nhân X từ khu cách ly A sang khu cách ly B",
-    create_at: "22/12/2021",
-  },
-  {
-    type: "Xuất viện",
-    description: "Cho phép bệnh nhân A rời khỏi khu cách ly",
-    create_at: "22/12/2021",
-  },
-];
-
-const fakeProductChartData = {
-  dates: "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
-  data: [
-    {
-      name: "'Nước ngọt'",
-      data: '[2, 17, 10, 38, 27, 21]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Bim bim'",
-      data: '[8, 7, 25, 35, 5, 14]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Bánh ngọt'",
-      data: '[37, 29, 14, 15, 26, 23]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Mì tôm'",
-      data: '[1, 27, 36, 35, 12, 15]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Thịt bò'",
-      data: '[29, 26, 3, 37, 13, 1]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Thịt bò'",
-      data: '[19, 33, 34, 5, 1, 15]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Thịt bò'",
-      data: '[16, 36, 13, 1, 38, 18]',
-      color: utils.randomColor()
-    },
-  ]
-}
-
-const fakePackageChartData = {
-  dates: "['15-01-2022', '16-01-2022', '17-01-2022', '18-01-2022', '19-01-2022', '20-01-2022']",
-  data: [
-    {
-      name: "'Gói thực phẩm 1'",
-      data: '[1, 3, 10, 11, 14, 18]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Gói thực phẩm 2'",
-      data: '[2, 17, 12, 16, 19, 8]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Gói sinh hoạt cá nhân'",
-      data: '[11, 20, 4, 18, 5, 7]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Gói ăn vặt 1'",
-      data: '[2, 1, 11, 9, 8, 18]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Gói ăn vặt 2'",
-      data: '[12, 8, 18, 9, 10, 3]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Gói chống virus'",
-      data: '[19, 33, 34, 5, 1, 15]',
-      color: utils.randomColor()
-    },
-    {
-      name: "'Gói luxury'",
-      data: '[28, 22, 18, 21, 20, 37]',
-      color: utils.randomColor()
-    },
-  ]
-}
 
 const fakePaymentChartData = {
   months: "['Tháng 6 - 2021', 'Tháng 7 - 2021', 'Tháng 8 - 2021', 'Tháng 9 - 2021', 'Tháng 10 - 2021', 'Tháng 11 - 2021', 'Tháng 12 - 2021', 'Tháng 1 - 2022']",
@@ -168,6 +59,7 @@ const fakePaymentChartData = {
   }
 }
 
+
 const categoryModel = require("../../models/sites/category.model");
 const productModel = require("../../models/sites/product.model");
 const packageModel = require("../../models/sites/necessaryPacket.model");
@@ -175,16 +67,19 @@ const userModel = require("../../models/user/user.model");
 const minimumPaymentModel = require("../../models/sites/minimumPayment.model");
 const quarantineLocationModel = require("../../models/sites/location.model");
 const logModel = require("../../models/sites/log.model");
+const numPatientsLogModel = require('../../models/sites/numPatientsLog.model')
+const orderModel = require('../../models/sites/order.model');
 const { uploadMultipleFiles, uploadFile, deleteFile } = require("../../config/firebase");
 const moment = require('moment')
+
 const {
   updateStateOfAllRelated,
   updateStateById,
-} = require("../../models/user/user.model");
+} = require('../../models/user/user.model');
 const { PERMISSIONS } = require('../../constants/index');
-const { db } = require("../../config/db");
+const { db } = require('../../config/db');
 const { callBankingApi } = require('../../lib/utils');
-const locationModel = require("../../models/sites/location.model");
+const locationModel = require('../../models/sites/location.model');
 
 module.exports = {
   get: async (req, res) => {
@@ -219,14 +114,6 @@ module.exports = {
     const related_id = req.body.relate.split(',');
     const add_create = await userModel.create(user);
     if (add_create != true) {
-      const data = await userModel.findAllPatient();
-      const location = await quarantineLocationModel.findAvailableLocation();
-      const { data: selected_location } =
-        await quarantineLocationModel.findByLocationId(req.body.isolation);
-      selected_location.num_patients += 1;
-      const update_selected_location = await quarantineLocationModel.update(
-        selected_location
-      );
       res.render('layouts/manager/createAcc', {
         layout: 'manager/main',
         data: data.data,
@@ -235,10 +122,25 @@ module.exports = {
         message: { status: 'danger', content: add_create },
       });
     } else {
+      const { data: selected_location } =
+        await quarantineLocationModel.findByLocationId(req.body.isolation);
+      selected_location.num_patients += 1;
+      const update_selected_location = await quarantineLocationModel.update(
+        selected_location
+      );
       const user_id = (await userModel.findByUsername(user.username)).data
         .account_id;
-      await logModel.create(res.locals.user.account_id, "Account", "add", null, req.body.status, "state", user.id, `Thêm ${req.body.fullname} vào khu cách ly`);
-      await callBankingApi('/auth/register', "POST", { id: user_id })
+      await logModel.create(
+        res.locals.user.account_id,
+        'Account',
+        'add',
+        null,
+        req.body.status,
+        'state',
+        user_id,
+        `Thêm ${req.body.identity} vào khu cách ly ${selected_location.name}`
+      );
+      await callBankingApi('/auth/register', 'POST', { id: user_id });
 
       for (let i = 0; i < related_id.length; i++) {
         await userModel.createRelated(user_id, related_id[i]);
@@ -259,11 +161,13 @@ module.exports = {
         F0: [],
         F1: [],
         F2: [],
-        F3: []
-      }
+        F3: [],
+      },
     };
     for (let i = 0; i < response.data.length; i++) {
-      chart_data.dates.push(moment(response.data[i].date_created).format('DD-MM-YYYY'));
+      chart_data.dates.push(
+        moment(response.data[i].date_created).format('DD-MM-YYYY')
+      );
       chart_data.data.normal.push(response.data[i].normal);
       chart_data.data.F0.push(response.data[i].f0);
       chart_data.data.F1.push(response.data[i].f1);
@@ -277,6 +181,7 @@ module.exports = {
     chart_data.data.F2 = utils.arrayNumberToString(chart_data.data.F2);
     chart_data.data.F3 = utils.arrayNumberToString(chart_data.data.F3);
 
+
     res.render("layouts/manager/accountManagement", {
       layout: "manager/main",
       data: data.data,
@@ -285,14 +190,6 @@ module.exports = {
     });
   },
 
-  getAccount: async (req, res) => {
-    const data = await userModel.findAllPatient();
-    res.render('layouts/manager/accountManagement', {
-      layout: 'manager/main',
-      data: data.data,
-      active: { accManagement: true },
-    });
-  },
 
   getAccountDetails: async (req, res) => {
     console.log(req.params);
@@ -325,14 +222,16 @@ module.exports = {
   getAccountEdit: async (req, res, next) => {
     const id = parseInt(req.params.id);
     const { data: user } = await userModel.findById(id);
-    let { data: locations } =
-      await quarantineLocationModel.findAll();
+    let { data: locations } = await quarantineLocationModel.findAll();
 
-    locations = locations.map(location => {
-      if (location.num_patients < location.capacity || location.location_id == user.quarantine_location_id) {
-        return location
+    locations = locations.map((location) => {
+      if (
+        location.num_patients < location.capacity ||
+        location.location_id == user.quarantine_location_id
+      ) {
+        return location;
       }
-    })
+    });
     const related_base_data = (await userModel.findAllPatientWithout(id)).data;
     const related_with_user = (await userModel.findAllRelatedById(id)).data;
     user.relate = related_with_user.join(',');
@@ -366,18 +265,49 @@ module.exports = {
     if (update_patient == 'Success') {
       if (req.body.state != req.body.oldState) {
         if (req.body.state == 'KB') {
-          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, null, "quarantine_location", req.params.id, `Cho ${req.body.fullname} xuất viện`);
-        }
-        else {
+          await logModel.create(
+            res.locals.user.account_id,
+            'Account',
+            'update',
+            req.body.oldState,
+            null,
+            'quarantine_location',
+            req.params.id,
+            `Cho ${req.body.identity} xuất viện`
+          );
+        } else {
           const oldState = `F${req.body.state}`;
-          const newState = `F${req.body.state}`
-          await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldState, req.body.state, "quarantine_location", req.params.id, `Đổi trạng thái ${req.body.fullname} từ F${oldState} sang F${newState}`);
+          const newState = `F${req.body.state}`;
+          await logModel.create(
+            res.locals.user.account_id,
+            'Account',
+            'update',
+            req.body.oldState,
+            req.body.state,
+            'quarantine_location',
+            req.params.id,
+            `Đổi trạng thái ${req.body.identity} từ ${oldState} sang ${newState}`
+          );
         }
       }
       if (req.body.isolation != req.body.oldIsolation) {
-        const oldName = (await locationModel.findById(req.body.oldIsolation)).data.name;
-        const newName = (await locationModel.findById(req.body.isolation)).data.name;
-        await logModel.create(res.locals.user.account_id, "Account", "update", req.body.oldIsolation, req.body.isolation, "quarantine_location", req.params.id, `Chuyển bệnh nhân ${req.body.fullname} từ ${oldName} sang ${newName}`);
+        let oldName = ''
+        if (req.body.oldIsolation != '') {
+          oldName = (await locationModel.findById(req.body.oldIsolation))
+            .data.name;
+        }
+        const newName = (await locationModel.findById(req.body.isolation)).data
+          .name;
+        await logModel.create(
+          res.locals.user.account_id,
+          'Account',
+          'update',
+          req.body.oldIsolation,
+          req.body.isolation,
+          'quarantine_location',
+          req.params.id,
+          `Chuyển bệnh nhân ${req.body.identity} từ ${oldName} sang ${newName}`
+        );
         if (req.body.oldIsolation != '') {
           const old_q_location = await quarantineLocationModel.findById(
             parseInt(req.body.oldIsolation)
@@ -403,16 +333,18 @@ module.exports = {
       );
       console.log(related_remove_1, related_remove_2);
       const new_related = req.body.relate.split(',');
-      for (let i = 0; i < new_related.length; i++) {
-        const create1 = await userModel.createRelated(
-          req.body.account_id,
-          new_related[i]
-        );
-        const create2 = await userModel.createRelated(
-          new_related[i],
-          req.body.account_id
-        );
-        console.log(create1, create2);
+      if (user.state != null) {
+        for (let i = 0; i < new_related.length; i++) {
+          const create1 = await userModel.createRelated(
+            req.body.account_id,
+            new_related[i]
+          );
+          const create2 = await userModel.createRelated(
+            new_related[i],
+            req.body.account_id
+          );
+          console.log(create1, create2);
+        }
       }
       console.log('Heloal related Create');
 
@@ -457,8 +389,17 @@ module.exports = {
   createCategory: async (req, res) => {
     const name = req.body.name;
     await categoryModel.create({ name });
-    await logModel.create(res.locals.user.account_id, "Category", "add", null, null, null, null, `Thêm ${name} vào Category`);
-    res.redirect("/manager/category-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Category',
+      'add',
+      null,
+      null,
+      null,
+      null,
+      `Thêm ${name} vào Category`
+    );
+    res.redirect('/manager/category-management');
   },
 
   updateCategory: async (req, res) => {
@@ -468,9 +409,18 @@ module.exports = {
 
   deleteCategory: async (req, res) => {
     const id = req.body.delete_category_id;
-    const name = (await categoryModel.findById(id)).data.name
+    const name = (await categoryModel.findById(id)).data.name;
     await categoryModel.deleteById(id);
-    await logModel.create(res.locals.user.account_id, "Category", "delete", null, null, null, null, `Xóa ${name} khỏi Category`);
+    await logModel.create(
+      res.locals.user.account_id,
+      'Category',
+      'delete',
+      null,
+      null,
+      null,
+      null,
+      `Xóa ${name} khỏi Category`
+    );
     res.redirect('/manager/category-management');
   },
   // end category
@@ -482,11 +432,58 @@ module.exports = {
       const category = await categoryModel.findById(product.category_id);
       product.category_name = category.data.name;
     }
+    const chart_data = {
+      dates: [],
+      data: []
+    }
+
+    const response = await orderModel.statProductsByDate();
+    for (let i of response.data) {
+      if (!chart_data.dates.includes(i.date)) {
+        chart_data.dates.push(i.date)
+      }
+    }
+
+    for (let i of response.data) {
+      const product = {
+        name: i.necessary_name,
+        data: [],
+        color: utils.randomColor()
+      }
+      let j;
+      for (j = 0; j < chart_data.data.length; j++) {
+        if (chart_data.data[j].name === i.necessary_name) {
+          break;
+        }
+      }
+      if (j == chart_data.data.length) {
+        for (let k = 0; k < chart_data.dates.length; k++) {
+          product.data.push(0);
+        }
+        chart_data.data.push(product);
+      }
+    }
+
+    for (let i = 0; i < chart_data.dates.length; i++) {
+      for (let j = 0; j < response.data.length; j++) {
+        for (let k = 0; k < chart_data.data.length; k++) {
+          if (response.data[j].date == chart_data.dates[i] && response.data[j].necessary_name == chart_data.data[k].name) {
+            chart_data.data[k].data[i] += parseInt(response.data[j].count);
+          }
+        }
+      }
+    }
+
+    chart_data.dates = utils.arrayStringToString(chart_data.dates);
+    for (let i = 0; i < chart_data.data.length; i++) {
+      chart_data.data[i].name = `"` + chart_data.data[i].name + `"`;
+      chart_data.data[i].data = utils.arrayNumberToString(chart_data.data[i].data);
+    }
 
     res.render("layouts/manager/productManagement", {
       layout: "manager/main",
       data: data,
-      chart_data: fakeProductChartData,
+      chart_data: chart_data,
       active: { proManagement: true },
     });
   },
@@ -504,8 +501,17 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files };
     await productModel.create(product);
-    await logModel.create(res.locals.user.account_id, "Necessary", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách sản phẩm`);
-    res.redirect("/manager/product-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Necessary',
+      'add',
+      null,
+      null,
+      null,
+      null,
+      `Thêm ${req.body.name} vào danh sách sản phẩm`
+    );
+    res.redirect('/manager/product-management');
   },
 
   detailsProduct: async (req, res) => {
@@ -525,15 +531,33 @@ module.exports = {
     const files = await uploadMultipleFiles(req.files);
     const product = { ...req.body, images: files, necessary_id: id };
     await productModel.update(product);
-    await logModel.create(res.locals.user.account_id, "Necessary", "update", null, null, null, null, `Sửa sản phẩm ${req.body.name}`);
-    res.redirect("/manager/product-management/");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Necessary',
+      'update',
+      null,
+      null,
+      null,
+      null,
+      `Sửa sản phẩm ${req.body.name}`
+    );
+    res.redirect('/manager/product-management/');
   },
 
   deleteProduct: async (req, res) => {
     const id = req.body.delete_product_id;
     const name = (await productModel.findById(id)).data.name;
     await productModel.deleteById(id);
-    await logModel.create(res.locals.user.account_id, "Necessary", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách sản phẩm`);
+    await logModel.create(
+      res.locals.user.account_id,
+      'Necessary',
+      'delete',
+      null,
+      null,
+      null,
+      null,
+      `Xóa ${name} khỏi danh sách sản phẩm`
+    );
     res.redirect('/manager/product-management');
   },
   // end product
@@ -542,10 +566,58 @@ module.exports = {
   getPackage: async (req, res) => {
     const { data } = await packageModel.findAll();
 
+    const chart_data = {
+      dates: [],
+      data: []
+    }
+
+    const response = await orderModel.statPackagesByDate();
+    for (let i of response.data) {
+      if (!chart_data.dates.includes(i.date)) {
+        chart_data.dates.push(i.date)
+      }
+    }
+
+    for (let i of response.data) {
+      const package = {
+        name: i.package_name,
+        data: [],
+        color: utils.randomColor()
+      }
+      let j;
+      for (j = 0; j < chart_data.data.length; j++) {
+        if (chart_data.data[j].name === i.package_name) {
+          break;
+        }
+      }
+      if (j == chart_data.data.length) {
+        for (let k = 0; k < chart_data.dates.length; k++) {
+          package.data.push(0);
+        }
+        chart_data.data.push(package);
+      }
+    }
+
+    for (let i = 0; i < chart_data.dates.length; i++) {
+      for (let j = 0; j < response.data.length; j++) {
+        for (let k = 0; k < chart_data.data.length; k++) {
+          if (response.data[j].date == chart_data.dates[i] && response.data[j].package_name == chart_data.data[k].name) {
+            chart_data.data[k].data[i] += parseInt(response.data[j].count);
+          }
+        }
+      }
+    }
+
+    chart_data.dates = utils.arrayStringToString(chart_data.dates);
+    for (let i = 0; i < chart_data.data.length; i++) {
+      chart_data.data[i].name = `"` + chart_data.data[i].name + `"`;
+      chart_data.data[i].data = utils.arrayNumberToString(chart_data.data[i].data);
+    }
+
     res.render("layouts/manager/packageManagement", {
       layout: "manager/main",
       data: data,
-      chart_data: fakePackageChartData,
+      chart_data: chart_data,
       active: { packManagement: true },
     });
   },
@@ -561,8 +633,12 @@ module.exports = {
 
   postCreatePackage: async (req, res) => {
     const file = await uploadFile(req.files[0]);
-
-    const _package = { ...req.body, file };
+    let _package;
+    if (file) {
+      _package = { ...req.body, file };
+    } else {
+      _package = { ...req.body };
+    }
     _package.products = _package.products
       .split(',')
       .filter((product) => product !== '')
@@ -574,8 +650,17 @@ module.exports = {
       });
 
     await packageModel.create(_package);
-    await logModel.create(res.locals.user.account_id, "Package", "add", null, null, null, null, `Thêm ${req.body.name} vào danh sách giỏ hàng`);
-    res.redirect("/manager/package-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Package',
+      'add',
+      null,
+      null,
+      null,
+      null,
+      `Thêm ${req.body.name} vào danh sách giỏ hàng`
+    );
+    res.redirect('/manager/package-management');
   },
 
   detailsPackage: async (req, res) => {
@@ -605,9 +690,7 @@ module.exports = {
 
     if (req.files && req.files.length > 0) {
       file = await uploadFile(req.files[0]);
-    }
-    else
-      file = req.body.file;
+    } else file = req.body.file;
 
     const id = req.params.id;
     const oldPackage = (await packageModel.findById(id)).data.name;
@@ -623,15 +706,33 @@ module.exports = {
       });
 
     await packageModel.update(_package);
-    await logModel.create(res.locals.user.account_id, "Package", "update", null, null, null, null, `Sửa ${req.body.name} trong danh sách giỏ hàng`);
-    res.redirect("/manager/package-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Package',
+      'update',
+      null,
+      null,
+      null,
+      null,
+      `Sửa ${req.body.name} trong danh sách giỏ hàng`
+    );
+    res.redirect('/manager/package-management');
   },
 
   deletePackage: async (req, res) => {
     const id = req.body.delete_package_id;
-    const name = (await packageModel.findById(id)).data.name
+    const name = (await packageModel.findById(id)).data.name;
     await packageModel.deleteById(id);
-    await logModel.create(res.locals.user.account_id, "Package", "delete", null, null, null, null, `Xóa ${name} khỏi danh sách gói`);
+    await logModel.create(
+      res.locals.user.account_id,
+      'Package',
+      'delete',
+      null,
+      null,
+      null,
+      null,
+      `Xóa ${name} khỏi danh sách gói`
+    );
     res.redirect('/manager/package-management');
   },
   // end package
@@ -640,8 +741,8 @@ module.exports = {
   getPayment: async (req, res, next) => {
     const { data: amount } = await minimumPaymentModel.find();
 
-    res.render("layouts/manager/paymentManagement", {
-      layout: "manager/main",
+    res.render('layouts/manager/paymentManagement', {
+      layout: 'manager/main',
       amount: amount,
       data: fakePaymentData,
       chart_data: fakePaymentChartData,
@@ -652,8 +753,17 @@ module.exports = {
   updatePayment: async (req, res, next) => {
     const amount = req.body.amount;
     await minimumPaymentModel.update(amount);
-    await logModel.create(res.locals.user.account_id, "Minimum_Payment", "update", null, null, null, null, `Sửa hạn mức`);
-    res.redirect("/manager/payment-management");
+    await logModel.create(
+      res.locals.user.account_id,
+      'Minimum_Payment',
+      'update',
+      null,
+      null,
+      null,
+      null,
+      `Sửa hạn mức`
+    );
+    res.redirect('/manager/payment-management');
   },
   // end payment
 };

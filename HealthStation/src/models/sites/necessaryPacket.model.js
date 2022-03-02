@@ -49,7 +49,7 @@ class NecessaryPacketModel {
   }
 
   async findAll() {
-    const response = await db.any('select package_id from $1 order by package_id', this.table)
+    const response = await db.any(`select package_id from $1 where is_delete = '0' order by package_id`, this.table)
     const ids = response.map(item => item.package_id)
     const data = []
     for (const id of ids) {
@@ -62,7 +62,7 @@ class NecessaryPacketModel {
   }
 
   async findById(id) {
-    const _package = await db.one('select * from ${table} where package_id = ${id}', {
+    const _package = await db.one(`select * from $(table) where package_id = $(id) and is_delete = '0'`, {
       table: this.table,
       id: id,
     });
@@ -72,7 +72,7 @@ class NecessaryPacketModel {
   }
 
   async findByName(name) {
-    const _package = await db.one('select * from ${table} where name = ${name}', {
+    const _package = await db.one(`select * from $(table) where name = $(name) and is_delete = '0'`, {
       table: this.table,
       name: name,
     });
@@ -102,7 +102,7 @@ class NecessaryPacketModel {
   async deleteById(id) {
     await this.helpers.deleteNecessaryPackageById(id)
     const queryString = `
-       delete from $(table) where package_id=$(id)
+       update $(table) set is_delete = '1' where package_id=$(id)
     `;
     await db.none(queryString, {
       table: this.table,
@@ -133,7 +133,9 @@ class NecessaryPacketModel {
       from public."Package" P, public."Necessary_Package" NP, public."Necessary" N
       where 
         P.package_id = NP.package_id 
-        and NP.necessary_id = N.necessary_id 
+        and NP.necessary_id = N.necessary_id
+        and P.is_delete = '0'
+        and N.is_delete = '0' 
         and N.category_id=$(id)
     `
 
@@ -145,6 +147,7 @@ class NecessaryPacketModel {
       SELECT *
       FROM public."Package"
       where name like $(searchTerm)
+      and is_delete = '0'
     `;
 
     const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%` });
@@ -159,6 +162,9 @@ class NecessaryPacketModel {
         and C.category_id=N.category_id
         and N.necessary_id=NP.necessary_id 
         and NP.package_id=P.package_id
+        and P.is_delete = '0'
+        and N.is_delete = '0'
+        and C.is_delete = '0'
     `;
 
     const data = await db.manyOrNone(queryString, { searchTerm: `%${searchTerm}%`, id: category_id });

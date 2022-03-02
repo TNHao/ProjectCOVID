@@ -6,17 +6,17 @@ const route = require('./routes');
 const handlebars = require('./middlewares/handlebars.middleware');
 const session = require('./middlewares/session.middleware');
 const passport = require('./middlewares/passport.middeware');
-
-const app = require("https-localhost")()
-// const app = express();
-const port = 3000;
+require('dotenv').config();
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+// const app = require('https-localhost')();
+const app = express();
+const port = process.env.PORT || 3000;
 const userM = require('./models/user/user.model');
 const managerM = require('./models/manager/manager.model');
 const { rmSync } = require('fs');
 const { isFirstGenerate } = require('./models/admin/admin.model');
 const { findById } = require('./models/sites/location.model');
 
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,8 +34,8 @@ app.use((req, res, next) => {
 app.use(async (req, res, next) => {
   const firstGenerate = await isFirstGenerate();
   if (firstGenerate == true) {
-    if (req.url != '/admin/firstCreate') {
-      req.url = '/admin/firstCreate';
+    if (req.url != '/firstCreate') {
+      req.url = '/firstCreate';
     }
   }
   next();

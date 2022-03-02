@@ -10,19 +10,22 @@ admin.initializeApp({
 const storageRef = admin.storage().bucket(`gs://projectcovid-hcmus.appspot.com/`);
 
 const uploadFile = async (file) => {
-    try {
-        const storage = await storageRef.upload(file.path, {
-            public: true,
-            destination: `/uploads/${file.filename}`,
-            metadata: {
-                firebaseStorageDownloadTokens: _.uniqueId(file),
-            }
-        });
 
-        return storage[0].metadata.mediaLink;
-    }
-    catch (error) {
-        throw error
+    if(file) {
+        try {
+            const storage = await storageRef.upload(file.path, {
+                public: true,
+                destination: `/uploads/${file.filename}`,
+                metadata: {
+                    firebaseStorageDownloadTokens: _.uniqueId(file),
+                }
+            });
+    
+            return storage[0].metadata.mediaLink;
+        }
+        catch (error) {
+            throw error
+        }
     }
 }
 

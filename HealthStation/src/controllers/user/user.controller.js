@@ -107,6 +107,7 @@ const fakeManagementData = [
     },
 ]
 
+// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2NDEwNTc2MTY1OTksImV4cCI6MTY0MTA1NzcwMjk5OX0.cdTrTbGwUt-3PJw3jeav8UfM2BEM9iFXa8GySM7prMM"
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE2NDEwNTc2MTY1OTksImV4cCI6MTY0MTA1NzcwMjk5OX0.cdTrTbGwUt-3PJw3jeav8UfM2BEM9iFXa8GySM7prMM"
 
 module.exports = {
@@ -117,7 +118,6 @@ module.exports = {
 
         profile = { ...profile, quarantineLocation }
         profile.dob = moment(profile.dob).format('YYYY-MM-DD')
-        console.log('profile', profile);
         res.render('layouts/user/profile',
             {
                 layout: 'user/main',
@@ -261,18 +261,18 @@ module.exports = {
 
         const message = req.session.message;
         req.session.message = null;
-        console.log(message);
 
         const { data: isVerified } = await userModel.checkVerify(id)
 
         balance = Number(userBankingDetail.balance);
         const isDebt = balance < 0;
+
         res.render('layouts/user/payment',
             {
                 layout: 'user/main',
                 active: { payment: true },
                 data: data || null,
-                balance: Math.abs(balance) || "---",
+                balance: Math.abs(balance),
                 isDebt: isDebt,
                 isVerified,
                 isLoggedIn: token ? true : false,
@@ -340,12 +340,17 @@ module.exports = {
             {
                 layout: 'user/main',
                 package,
+                active: { purchase: true },
                 id
             }
         )
     },
     deposit: async (req, res) => {
         const { amount, send_id } = req.body;
+
+        const { data: user } = await userModel.findById(send_id)
+        const token = user.banking_token
+
         const { data } = await userModel.deposit(send_id, amount, token);
         res.redirect(`/user/${send_id}/payment`);
     },
