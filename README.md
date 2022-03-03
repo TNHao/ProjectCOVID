@@ -19,7 +19,7 @@ View detail requirement [here](Project_Covid.pdf)
 |19120141| [Nguyễn Quốc Toàn](https://github.com/ascorbic1230) |    |
 |19120168| [Lê Viết Bách](https://github.com/lebach168) |    |
 |19120678| [Nguyễn Hoàng Tiến](https://github.com/hoangtien1005) | Build layouts and working on manager related system  |
-|19120722| [Văn Thế Vinh](https://github.com/duncheon)   |    | Working on manager, admin, patient related modules and connect with FE
+|19120722| [Văn Thế Vinh](https://github.com/duncheon)   |    | Working on manager, admin, patient related modules and connect with FE |
 
 
 ### Built with
